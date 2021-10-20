@@ -1,58 +1,31 @@
 import React from "react";
 import {
-  GoogleMap,
-  LoadScript,
-  StreetViewPanorama,
-} from "@react-google-maps/api";
-
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 import "./App.css"
-
-const mapContainerStyle = {
-  width: "700px",
-  height: "500px"
-};
-
-const center = {
-  lat:41.106196,
-  lng:28.803581
-};
-
-const mapOptions = {
-  // disableDefaultUI: true,
-};
+import Play from "./pages/Play"
+import Home from "./pages/Home"
 
 function App() {
 
-  return (<>
+  return (
+      <Router>
+        <div>
+          <Switch>
 
-  <h1>INF503 Proje keyff</h1>
+            <Route path="/play">
+              <Play/>
+            </Route>
 
-  <LoadScript
-  googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
-
-    {/* soldaki harita */}
-    <div id='mapLeft'>
-      <GoogleMap mapContainerStyle={mapContainerStyle} zoom ={8} center={center} options ={mapOptions}>
-      </GoogleMap>
-    </div>
-
-    {/* Streetview (sağdaki harita) */}
-    <div id='mapRight'>
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        zoom={14}
-        center={center}
-      >
-        <StreetViewPanorama
-              position={center}
-              visible={true}
-            />
-      </GoogleMap>
-    </div>
-
-  </LoadScript>
-
-  </>);
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </div>
+    </Router>
+  );
 }
 
 export default App;
