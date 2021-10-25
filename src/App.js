@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import "./App.css"
 import Play from "./pages/Play"
-import Home from "./pages/Home"
+import Home from "./pages/Home/Home"
 
 function App() {
 
