@@ -1,3 +1,11 @@
+body {
+    background-image: url('../../assets/pisa-tower.png');
+}
+
+img {
+    opacity: 0.5;
+}
+
 .icon-help, .icon-language {
     margin-right: 2%; 
     cursor: pointer;
@@ -7,9 +15,20 @@
     margin-left: 1%;
 }
 
-.home-top-right-container {
+.home-top-right-flex-container {
     display: flex;
     flex-direction: row;
-    margin-left: 7%;
-    padding-left: 60%;
+    margin-left: 4%;
+}
+
+.btn-profile {
+    width: 130%;
+    margin-left: 30%;
+}
+
+.sp-image, .mp-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
 }
