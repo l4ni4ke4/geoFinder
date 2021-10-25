@@ -1,4 +1,15 @@
-.fa-question {
-    margin-right: "1%"; 
-    cursor:"pointer";
+.icon-help, .icon-language {
+    margin-right: 2%; 
+    cursor: pointer;
+}
+
+.icon-help {
+    margin-left: 1%;
+}
+
+.home-top-right-container {
+    display: flex;
+    flex-direction: row;
+    margin-left: 7%;
+    padding-left: 60%;
 }
