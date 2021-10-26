@@ -33,13 +33,13 @@ const Home = () => {
             <div class="col-sm-3">
                 <div class="card" style={{ height: "400px", backgroundColor: "gainsboro", color: "white", cursor: "pointer" }}>
                     <h1 style={{ textAlign: "center" }}>Single Player</h1>
-                    <img src={singlePlayerLogo} width="80%" class="sp-image"></img>
+                    <img src={singlePlayerLogo} width="80%" class="sp-image image"></img>
                 </div>
             </div>
             <div class="col-sm-3" style={{ marginLeft: "2%" }}>
                 <div class="card" style={{ height: "400px", backgroundColor: "gainsboro", color: "white", cursor: "pointer" }}>
                     <h1 style={{ textAlign: "center" }}>Multiplayer</h1>
-                    <img src={multiPlayerLogo} width="80%" class="mp-image"></img>
+                    <img src={multiPlayerLogo} width="80%" class="mp-image image"></img>
                 </div>
             </div>
             <div class="col-sm-4" style={{ marginLeft: "10%", marginTop: "-3%" }}>
