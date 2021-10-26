@@ -5,7 +5,7 @@ import {
   Route
 } from "react-router-dom";
 import "./App.css"
-import Play from "./pages/Play"
+import Play from "./pages/Play/Play"
 import Home from "./pages/Home/Home"
 
 function App() {
