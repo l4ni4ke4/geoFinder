@@ -2,9 +2,10 @@ body {
     background-image: url('../../assets/pisa-tower.png');
 }
 
-img {
+.image{
     opacity: 0.5;
 }
+
 
 .icon-help, .icon-language {
     margin-right: 2%; 

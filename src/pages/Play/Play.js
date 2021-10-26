@@ -14,8 +14,8 @@ const libraries = ["places","drawing"]; // for useLoadScript below
   // Map variables
 
   const mapContainerStyle= {
-    width: "700px",
-    height: "500px",
+    width: "100%",
+    height: "100%",
   };
 
   const mapCenter = {
@@ -24,14 +24,14 @@ const libraries = ["places","drawing"]; // for useLoadScript below
   };
   
   const mapOptions = {
-    disableDefaultUI: false,
+    disableDefaultUI: true,
   };
 
 
 // Streetview variables
   const streetviewContainerStyle = {
-      width: "700px",
-      height: "500px",
+      width: "100%",
+      height: "100%"
   }
   const StreetviewPosition = {
     lat:41.106196,
@@ -40,6 +40,7 @@ const libraries = ["places","drawing"]; // for useLoadScript below
 
   const streetviewOptions = {
     disableDefaultUI: true,
+
   };
 
 // distance formula for given longtitute and latitude
@@ -95,11 +96,9 @@ export default function Play() {
   if (!isLoaded) return "Loading maps";
 
     return (<>
-    <h1>Game Page</h1>
-  
-    <div class="mapsContainer">
-      {/* map on the left */}
-      <div id='mapLeft'>
+    <div class= "play-game-container">
+      {/* Google Map  */}
+      <div class='map-view'>
         <GoogleMap mapContainerStyle={mapContainerStyle} 
           zoom ={8} 
           center={mapCenter} 
@@ -109,23 +108,28 @@ export default function Play() {
         </GoogleMap>
       </div>
   
-      {/* Streetview (map on the right) */}
-      <div id='mapRight'>
-        
+      {/* Streetview */}
+      <div class='street-view'>
         <GoogleMap
           mapContainerStyle={streetviewContainerStyle}
           zoom={14}
+          
         >
           <StreetViewPanorama
                 position={StreetviewPosition}
                 visible={true}
-                // options={streetviewOptions}
+                options={streetviewOptions}
+                
               />
         </GoogleMap>
       </div>
+
+      <div class = "play-game-footer">
+      </div>
+      <button type="button" id = "guessBtn" class="btn btn-primary" onClick={handleGuessButton} >Guess</button>
+
     </div>
 
-    <button onClick={handleGuessButton} >Guess</button>
 
   
     </>);
