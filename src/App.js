@@ -9,10 +9,10 @@ import Game from "./pages/Game/GamePage"
 import Home from "./pages/Home/Home"
 import GameLobby from "./pages/GameLobby/GameLobbyPage"
 import Auth from "./pages/Auth/AuthPage"
-import GameResults from "./pages/GameResults/GameResultsPage"
+import GameResults from "./components/GameResults/GameResults"
 import Profile from "./pages/Profile/ProfilePage"
-import RoundStart from "./pages/RoundStart/RoundStartPage"
-import RoundEnd from "./pages/RoundEnd/RoundEndPage"
+import RoundStart from "./components/RoundStart/RoundStart"
+import RoundEnd from "./components/RoundEnd/RoundEnd"
 
 function App() {
 
