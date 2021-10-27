@@ -10,7 +10,7 @@ export default function Home() {
 
     const history = useHistory();
     const singlePlayerButtonClick = () =>{ 
-        let path = `/play`; 
+        let path = `/GamePage`; 
         history.push(path);
       }
 

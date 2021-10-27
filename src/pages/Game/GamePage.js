@@ -7,7 +7,7 @@ import {
     useJsApiLoader
   } from "@react-google-maps/api";
 
-import "./Play.css";
+import "./GamePage.css";
 
 const libraries = ["places","drawing"]; // for useLoadScript below
 
@@ -65,7 +65,7 @@ function calculateDistance(lat1,
         return(c * r);
     };
 
-export default function Play() {
+export default function GamePage() {
 
   // Add google scripts
   const {isLoaded, loadError} = useJsApiLoader ({
