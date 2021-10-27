@@ -5,7 +5,7 @@ import {
   Route
 } from "react-router-dom";
 import "./App.css"
-import Play from "./pages/Play/Play"
+import GamePage from "./pages/Game/GamePage"
 import Home from "./pages/Home/Home"
 
 function App() {
@@ -15,8 +15,8 @@ function App() {
         <div>
           <Switch>
 
-            <Route path="/play">
-              <Play/>
+            <Route path="/GamePage">
+              <GamePage/>
             </Route>
 
             <Route path="/">
