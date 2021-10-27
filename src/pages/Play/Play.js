@@ -76,11 +76,14 @@ export default function Play() {
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
 
+  const [mapClicked, setMapClicked] = useState(false);
+
 
   // Handle the clicks on map (set the marker position on click)
   const handleMapClick = (event) =>{
     setMarkerPosition({lat: event.latLng.lat(),
                        lng: event.latLng.lng()});
+    setMapClicked(true);
   };
 
   // calculate the distance and show alert when guess button is clicked
@@ -126,7 +129,7 @@ export default function Play() {
 
       <div class = "play-game-footer">
       </div>
-      <button type="button" id = "guessBtn" class="btn btn-primary" onClick={handleGuessButton} >Guess</button>
+      <button type="button" id = "guessBtn" class="btn btn-primary" onClick={handleGuessButton} disabled={!mapClicked}>Guess</button>
 
     </div>
 
