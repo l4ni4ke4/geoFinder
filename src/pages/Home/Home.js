@@ -1,11 +1,18 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
+import { useHistory } from "react-router-dom";
 import singlePlayerLogo from '../../assets/one-player-game-symbol.png';
 import multiPlayerLogo from '../../assets/network_icon.png';
 import './Home.css';
 
-const Home = () => {
+export default function Home() {
+
+    const history = useHistory();
+    const singlePlayerButtonClick = () =>{ 
+        let path = `/play`; 
+        history.push(path);
+      }
 
     return (<>
 
@@ -31,7 +38,7 @@ const Home = () => {
 
         <div class="row" style={{ marginTop: "8%", paddingLeft: "5%" }}>
             <div class="col-sm-3">
-                <div class="card" style={{ height: "400px", backgroundColor: "gainsboro", color: "white", cursor: "pointer" }}>
+                <div class="card" style={{ height: "400px", backgroundColor: "gainsboro", color: "white", cursor: "pointer" }} onClick={singlePlayerButtonClick}>
                     <h1 style={{ textAlign: "center" }}>Single Player</h1>
                     <img src={singlePlayerLogo} width="80%" class="sp-image image"></img>
                 </div>
@@ -82,6 +89,3 @@ const Home = () => {
     </>)
 
 }
-
-
-export default Home;
