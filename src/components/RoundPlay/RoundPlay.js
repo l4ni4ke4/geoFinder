@@ -3,6 +3,8 @@ import {useState,useEffect} from "react";
 import {
     GoogleMap,
     StreetViewPanorama,
+    StreetViewControlOptions,
+    ControlPosition,
     Marker,
     useJsApiLoader
   } from "@react-google-maps/api";
@@ -38,7 +40,9 @@ const mapContainerStyle= {
 
   const streetviewOptions = {
     disableDefaultUI: true,
-
+    clickToGo: false,
+    showRoadLabels: false,
+    visible: true,
   };
   
   // const StreetviewPosition = {
@@ -138,7 +142,7 @@ function RoundPlay({streetviewPosition}) {
                   position={streetviewPosition}
                   visible={true}
                   options={streetviewOptions}
-                  
+
                 />
           </GoogleMap>
         </div>
