@@ -1,5 +1,5 @@
 import React from "react";
-import {useState} from "react";
+import {useState,useEffect} from "react";
 import {
     GoogleMap,
     StreetViewPanorama,
@@ -7,6 +7,8 @@ import {
   } from "@react-google-maps/api";
 
 import "./RoundPlay.css";
+
+import randomStreetView from 'random-streetview';
 
 // Map variables
 
@@ -30,15 +32,24 @@ const mapContainerStyle= {
       width: "100%",
       height: "100%"
   }
-  const StreetviewPosition = {
-    lat:41.106196,
-    lng:28.803581
-  };
 
   const streetviewOptions = {
     disableDefaultUI: true,
 
   };
+  
+  // const StreetviewPosition = {
+  //   lat:41.106196,
+  //   lng:28.803581
+  // }; 
+  
+  var returnLocation = [];
+  
+  async function generateRandomStreetView() {
+    Promise.resolve(await randomStreetView.getRandomLocation()).then(value => {
+      returnLocation = value;
+    });
+  }
 
 // distance formula for given longtitute and latitude
 function calculateDistance(lat1,
@@ -63,6 +74,15 @@ function calculateDistance(lat1,
     };
 
 function RoundPlay() {
+
+  useEffect(() => {
+      generateRandomStreetView();
+    }, []);
+
+  const StreetviewPosition = {
+    lat: returnLocation[0],
+    lng: returnLocation[1]
+  };
 
 
 // Marker's position
