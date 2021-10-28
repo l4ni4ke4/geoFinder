@@ -1,5 +1,5 @@
 import React from "react";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {
     GoogleMap,
     StreetViewPanorama,
@@ -7,41 +7,52 @@ import {
     useJsApiLoader
   } from "@react-google-maps/api";
 
+import randomStreetView from 'random-streetview';
+
 import "./GamePage.css";
 
 const libraries = ["places","drawing"]; // for useLoadScript below
 
-  // Map variables
+// Map variables
 
-  const mapContainerStyle= {
-    width: "100%",
-    height: "100%",
-  };
+const mapContainerStyle= {
+  width: "100%",
+  height: "100%",
+};
 
-  const mapCenter = {
-    lat:41.106196,
-    lng:28.803581
-  };
-  
-  const mapOptions = {
-    disableDefaultUI: true,
-  };
+const mapCenter = {
+  lat:41.106196,
+  lng:28.803581
+};
+
+const mapOptions = {
+  disableDefaultUI: true,
+};
 
 
 // Streetview variables
-  const streetviewContainerStyle = {
-      width: "100%",
-      height: "100%"
-  }
-  const StreetviewPosition = {
-    lat:41.106196,
-    lng:28.803581
-  };
+const streetviewContainerStyle = {
+    width: "100%",
+    height: "100%"
+}
+/* const StreetviewPosition = {
+  lat:41.106196,
+  lng:28.803581
+}; */
 
-  const streetviewOptions = {
-    disableDefaultUI: true,
+var returnLocation = [];
 
-  };
+async function generateRandomStreetView() {
+  Promise.resolve(await randomStreetView.getRandomLocation()).then(value => {
+    returnLocation = value;
+  });
+}
+
+
+const streetviewOptions = {
+  disableDefaultUI: true,
+
+};
 
 // distance formula for given longtitute and latitude
 function calculateDistance(lat1,
@@ -67,6 +78,15 @@ function calculateDistance(lat1,
 
 export default function GamePage() {
 
+  useEffect(() => {
+    generateRandomStreetView();
+  }, []);
+
+  const StreetviewPosition = {
+    lat: returnLocation[0],
+    lng: returnLocation[1]
+  };
+
   // Add google scripts
   const {isLoaded, loadError} = useJsApiLoader ({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -88,6 +108,7 @@ export default function GamePage() {
 
   // calculate the distance and show alert when guess button is clicked
   const handleGuessButton = () =>{
+    console.log("return location" + returnLocation);
     let distance = calculateDistance(StreetviewPosition.lat,markerPosition.lat,StreetviewPosition.lng,markerPosition.lng);
     alert("Distance: "+Math.round(distance)+" (Km)");
   
