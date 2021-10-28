@@ -11,7 +11,7 @@ import "./RoundPlay.css";
 
 import randomStreetView from 'random-streetview';
 
-const libraries = ["places","drawing"]; // for useLoadScript below
+
 
 // Map variables
 
@@ -46,13 +46,9 @@ const mapContainerStyle= {
   //   lng:28.803581
   // }; 
   
-  var returnLocation = [];
+  // var returnLocation = [];
   
-  async function generateRandomStreetView() {
-    Promise.resolve(await randomStreetView.getRandomLocation()).then(value => {
-      returnLocation = value;
-    });
-  }
+
 
 // distance formula for given longtitute and latitude
 function calculateDistance(lat1,
@@ -76,32 +72,31 @@ function calculateDistance(lat1,
         return(c * r);
     };
 
-function RoundPlay() {
-
+function RoundPlay({streetviewPosition}) {
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
 
   const [mapClicked, setMapClicked] = useState(false);
 
-  useEffect(() => {
-    generateRandomStreetView();
-  }, []);
 
-  // Add google scripts
-  const {isLoaded, loadError} = useJsApiLoader ({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries
-  });
-  
+  // async function generateRandomStreetView() {
 
-  // for loading errors
-  if (loadError) return "Error loading maps";
-  if (!isLoaded) return "Loading maps";
+  //   Promise.resolve(await randomStreetView.getRandomLocation()).then(value => {
+  //     console.log(value);
+  //     setStreetViewPosition({
+  //       lat: value[0],
+  //       lng: value[1]
+  //     });
+  //   });
+  // };
 
-  const StreetviewPosition = {
-    lat: returnLocation[0],
-    lng: returnLocation[1]
-  };
+
+  // useEffect(() => {
+  //   generateRandomStreetView();
+  // }, []);
+
+
+
 
 
 // Handle the clicks on map (set the marker position on click)
@@ -113,7 +108,7 @@ function RoundPlay() {
 
   // calculate the distance and show alert when guess button is clicked
   const handleGuessButton = () =>{
-    let distance = calculateDistance(StreetviewPosition.lat,markerPosition.lat,StreetviewPosition.lng,markerPosition.lng);
+    let distance = calculateDistance(streetviewPosition.lat,markerPosition.lat,streetviewPosition.lng,markerPosition.lng);
     alert("Distance: "+Math.round(distance)+" (Km)");
   
      };
@@ -140,7 +135,7 @@ function RoundPlay() {
             
           >
             <StreetViewPanorama
-                  position={StreetviewPosition}
+                  position={streetviewPosition}
                   visible={true}
                   options={streetviewOptions}
                   
