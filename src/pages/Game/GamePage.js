@@ -2,14 +2,14 @@ import React from "react";
 import {useState,useEffect} from "react";
 import "./GamePage.css";
 import {
-  GoogleMap,
-  StreetViewPanorama,
-  Marker,
   useJsApiLoader
 } from "@react-google-maps/api";
+
 import randomStreetView from 'random-streetview';
+
 import RoundPlay from "../../components/RoundPlay/RoundPlay";
 import RoundEnd from "../../components/RoundEnd/RoundEnd";
+import RoundStart from "../../components/RoundStart/RoundStart";
 
 const libraries = ["places","drawing"]; // for useLoadScript below
 
@@ -21,7 +21,6 @@ export default function GamePage() {
   });
 
   async function generateRandomStreetView() {
-
     Promise.resolve(await randomStreetView.getRandomLocation()).then(value => {
       console.log(value);
       setStreetViewPosition({
@@ -47,6 +46,7 @@ export default function GamePage() {
   if (!isLoaded) return "Loading maps";
 
     return (<>
-      <RoundPlay streetviewPosition = {streetviewPosition}/>
+      {/* <RoundPlay streetviewPosition = {streetviewPosition}/> */}
+      <RoundEnd/>
     </>);
   }

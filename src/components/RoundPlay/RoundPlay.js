@@ -3,15 +3,10 @@ import {useState,useEffect} from "react";
 import {
     GoogleMap,
     StreetViewPanorama,
-    StreetViewControlOptions,
-    ControlPosition,
     Marker,
-    useJsApiLoader
   } from "@react-google-maps/api";
 
 import "./RoundPlay.css";
-
-import randomStreetView from 'random-streetview';
 
 
 
@@ -40,17 +35,10 @@ const mapContainerStyle= {
 
   const streetviewOptions = {
     disableDefaultUI: true,
-    clickToGo: false,
+    clickToGo: true,
     showRoadLabels: false,
     visible: true,
   };
-  
-  // const StreetviewPosition = {
-  //   lat:41.106196,
-  //   lng:28.803581
-  // }; 
-  
-  // var returnLocation = [];
   
 
 
@@ -83,25 +71,6 @@ function RoundPlay({streetviewPosition}) {
   const [mapClicked, setMapClicked] = useState(false);
 
 
-  // async function generateRandomStreetView() {
-
-  //   Promise.resolve(await randomStreetView.getRandomLocation()).then(value => {
-  //     console.log(value);
-  //     setStreetViewPosition({
-  //       lat: value[0],
-  //       lng: value[1]
-  //     });
-  //   });
-  // };
-
-
-  // useEffect(() => {
-  //   generateRandomStreetView();
-  // }, []);
-
-
-
-
 
 // Handle the clicks on map (set the marker position on click)
   const handleMapClick = (event) =>{
@@ -123,7 +92,7 @@ function RoundPlay({streetviewPosition}) {
         {/* Google Map  */}
         <div class='map-view'>
           <GoogleMap mapContainerStyle={mapContainerStyle} 
-            zoom ={8} 
+            zoom ={3} 
             center={mapCenter} 
             options ={mapOptions}
             onClick={handleMapClick}>
