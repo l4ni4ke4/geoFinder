@@ -4,11 +4,14 @@ import {
     GoogleMap,
     StreetViewPanorama,
     Marker,
+    useJsApiLoader
   } from "@react-google-maps/api";
 
 import "./RoundPlay.css";
 
 import randomStreetView from 'random-streetview';
+
+const libraries = ["places","drawing"]; // for useLoadScript below
 
 // Map variables
 
@@ -75,20 +78,30 @@ function calculateDistance(lat1,
 
 function RoundPlay() {
 
+  // Marker's position
+  const [markerPosition,setMarkerPosition] = useState();
+
+  const [mapClicked, setMapClicked] = useState(false);
+
   useEffect(() => {
-      generateRandomStreetView();
-    }, []);
+    generateRandomStreetView();
+  }, []);
+
+  // Add google scripts
+  const {isLoaded, loadError} = useJsApiLoader ({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries
+  });
+  
+
+  // for loading errors
+  if (loadError) return "Error loading maps";
+  if (!isLoaded) return "Loading maps";
 
   const StreetviewPosition = {
     lat: returnLocation[0],
     lng: returnLocation[1]
   };
-
-
-// Marker's position
-  const [markerPosition,setMarkerPosition] = useState();
-
-  const [mapClicked, setMapClicked] = useState(false);
 
 
 // Handle the clicks on map (set the marker position on click)
