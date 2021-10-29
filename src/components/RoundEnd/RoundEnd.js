@@ -24,10 +24,10 @@ const mapOptions = {
     disableDefaultUI: true,
   };
 
-const mapCenter = {
-    lat:41.106196,
-    lng:28.803581
-  };
+// const mapCenter = {
+//     lat:41.106196,
+//     lng:28.803581
+//   };
 
 
 function RoundEnd({currentRound,setCurrentRound,rounds,setShowView,distances,scores,totalScore,setTotalScore,guessedLocations
@@ -46,8 +46,8 @@ function RoundEnd({currentRound,setCurrentRound,rounds,setShowView,distances,sco
         <div className='round-end-container'>
             <div className ='round-end-mapview'>
                     <GoogleMap mapContainerStyle={mapContainerStyle} 
-                        zoom ={3} 
-                        center={mapCenter} 
+                        zoom ={4} 
+                        center={trueLocations[currentRound]} 
                         options ={mapOptions}>
                             <Marker position={guessedLocations[currentRound]}
                                     icon= {{url:markerDefault,

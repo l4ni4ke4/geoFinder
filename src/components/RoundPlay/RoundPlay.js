@@ -20,8 +20,8 @@ const mapContainerStyle= {
   };
 
   const mapCenter = {
-    lat:41.106196,
-    lng:28.803581
+    lat:36,
+    lng:-16
   };
   
   const mapOptions = {
@@ -106,7 +106,7 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
         {/* Google Map  */}
         <div class='map-view'>
           <GoogleMap mapContainerStyle={mapContainerStyle} 
-            zoom ={3} 
+            zoom ={1} 
             center={mapCenter} 
             options ={mapOptions}
             onClick={handleMapClick}>
