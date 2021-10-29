@@ -10,6 +10,7 @@ import "./RoundPlay.css";
 
 import {calculatePoints} from "../../utils/GameUtils"
 
+import markerDefault from "../../assets/markerDefault.svg"
 
 // Map variables
 
@@ -109,7 +110,10 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
             center={mapCenter} 
             options ={mapOptions}
             onClick={handleMapClick}>
-              <Marker position = {markerPosition}/>
+              <Marker position = {markerPosition}
+                      icon={{url:markerDefault,
+                             scaledSize: new window.google.maps.Size(35,35)
+                             }}/>
           </GoogleMap>
         </div>
     

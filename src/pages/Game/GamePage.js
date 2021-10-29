@@ -103,7 +103,9 @@ export default function GamePage() {
         distances={distances}
         scores = {scores}
         totalScore={totalScore}
-        setTotalScore={setTotalScore}/>
+        setTotalScore={setTotalScore}
+        guessedLocations={guessedLocations}
+        trueLocations ={trueLocations}/>
     }
 
     </>); }

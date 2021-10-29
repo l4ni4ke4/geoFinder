@@ -1,8 +1,13 @@
 import "./RoundEnd.css"
 import {
-    GoogleMap
+    GoogleMap,
+    Marker
   } from "@react-google-maps/api";
 import { useEffect } from "react";
+
+import markerTrueLocation from "../../assets/markerTrueLocation.svg"
+import markerDefault from "../../assets/markerDefault.svg"
+
 
 const mapContainerStyle= {
     width: "100%",
@@ -19,7 +24,8 @@ const mapCenter = {
   };
 
 
-function RoundEnd({currentRound,setCurrentRound,rounds,setShowView,distances,scores,totalScore,setTotalScore}){
+function RoundEnd({currentRound,setCurrentRound,rounds,setShowView,distances,scores,totalScore,setTotalScore,guessedLocations
+    ,trueLocations}){
 
     const handleBtnNextRound = () =>{
             setCurrentRound(currentRound+1);
@@ -37,6 +43,13 @@ function RoundEnd({currentRound,setCurrentRound,rounds,setShowView,distances,sco
                         zoom ={3} 
                         center={mapCenter} 
                         options ={mapOptions}>
+                            <Marker position={guessedLocations[currentRound]}
+                                    icon= {{url:markerDefault,
+                                            scaledSize: new window.google.maps.Size(45,45)}}/>
+
+                            <Marker position ={trueLocations[currentRound]}
+                                    icon = {{url:markerTrueLocation,
+                                             scaledSize: new window.google.maps.Size(35,35)}}/>
 
                     </GoogleMap>
             </div>
