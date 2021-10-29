@@ -8,6 +8,7 @@ import {
 
 import "./RoundPlay.css";
 
+import {calculatePoints} from "../../utils/GameUtils"
 
 
 // Map variables
@@ -64,7 +65,7 @@ function calculateDistance(lat1,
         return(c * r);
     };
 
-function RoundPlay({streetviewPosition}) {
+function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocations,distances,setDistances,scores,setScores}) {
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
 
@@ -81,8 +82,20 @@ function RoundPlay({streetviewPosition}) {
 
   // calculate the distance and show alert when guess button is clicked
   const handleGuessButton = () =>{
-    let distance = calculateDistance(streetviewPosition.lat,markerPosition.lat,streetviewPosition.lng,markerPosition.lng);
-    alert("Distance: "+Math.round(distance)+" (Km)");
+    //push the guessed position into guessedPositions variable
+    setGuessedLocations(guessedLocations => [...guessedLocations,markerPosition]);
+
+    // calculate distance
+    let roundDistance = calculateDistance(trueLocation.lat,markerPosition.lat,trueLocation.lng,markerPosition.lng);
+    // push round distance to distances array
+    setDistances(distances=>[...distances,roundDistance]);
+
+    // calculate score
+    let roundScore = calculatePoints(roundDistance,12000);
+    // push round score to scores array
+    setScores(scores =>[...scores,roundScore]);
+    
+    setShowView("RoundEnd");
   
      };
 
@@ -108,7 +121,7 @@ function RoundPlay({streetviewPosition}) {
             
           >
             <StreetViewPanorama
-                  position={streetviewPosition}
+                  position={trueLocation}
                   visible={true}
                   options={streetviewOptions}
 
