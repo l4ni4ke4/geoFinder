@@ -1,13 +1,19 @@
 import "./RoundEnd.css"
 import {
     GoogleMap,
-    Marker
+    Marker,
+    Polyline
   } from "@react-google-maps/api";
 import { useEffect } from "react";
 
 import markerTrueLocation from "../../assets/markerTrueLocation.svg"
 import markerDefault from "../../assets/markerDefault.svg"
 
+const lineSymbol = {
+    path: "M 0,-1 0,1",
+    strokeOpacity: 0.8,
+    scale: 3,
+  };
 
 const mapContainerStyle= {
     width: "100%",
@@ -50,6 +56,22 @@ function RoundEnd({currentRound,setCurrentRound,rounds,setShowView,distances,sco
                             <Marker position ={trueLocations[currentRound]}
                                     icon = {{url:markerTrueLocation,
                                              scaledSize: new window.google.maps.Size(35,35)}}/>
+                            
+                            <Polyline path ={[guessedLocations[currentRound],trueLocations[currentRound]]}
+                                      options = {{
+                                        icons: [
+                                            {
+                                              icon: lineSymbol,
+                                              offset: "10px",
+                                              repeat: "20px",
+                                            },
+                                          ],
+                                        strokeOpacity:0,
+                                        strokeColor:"#000000"
+                                      }}
+  
+
+                                      />
 
                     </GoogleMap>
             </div>
