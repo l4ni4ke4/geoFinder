@@ -19,7 +19,7 @@
   
 .round-end-scores {
       grid-area: round-end-scores;
-      background-image: url('../../assets/roundend-scores.jpg');
+      background-image: linear-gradient(to right top,rgba(0,0,0,.3),rgba(0,0,0,.3)),url('../../assets/roundend-scores.jpg');
       background-size: cover;
       display:flex;
       flex-direction: column;

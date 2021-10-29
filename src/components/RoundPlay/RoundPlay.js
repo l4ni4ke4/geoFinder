@@ -10,6 +10,7 @@ import "./RoundPlay.css";
 
 import {calculatePoints} from "../../utils/GameUtils"
 
+import markerDefault from "../../assets/markerDefault.svg"
 
 // Map variables
 
@@ -19,8 +20,8 @@ const mapContainerStyle= {
   };
 
   const mapCenter = {
-    lat:41.106196,
-    lng:28.803581
+    lat:36,
+    lng:-16
   };
   
   const mapOptions = {
@@ -105,11 +106,14 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
         {/* Google Map  */}
         <div class='map-view'>
           <GoogleMap mapContainerStyle={mapContainerStyle} 
-            zoom ={3} 
+            zoom ={1} 
             center={mapCenter} 
             options ={mapOptions}
             onClick={handleMapClick}>
-              <Marker position = {markerPosition}/>
+              <Marker position = {markerPosition}
+                      icon={{url:markerDefault,
+                             scaledSize: new window.google.maps.Size(35,35)
+                             }}/>
           </GoogleMap>
         </div>
     

@@ -1,8 +1,19 @@
 import "./RoundEnd.css"
 import {
-    GoogleMap
+    GoogleMap,
+    Marker,
+    Polyline
   } from "@react-google-maps/api";
 import { useEffect } from "react";
+
+import markerTrueLocation from "../../assets/markerTrueLocation.svg"
+import markerDefault from "../../assets/markerDefault.svg"
+
+const lineSymbol = {
+    path: "M 0,-1 0,1",
+    strokeOpacity: 0.8,
+    scale: 3,
+  };
 
 const mapContainerStyle= {
     width: "100%",
@@ -13,13 +24,14 @@ const mapOptions = {
     disableDefaultUI: true,
   };
 
-const mapCenter = {
-    lat:41.106196,
-    lng:28.803581
-  };
+// const mapCenter = {
+//     lat:41.106196,
+//     lng:28.803581
+//   };
 
 
-function RoundEnd({currentRound,setCurrentRound,rounds,setShowView,distances,scores,totalScore,setTotalScore}){
+function RoundEnd({currentRound,setCurrentRound,rounds,setShowView,distances,scores,totalScore,setTotalScore,guessedLocations
+    ,trueLocations}){
 
     const handleBtnNextRound = () =>{
             setCurrentRound(currentRound+1);
@@ -34,9 +46,32 @@ function RoundEnd({currentRound,setCurrentRound,rounds,setShowView,distances,sco
         <div className='round-end-container'>
             <div className ='round-end-mapview'>
                     <GoogleMap mapContainerStyle={mapContainerStyle} 
-                        zoom ={3} 
-                        center={mapCenter} 
+                        zoom ={4} 
+                        center={trueLocations[currentRound]} 
                         options ={mapOptions}>
+                            <Marker position={guessedLocations[currentRound]}
+                                    icon= {{url:markerDefault,
+                                            scaledSize: new window.google.maps.Size(45,45)}}/>
+
+                            <Marker position ={trueLocations[currentRound]}
+                                    icon = {{url:markerTrueLocation,
+                                             scaledSize: new window.google.maps.Size(35,35)}}/>
+                            
+                            <Polyline path ={[guessedLocations[currentRound],trueLocations[currentRound]]}
+                                      options = {{
+                                        icons: [
+                                            {
+                                              icon: lineSymbol,
+                                              offset: "10px",
+                                              repeat: "20px",
+                                            },
+                                          ],
+                                        strokeOpacity:0,
+                                        strokeColor:"#000000"
+                                      }}
+  
+
+                                      />
 
                     </GoogleMap>
             </div>
