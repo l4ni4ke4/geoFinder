@@ -1,10 +1,8 @@
 import "./RoundEnd.css"
 import {
-    GoogleMap,
-    StreetViewPanorama,
-    StreetViewControlOptions,
-    Marker
+    GoogleMap
   } from "@react-google-maps/api";
+import { useEffect } from "react";
 
 const mapContainerStyle= {
     width: "100%",
@@ -20,7 +18,18 @@ const mapCenter = {
     lng:28.803581
   };
 
-function RoundEnd(){
+
+function RoundEnd({currentRound,setCurrentRound,rounds,setShowView,distances,scores,totalScore,setTotalScore}){
+
+    const handleBtnNextRound = () =>{
+            setCurrentRound(currentRound+1);
+            setShowView("RoundStart");
+    }
+    useEffect(()=>{
+        let totalScore = scores.reduce((partial_sum, a) => partial_sum + a,0); // this just sums the array elements
+        setTotalScore(totalScore);
+    },[])
+
     return(
         <div className='round-end-container'>
             <div className ='round-end-mapview'>
@@ -41,11 +50,11 @@ function RoundEnd(){
                             <tbody>
                                 <tr>
                                     <td>Score</td>
-                                    <td>500</td>
+                                    <td>{Math.round(scores[currentRound])}</td>
                                 </tr>
                                 <tr>
                                     <td>Distance</td>
-                                    <td>1000 km</td>
+                                    <td>{Math.round(distances[currentRound])} km</td>
                                 </tr>
                                 <tr>
                                     <td>Time Bonus</td>
@@ -69,14 +78,14 @@ function RoundEnd(){
                             <tbody>
                                 <tr>
                                         <td>Total Score</td>
-                                        <td>500</td>
+                                        <td>{Math.round(totalScore)}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </section>
-                <button type= 'button' className= 'btn btn-primary' id = 'btnNextround'>
-                    Next Round
+                <button type= 'button' className= 'btn btn-primary' id = 'btnNextround' onClick={handleBtnNextRound}>
+                    {currentRound === rounds-1 ? "End Game" : "Next Round"}
                 </button>
             </div>
         </div>

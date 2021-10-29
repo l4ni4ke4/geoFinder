@@ -3,12 +3,21 @@ import "./RoundStart.css"
 import playIcon from '../../assets/play_icon.png';
 import exitIcon from '../../assets/exit_icon.png';
 
-function RoundStart({currentRound}){
+function RoundStart({setShowView,currentRound,rounds,totalScore}){
+
+    const handleStartRoundBtn = () => {
+        setShowView("RoundPlay");
+    }
 
     return(
         <div className = "round-start-container">
             <div className = 'round-start-main'>
-                <h1>PREPARE YOURSELF</h1>
+                
+                <div className='roundBox'>
+                    <h5>Round: {currentRound+1}/{rounds}</h5>
+                </div>
+
+                <h1>GET READY</h1>
                 <div className= 'box'>
 
                 </div>
@@ -17,7 +26,7 @@ function RoundStart({currentRound}){
                     <img src={exitIcon} id='exitIcon'/>
                 </button>
 
-                <button type='button' id='btn-next-round' className='btn btn-primary'>
+                <button type='button' id='btn-start-round' className='btn btn-primary' onClick= {handleStartRoundBtn}>
                    <img src={playIcon} />
                 </button>
 
@@ -25,7 +34,7 @@ function RoundStart({currentRound}){
 
             <div className= 'round-start-footer'>
                 <div className ='player_score'>
-                    <h2>Current Score: </h2>
+                    <h2>Current Score: {Math.round(totalScore)} </h2>
                 </div>
             </div>
         </div>

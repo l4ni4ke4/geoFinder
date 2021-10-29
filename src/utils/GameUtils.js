@@ -1,8 +1,8 @@
 
-function CalculatePoints(distance, maxDistance, maxPoints){
-    deadzone = 30;
-    maxPoints = 5000;
-    a = maxPoints/Math.pow(maxDistance, 2);
+export const calculatePoints = (distance, maxDistance) => {
+    let deadzone = 30;
+    let maxPoints = 5000;
+    let a = maxPoints/Math.pow(maxDistance, 2);
 
     if(distance < deadzone)
         return maxPoints;
