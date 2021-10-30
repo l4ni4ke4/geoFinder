@@ -1,5 +1,7 @@
 import React from "react";
 import {useState,useEffect} from "react";
+
+import { useSound } from "use-sound";
 import {
     GoogleMap,
     StreetViewPanorama,
@@ -11,6 +13,8 @@ import "./RoundPlay.css";
 import {getScore} from "../../utils/GameUtils"
 
 import markerDefault from "../../assets/markerDefault.svg"
+
+import BeepSound from "../../assets/beep.mp3";
 
 // Map variables
 
@@ -67,17 +71,23 @@ function calculateDistance(lat1,
     };
 
 function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocations,distances,setDistances,scores,setScores,
-  currentTime,setIsCountdownStart,setCurrentTime}) {
+  currentTime,setIsCountdownStart,setCurrentTime,roundTime,setRoundTime}) {
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
 
   const [mapClicked, setMapClicked] = useState(false);
 
+  // last 5 seconds alert beep sound
+  const [playBeep] = useSound(BeepSound);
+
   //Checks if current time is smaller than 0
   useEffect(() => {
-        if(currentTime < 0){
+        if(currentTime < 1){
           handleGuessButton();
-          setCurrentTime(9999);
+          setCurrentTime(roundTime);
+        }
+        else if (currentTime >= 1 && currentTime < 6) {
+          playBeep();
         }
       }, [currentTime])
 
