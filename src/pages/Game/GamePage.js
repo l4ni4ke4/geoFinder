@@ -1,3 +1,4 @@
+
 import React from "react";
 import {useState,useEffect} from "react";
 import "./GamePage.css";
@@ -17,6 +18,42 @@ export default function GamePage() {
 
   // Game Logic Variables
 
+  // timer related variables
+
+  // get this from lobby later
+  const roundTime = 60;
+
+
+  const [currentTime,setCurrentTime] = useState(roundTime);
+  const [isCountdownStart,setIsCountdownStart] = useState(false);
+/* 
+  // triggered during first initialization of game page.
+  useEffect(()=>{
+    if (isCountdownStart) {
+      setCurrentTime(roundTime-1);
+    }
+  }, [countdownStart]) */
+
+
+  // triggered each time when time changes -1 seconds.
+
+  useEffect(()=>{
+    let interval = 0
+    if(isCountdownStart){
+      setCurrentTime(roundTime);
+      interval = setInterval(()=>{
+        setCurrentTime(prevTime => prevTime-1);
+      },1000)
+    }
+    else{
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+
+  },[isCountdownStart])
+
+
   // true streetview locations
   const [trueLocations, setTrueLocations] = useState([]);
 
@@ -25,8 +62,12 @@ export default function GamePage() {
 
   // get random X (number of total rounds above) location when GamePage loads set it to trueLocations
   async function generateRandomStreetView() {
+    await randomStreetView.setParameters({
+      type:'sv'
+    });
     Promise.resolve(await randomStreetView.getRandomLocations(rounds)).then(value => {
       const returnedLocations = value.map((location) => {
+        console.log(location);
         return {lat: location[0], lng: location[1]}
       })
       setTrueLocations(returnedLocations);
@@ -79,7 +120,8 @@ export default function GamePage() {
         setShowView = {setShowView}
         currentRound={currentRound}
         rounds={rounds}
-        totalScore={totalScore}/>
+        totalScore={totalScore}
+        setIsCountdownStart={setIsCountdownStart}/>
     }
     {
       showView === "RoundPlay" && 
@@ -91,7 +133,11 @@ export default function GamePage() {
         distances={distances}
         setDistances ={setDistances}
         scores={scores}
-        setScores={setScores}/>
+        setScores={setScores}
+        currentTime= {currentTime}
+        setIsCountdownStart={setIsCountdownStart}
+        setCurrentTime={setCurrentTime}
+        />
     }
     {
       showView === "RoundEnd" && 
