@@ -16,6 +16,9 @@
     }
   
 .play-game-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
      grid-area: 4 / 1 / 5 / 9;
      /* border: solid aqua 2px; */
      z-index: 2;
@@ -40,5 +43,20 @@
     margin-right: 20px;
     margin-bottom: 20px;
     padding:5px;
+    width: 23.3%;
     /* float:right; */
+}
+
+.game-info-section {
+    z-index: 3;
+    margin-right: 1%;
+}
+
+#timeRemainingButton {
+    z-index: 3;
+}
+
+#roundInfoButton {
+    z-index: 3;
+    margin-right: 10px;
 }
