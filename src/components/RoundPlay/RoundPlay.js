@@ -71,7 +71,7 @@ function calculateDistance(lat1,
     };
 
 function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocations,distances,setDistances,scores,setScores,
-  currentTime,setIsCountdownStart,setCurrentTime,roundTime,setRoundTime}) {
+  currentTime,setIsCountdownStart,setCurrentTime,roundTime,setRoundTime, currentRound, rounds}) {
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
 
@@ -135,7 +135,7 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
         <div class= "play-game-container">
         {/* Google Map  */}
         <div class='map-view'>
-        <h1>{currentTime}</h1>
+        {/* <h1>{currentTime}</h1> */}
           <GoogleMap mapContainerStyle={mapContainerStyle} 
             zoom ={1} 
             center={mapCenter} 
@@ -165,9 +165,13 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
         </div>
   
         <div class = "play-game-footer">
+          <div class= "game-info-section">
+            <button type="button" id = "roundInfoButton" class="btn btn-light" disabled >Round: {currentRound+1}/{rounds} </button>
+            <button type="button" id = "timeRemainingButton" class="btn btn-light" disabled >Time: {currentTime} </button>
+          </div>
+          <button type="button" id = "guessBtn" class="btn btn-primary" onClick={handleGuessButton} disabled={!mapClicked}>Guess</button>
         </div>
-        <button type="button" id = "guessBtn" class="btn btn-primary" onClick={handleGuessButton} disabled={!mapClicked}>Guess</button>
-  
+          
       </div>
     )
 }
