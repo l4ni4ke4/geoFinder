@@ -8,7 +8,7 @@ import {
 
 import "./RoundPlay.css";
 
-import {calculatePoints} from "../../utils/GameUtils"
+import {getScore} from "../../utils/GameUtils"
 
 import markerDefault from "../../assets/markerDefault.svg"
 
@@ -92,7 +92,7 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
     setDistances(distances=>[...distances,roundDistance]);
 
     // calculate score
-    let roundScore = calculatePoints(roundDistance,12000);
+    let roundScore = getScore(roundDistance,12000);
     // push round score to scores array
     setScores(scores =>[...scores,roundScore]);
     
