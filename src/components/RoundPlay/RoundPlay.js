@@ -41,6 +41,11 @@ const mapContainerStyle= {
 
   const streetviewOptions = {
     disableDefaultUI: true,
+    panControl: true,
+    panControlOptions: {
+      position: window.google.maps.ControlPosition.BOTTOM_LEFT
+    },
+    linksControl: false,
     clickToGo: true,
     showRoadLabels: false,
     visible: true,
