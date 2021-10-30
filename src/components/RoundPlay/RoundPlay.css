@@ -60,3 +60,17 @@
     z-index: 3;
     margin-right: 10px;
 }
+
+.gm-iv-container {
+    display: none;
+}
+
+.gmnoprint a, .gmnoprint span, .gm-style-cc {
+    display:none;
+}
+.gmnoprint div {
+    background:none !important;
+}
+#GMapsID div div a div img{
+    display:none;
+}
