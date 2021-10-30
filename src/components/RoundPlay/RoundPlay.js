@@ -67,13 +67,19 @@ function calculateDistance(lat1,
     };
 
 function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocations,distances,setDistances,scores,setScores,
-  currentTime,setIsCountdownStart}) {
+  currentTime,setIsCountdownStart,setCurrentTime}) {
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
 
   const [mapClicked, setMapClicked] = useState(false);
 
-
+  //Checks if current time is smaller than 0
+  useEffect(() => {
+        if(currentTime < 0){
+          handleGuessButton();
+          setCurrentTime(9999);
+        }
+      }, [currentTime])
 
 // Handle the clicks on map (set the marker position on click)
   const handleMapClick = (event) =>{
@@ -86,16 +92,27 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
   const handleGuessButton = () =>{
     // turn off the timer
     setIsCountdownStart(false);
-    //push the guessed position into guessedPositions variable
-    setGuessedLocations(guessedLocations => [...guessedLocations,markerPosition]);
+    let roundDistance;
+    let roundScore;
+    if(markerPosition != null){
+      //push the guessed position into guessedPositions variable
+      setGuessedLocations(guessedLocations => [...guessedLocations,markerPosition]);
 
-    // calculate distance
-    let roundDistance = calculateDistance(trueLocation.lat,markerPosition.lat,trueLocation.lng,markerPosition.lng);
+      // calculate distance
+      roundDistance = calculateDistance(trueLocation.lat,markerPosition.lat,trueLocation.lng,markerPosition.lng);
+
+      // calculate score
+      roundScore = getScore(roundDistance,12000);
+    }else{
+      //push the guessed position into guessedPositions variable
+      setGuessedLocations(guessedLocations => [...guessedLocations,markerPosition]);
+      roundDistance = "aa";
+      roundScore = 0;
+    }
+
     // push round distance to distances array
     setDistances(distances=>[...distances,roundDistance]);
-
-    // calculate score
-    let roundScore = getScore(roundDistance,12000);
+    
     // push round score to scores array
     setScores(scores =>[...scores,roundScore]);
     

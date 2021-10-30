@@ -136,6 +136,7 @@ export default function GamePage() {
         setScores={setScores}
         currentTime= {currentTime}
         setIsCountdownStart={setIsCountdownStart}
+        setCurrentTime={setCurrentTime}
         />
     }
     {
