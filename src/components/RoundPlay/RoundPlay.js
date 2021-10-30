@@ -66,7 +66,8 @@ function calculateDistance(lat1,
         return(c * r);
     };
 
-function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocations,distances,setDistances,scores,setScores}) {
+function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocations,distances,setDistances,scores,setScores,
+  currentTime,setIsCountdownStart}) {
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
 
@@ -83,6 +84,8 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
 
   // calculate the distance and show alert when guess button is clicked
   const handleGuessButton = () =>{
+    // turn off the timer
+    setIsCountdownStart(false);
     //push the guessed position into guessedPositions variable
     setGuessedLocations(guessedLocations => [...guessedLocations,markerPosition]);
 
@@ -105,6 +108,7 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
         <div class= "play-game-container">
         {/* Google Map  */}
         <div class='map-view'>
+        <h1>{currentTime}</h1>
           <GoogleMap mapContainerStyle={mapContainerStyle} 
             zoom ={1} 
             center={mapCenter} 
