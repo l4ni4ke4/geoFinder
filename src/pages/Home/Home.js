@@ -10,9 +10,9 @@ export default function Home() {
 
     const history = useHistory();
     const singlePlayerButtonClick = () =>{ 
-        let path = `/Game`; 
+        let path = `/GameLobby`; 
         history.push(path);
-      }
+    }
 
     return (<>
 

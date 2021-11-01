@@ -25,12 +25,8 @@ function App() {
               <Game/>
             </Route>
 
-            <Route path="/">
-              <Home />
-            </Route>
-
             <Route path="/GameLobby">
-              <GameLobby />
+              <GameLobby/>
             </Route>
 
             <Route path="/Auth">
@@ -51,6 +47,10 @@ function App() {
 
             <Route path="/RoundEnd">
               <RoundEnd />
+            </Route>
+            
+            <Route path="/">
+              <Home/>
             </Route>
 
           </Switch>
