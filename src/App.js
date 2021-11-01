@@ -26,11 +26,11 @@ function App() {
             </Route>
 
             <Route path="/">
-              <Home />
+              <Home/>
             </Route>
 
             <Route path="/GameLobby">
-              <GameLobby />
+              <GameLobby/>
             </Route>
 
             <Route path="/Auth">
