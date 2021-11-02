@@ -1,0 +1,65 @@
+.game-settings-main-container {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    justify-content: block;
+    border: 3px solid #494646;
+    border-radius: 5px;
+    margin-top: 5%;
+}
+
+.main-header {
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+    font-weight: bolder;
+}
+
+.game-rules-container {
+    width: 80%;
+    justify-content: center;
+    border: 2px solid #494646;
+    border-radius: 5px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.game-rules-header {
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.game-rules-row-1 {
+    justify-content:space-around;
+}
+
+.game-rules-row-2 {
+    margin-top: 5%;
+    margin-left: 7%;
+}
+
+.game-rules-row-3 {
+    margin-top: 2%;
+    margin-left: 7%;
+}
+
+#timeLimitRange, #numberOfRoundsRange {
+    margin-left: 2%;
+}
+
+.game-settings-footer {
+    display:flex;
+    margin-top: 5%;
+    margin-bottom: 3%;
+    justify-content:end;
+}
+
+#exitButton {
+    margin-right: 3%;
+}
+
+#startGameButton {
+    margin-right: 10%;
+}

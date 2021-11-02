@@ -5,6 +5,7 @@ import "./GamePage.css";
 import {
   useJsApiLoader
 } from "@react-google-maps/api";
+import {useLocation} from 'react-router-dom';
 
 import randomStreetView from 'random-streetview';
 
@@ -16,13 +17,17 @@ const libraries = ["places", "drawing"]; // for useLoadScript below
 
 export default function GamePage() {
 
+  const location = useLocation();
+
+  const variables = JSON.parse(location.state);
+
   // Game Logic Variables
 
   // timer related variables
 
   // get this from lobby later
-  const [roundTime, setRoundTime] = useState(120);
-  const [currentTime, setCurrentTime] = useState(roundTime);
+  //const [roundTime, setRoundTime] = useState(120);
+  const [currentTime, setCurrentTime] = useState(location.state.roundTime);
   const [isCountdownStart, setIsCountdownStart] = useState(false);
 
   // current Round at any time (starts from zero because its easier to associate it with the index of related variables this way)
@@ -43,7 +48,7 @@ export default function GamePage() {
   const [trueLocations, setTrueLocations] = useState([]);
 
   // total rounds (should come from lobby settings later)
-  const rounds = 5;
+  const rounds = variables.numberOfRounds;
 
   // Add google scripts
   const { isLoaded, loadError } = useJsApiLoader({
@@ -56,7 +61,7 @@ export default function GamePage() {
   useEffect(() => {
     let interval = 0
     if (isCountdownStart) {
-      setCurrentTime(roundTime);
+      setCurrentTime(variables.roundTime);
       interval = setInterval(() => {
         setCurrentTime(prevTime => prevTime - 1);
       }, 1000)
@@ -87,6 +92,7 @@ export default function GamePage() {
   };
 
   useEffect(() => {
+    console.log(variables);
     generateRandomStreetView();
   }, []);
 
@@ -134,10 +140,13 @@ export default function GamePage() {
           currentTime={currentTime}
           setIsCountdownStart={setIsCountdownStart}
           setCurrentTime={setCurrentTime}
-          roundTime={roundTime}
-          setRoundTime={setRoundTime}
+          roundTime={variables.roundTime}
+          setRoundTime={variables.setRoundTime}
           currentRound={currentRound}
           rounds={rounds}
+          enableMovement={variables.enableMovement}
+          enablePan={variables.enablePan}
+          enableZooming={variables.enableZooming}
         />
       }
       {
