@@ -37,19 +37,19 @@ export default function GameLobbyPage() {
                 </div>
                 <div class="row game-rules-row-1">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value={enableZooming} onChange={(event) => setEnableZooming(event.target.value)} id="flexCheckZooming"></input>
+                        <input class="form-check-input" type="checkbox" id="flexCheckZooming" onChange={(event) => setEnableZooming(event.target.checked)} defaultChecked={enableZooming} ></input>
                         <label class="form-check-label" for="flexCheckZooming">
                             Zooming
                         </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value={enablePan} onChange={(event) => setEnablePan(event.target.value)}id="flexCheckCameraPan"></input>
+                    {/* <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="flexCheckCameraPan" onChange={(event) => setEnablePan(event.target.checked)} defaultChecked={enablePan}></input>
                         <label class="form-check-label" for="flexCheckCameraPan">
                             Camera Pan
                         </label>
-                    </div>
+                    </div> */}
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value={enableMovement} onChange={(event) => setEnableMovement(event.target.value)} id="flexCheckMovement"></input>
+                        <input class="form-check-input" type="checkbox" id="flexCheckMovement" onChange={(event) => setEnableMovement(event.target.checked)} defaultChecked={enableMovement} ></input>
                         <label class="form-check-label" for="flexCheckMovement">
                             Movement
                         </label>

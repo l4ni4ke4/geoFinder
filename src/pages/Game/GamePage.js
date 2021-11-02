@@ -25,8 +25,6 @@ export default function GamePage() {
 
   // timer related variables
 
-  // get this from lobby later
-  //const [roundTime, setRoundTime] = useState(120);
   const [currentTime, setCurrentTime] = useState(location.state.roundTime);
   const [isCountdownStart, setIsCountdownStart] = useState(false);
 
