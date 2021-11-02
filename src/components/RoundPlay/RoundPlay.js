@@ -72,20 +72,19 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
 
   const streetviewOptions = {
     disableDefaultUI: true,
-    panControl: enablePan,
+    panControl: true,
     panControlOptions: {
       position: window.google.maps.ControlPosition.BOTTOM_LEFT
     },
-    panoramaOptions: {
-      clickToGo: enableMovement,
-      scrollwheel: enableMovement
-    },
+    clickToGo: enableMovement,
+    scrollwheel: enableZooming,
     linksControl: false,
-    zoomControl: enableZooming,
     showRoadLabels: false,
     visible: true,
+    enableCloseButton: false
   };
 
+  // keyboard handler for enabling/disabling key presses according to game rules
   window.addEventListener(
     'keydown',
     (event) => {
@@ -118,7 +117,7 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
         }
       }
       // if camera Pan is unallowed in game rules, below code disables keyboard inputs
-      if (!enablePan) {
+      /* if (!enablePan) {
         if (
           (event.key === 'ArrowLeft' || // Pan left
           event.key === 'ArrowRight') // Pan right
@@ -129,18 +128,13 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
         ) {
           event.stopPropagation();
         }
-      }
+      } */
     },
     { capture: true },
   );
 
   // last 5 seconds alert beep sound
   const [playBeep] = useSound(BeepSound);
-
-  //on load
-  useEffect(() => {
-    console.log(enableMovement);
-  }, []);
 
   //Checks if current time is smaller than 0
   useEffect(() => {
