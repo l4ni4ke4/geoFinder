@@ -38,18 +38,6 @@ const mapContainerStyle= {
       width: "100%",
       height: "100%"
   }
-
-  const streetviewOptions = {
-    disableDefaultUI: true,
-    panControl: true,
-    panControlOptions: {
-      position: window.google.maps.ControlPosition.BOTTOM_LEFT
-    },
-    linksControl: false,
-    clickToGo: true,
-    showRoadLabels: false,
-    visible: true,
-  };
   
 
 
@@ -76,14 +64,83 @@ function calculateDistance(lat1,
     };
 
 function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocations,distances,setDistances,scores,setScores,
-  currentTime,setIsCountdownStart,setCurrentTime,roundTime,setRoundTime, currentRound, rounds}) {
+  currentTime,setIsCountdownStart,setCurrentTime,roundTime,setRoundTime, currentRound, rounds, enableMovement, enablePan, enableZooming}) {
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
 
   const [mapClicked, setMapClicked] = useState(false);
 
+  const streetviewOptions = {
+    disableDefaultUI: true,
+    panControl: enablePan,
+    panControlOptions: {
+      position: window.google.maps.ControlPosition.BOTTOM_LEFT
+    },
+    panoramaOptions: {
+      clickToGo: enableMovement,
+      scrollwheel: enableMovement
+    },
+    linksControl: false,
+    zoomControl: enableZooming,
+    showRoadLabels: false,
+    visible: true,
+  };
+
+  window.addEventListener(
+    'keydown',
+    (event) => {
+      // if zooming is unallowed in game rules, below code disables keyboard inputs
+      if (!enableZooming) {
+        if (
+          (event.key === '+' || // Zoom in
+          event.key === '=' || // Zoom in
+          event.key === '_' || // Zoom out
+          event.key === '-') // Zoom out
+          &&
+          !event.metaKey &&
+          !event.altKey &&
+          !event.ctrlKey
+        ) {
+          event.stopPropagation();
+        }
+      }
+      // if movement is unallowed in game rules, below code disables keyboard inputs
+      if (!enableMovement) {
+        if (
+          (event.key === 'ArrowUp' || // Move forward
+          event.key === 'ArrowDown') // Move backward
+          &&
+          !event.metaKey &&
+          !event.altKey &&
+          !event.ctrlKey
+        ) {
+          event.stopPropagation();
+        }
+      }
+      // if camera Pan is unallowed in game rules, below code disables keyboard inputs
+      if (!enablePan) {
+        if (
+          (event.key === 'ArrowLeft' || // Pan left
+          event.key === 'ArrowRight') // Pan right
+          &&
+          !event.metaKey &&
+          !event.altKey &&
+          !event.ctrlKey
+        ) {
+          event.stopPropagation();
+        }
+      }
+    },
+    { capture: true },
+  );
+
   // last 5 seconds alert beep sound
   const [playBeep] = useSound(BeepSound);
+
+  //on load
+  useEffect(() => {
+    console.log(enableMovement);
+  }, []);
 
   //Checks if current time is smaller than 0
   useEffect(() => {

@@ -1,4 +1,8 @@
 body {
+    font-family: 'Lato', sans-serif;
+}
+
+.home-main {
     background-image: url('../../assets/pisa-tower.png');
 }
 

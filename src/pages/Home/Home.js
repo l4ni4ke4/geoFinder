@@ -36,52 +36,55 @@ export default function Home() {
 
         </nav>
 
-        <div class="row" style={{ marginTop: "8%", paddingLeft: "5%" }}>
-            <div class="col-sm-3">
-                <div class="card" style={{ height: "400px", backgroundColor: "gainsboro", color: "white", cursor: "pointer" }} onClick={singlePlayerButtonClick}>
-                    <h1 style={{ textAlign: "center" }}>Single Player</h1>
-                    <img src={singlePlayerLogo} width="80%" class="sp-image image"></img>
+        <div className="home-main" style={{ height:"680px" }}>
+            <div class="row" style={{ paddingTop:"9%", paddingLeft: "11%", width:"fitContent" }}>
+                <div class="col-sm-3">
+                    <div class="card" style={{ height: "400px", backgroundColor: "gainsboro", color: "white", cursor: "pointer" }} onClick={singlePlayerButtonClick}>
+                        <h1 style={{ textAlign: "center" }}>Single Player</h1>
+                        <img src={singlePlayerLogo} width="80%" class="sp-image image"></img>
+                    </div>
                 </div>
-            </div>
-            <div class="col-sm-3" style={{ marginLeft: "2%" }}>
-                <div class="card" style={{ height: "400px", backgroundColor: "gainsboro", color: "white", cursor: "pointer" }}>
-                    <h1 style={{ textAlign: "center" }}>Multiplayer</h1>
-                    <img src={multiPlayerLogo} width="80%" class="mp-image image"></img>
+                <div class="col-sm-3" style={{ marginLeft: "2%" }}>
+                    <div class="card" style={{ height: "400px", backgroundColor: "gainsboro", color: "white", cursor: "pointer" }}>
+                        <h1 style={{ textAlign: "center" }}>Multiplayer</h1>
+                        <img src={multiPlayerLogo} width="80%" class="mp-image image"></img>
+                    </div>
                 </div>
-            </div>
-            <div class="col-sm-4" style={{ marginLeft: "10%", marginTop: "-3%" }}>
-                <div class="card" style={{ height: "500px" }}>
-                    <h2 style={{ textAlign: "center" }}>Scoreboard</h2>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Username</th>
-                                <th scope="col">Points</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Berat</td>
-                                <td>3000</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Serdar</td>
-                                <td>2000</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>Arman</td>
-                                <td>1000</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="col-sm-4" style={{ marginLeft: "10%", marginTop: "-3%" }}>
+                    <div class="card" style={{ height: "500px" }}>
+                        <h2 style={{ textAlign: "center" }}>Scoreboard</h2>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Points</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Berat</td>
+                                    <td>3000</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Serdar</td>
+                                    <td>2000</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>Arman</td>
+                                    <td>1000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
 
+            </div>
         </div>
+        
 
 
 
