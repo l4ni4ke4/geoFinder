@@ -5,7 +5,7 @@ import { useSound } from "use-sound";
 import {
     GoogleMap,
     StreetViewPanorama,
-    Marker,
+    Marker
   } from "@react-google-maps/api";
 
 import "./RoundPlay.css";
@@ -15,6 +15,7 @@ import {getScore} from "../../utils/GameUtils"
 import markerDefault from "../../assets/markerDefault.svg"
 
 import BeepSound from "../../assets/beep.mp3";
+
 
 // Map variables
 
@@ -65,6 +66,7 @@ function calculateDistance(lat1,
 
 function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocations,distances,setDistances,scores,setScores,
   currentTime,setIsCountdownStart,setCurrentTime,roundTime,setRoundTime, currentRound, rounds, enableMovement, enablePan, enableZooming}) {
+
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
 
@@ -85,53 +87,53 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
   };
 
   // keyboard handler for enabling/disabling key presses according to game rules
-  window.addEventListener(
-    'keydown',
-    (event) => {
-      // if zooming is unallowed in game rules, below code disables keyboard inputs
-      if (!enableZooming) {
-        if (
-          (event.key === '+' || // Zoom in
-          event.key === '=' || // Zoom in
-          event.key === '_' || // Zoom out
-          event.key === '-') // Zoom out
-          &&
-          !event.metaKey &&
-          !event.altKey &&
-          !event.ctrlKey
-        ) {
-          event.stopPropagation();
-        }
-      }
-      // if movement is unallowed in game rules, below code disables keyboard inputs
-      if (!enableMovement) {
-        if (
-          (event.key === 'ArrowUp' || // Move forward
-          event.key === 'ArrowDown') // Move backward
-          &&
-          !event.metaKey &&
-          !event.altKey &&
-          !event.ctrlKey
-        ) {
-          event.stopPropagation();
-        }
-      }
-      // if camera Pan is unallowed in game rules, below code disables keyboard inputs
-      /* if (!enablePan) {
-        if (
-          (event.key === 'ArrowLeft' || // Pan left
-          event.key === 'ArrowRight') // Pan right
-          &&
-          !event.metaKey &&
-          !event.altKey &&
-          !event.ctrlKey
-        ) {
-          event.stopPropagation();
-        }
-      } */
-    },
-    { capture: true },
-  );
+  // window.addEventListener(
+  //   'keydown',
+  //   (event) => {
+  //     // if zooming is unallowed in game rules, below code disables keyboard inputs
+  //     if (!enableZooming) {
+  //       if (
+  //         (event.key === '+' || // Zoom in
+  //         event.key === '=' || // Zoom in
+  //         event.key === '_' || // Zoom out
+  //         event.key === '-') // Zoom out
+  //         &&
+  //         !event.metaKey &&
+  //         !event.altKey &&
+  //         !event.ctrlKey
+  //       ) {
+  //         event.stopPropagation();
+  //       }
+  //     }
+  //     // if movement is unallowed in game rules, below code disables keyboard inputs
+  //     if (!enableMovement) {
+  //       if (
+  //         (event.key === 'ArrowUp' || // Move forward
+  //         event.key === 'ArrowDown') // Move backward
+  //         &&
+  //         !event.metaKey &&
+  //         !event.altKey &&
+  //         !event.ctrlKey
+  //       ) {
+  //         event.stopPropagation();
+  //       }
+  //     }
+  //     // if camera Pan is unallowed in game rules, below code disables keyboard inputs
+  //     /* if (!enablePan) {
+  //       if (
+  //         (event.key === 'ArrowLeft' || // Pan left
+  //         event.key === 'ArrowRight') // Pan right
+  //         &&
+  //         !event.metaKey &&
+  //         !event.altKey &&
+  //         !event.ctrlKey
+  //       ) {
+  //         event.stopPropagation();
+  //       }
+  //     } */
+  //   },
+  //   { capture: true },
+  // );
 
   // last 5 seconds alert beep sound
   const [playBeep] = useSound(BeepSound);
@@ -185,6 +187,7 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
     setShowView("RoundEnd");
   
      };
+    
 
 
     return(
@@ -209,7 +212,6 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
           <GoogleMap
             mapContainerStyle={streetviewContainerStyle}
             zoom={14}
-            
           >
             <StreetViewPanorama
                   position={trueLocation}
@@ -230,6 +232,7 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
           
       </div>
     )
+    
 }
 
 

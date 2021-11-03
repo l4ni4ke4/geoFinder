@@ -17,9 +17,15 @@ const libraries = ["places", "drawing"]; // for useLoadScript below
 
 export default function GamePage() {
 
+  // Add google scripts
+    const { isLoaded, loadError } = useJsApiLoader({
+      googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+      libraries
+    }); 
+
   const location = useLocation();
 
-  const variables = JSON.parse(location.state);
+  const variables = location.state;
 
   // Game Logic Variables
 
@@ -48,11 +54,7 @@ export default function GamePage() {
   // total rounds (should come from lobby settings later)
   const rounds = variables.numberOfRounds;
 
-  // Add google scripts
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries
-  });
+
 
 
   //round time countdown handler
@@ -81,11 +83,9 @@ export default function GamePage() {
     });
     Promise.resolve(await randomStreetView.getRandomLocations(rounds)).then(value => {
       const returnedLocations = value.map((location) => {
-        console.log(location);
         return { lat: location[0], lng: location[1] }
       })
       setTrueLocations(returnedLocations);
-      console.log(trueLocations);
     });
   };
 
@@ -94,7 +94,7 @@ export default function GamePage() {
     generateRandomStreetView();
   }, []);
 
-
+    
   // for loading errors
   if (loadError) return "Error loading maps";
   if (!isLoaded) return "Loading maps";
