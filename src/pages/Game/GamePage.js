@@ -3,7 +3,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "./GamePage.css";
 import {
-  useJsApiLoader
+  useLoadScript
 } from "@react-google-maps/api";
 import {useLocation} from 'react-router-dom';
 
@@ -12,16 +12,11 @@ import randomStreetView from 'random-streetview';
 import RoundPlay from "../../components/RoundPlay/RoundPlay";
 import RoundEnd from "../../components/RoundEnd/RoundEnd";
 import RoundStart from "../../components/RoundStart/RoundStart";
+import GameResults from "../../components/GameResults/GameResults";
 
 const libraries = ["places", "drawing"]; // for useLoadScript below
 
 export default function GamePage() {
-
-  // Add google scripts
-    const { isLoaded, loadError } = useJsApiLoader({
-      googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-      libraries
-    }); 
 
   const location = useLocation();
 
@@ -95,9 +90,15 @@ export default function GamePage() {
   }, []);
 
     
+    // Add google scripts
+    const { isLoaded, loadError } = useLoadScript({
+      googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+      libraries
+    });
+
   // for loading errors
-  if (loadError) return "Error loading maps";
-  if (!isLoaded) return "Loading maps";
+    if (loadError) return "Error loading maps";
+    if (!isLoaded) return "Loading maps";
 
 
   // if rounds are finished, render end game page
@@ -105,7 +106,7 @@ export default function GamePage() {
     // Burda EndGame componenti render olcak
     return (<>
       {
-        // GameResults 
+        <GameResults/>
       }
 
     </>
