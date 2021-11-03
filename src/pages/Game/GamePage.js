@@ -106,7 +106,11 @@ export default function GamePage() {
     // Burda EndGame componenti render olcak
     return (<>
       {
-        <GameResults/>
+        <GameResults
+        guessedLocations={guessedLocations}
+        trueLocations = {trueLocations}
+        totalScore={totalScore}
+        scores={scores}/>
       }
 
     </>
