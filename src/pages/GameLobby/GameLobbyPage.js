@@ -12,12 +12,13 @@ export default function GameLobbyPage() {
     const [roundTime, setRoundTime] = useState(60);
     const [numberOfRounds, setNumberOfRounds] = useState(5);
 
-    let data = {enablePan: enablePan, enableMovement: enableMovement, enableZooming: enableZooming, roundTime: roundTime, numberOfRounds: numberOfRounds, setRoundTime: setRoundTime, setNumberOfRounds: setNumberOfRounds};
+    let data = {enablePan: enablePan, enableMovement: enableMovement, enableZooming: enableZooming,
+        roundTime: roundTime, numberOfRounds: numberOfRounds};
     const history = useHistory();
     const startGameButtonClick = () => {
         history.push({
             pathname: '/Game',
-            state: JSON.stringify(data),
+            state: data,
         })
     }
     const exitButtonClick = () => {
