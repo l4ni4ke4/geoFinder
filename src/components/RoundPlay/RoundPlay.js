@@ -7,12 +7,13 @@ import {
     StreetViewPanorama,
     Marker
   } from "@react-google-maps/api";
-
+import {useLocation} from 'react-router-dom';
 import "./RoundPlay.css";
 
-import {getScore} from "../../utils/GameUtils"
+import {getScore,calculateDistance} from "../../utils/GameUtils"
 
 import markerDefault from "../../assets/markerDefault.svg"
+import RoundTimer from "../RoundTimer";
 
 import BeepSound from "../../assets/beep.mp3";
 
@@ -42,35 +43,19 @@ const mapContainerStyle= {
   
 
 
-// distance formula for given longtitute and latitude
-function calculateDistance(lat1,
-                     lat2, lon1, lon2)
-    {
-        lon1 =  lon1 * Math.PI / 180;
-        lon2 = lon2 * Math.PI / 180;
-        lat1 = lat1 * Math.PI / 180;
-        lat2 = lat2 * Math.PI / 180;
-   
-        let dlon = lon2 - lon1;
-        let dlat = lat2 - lat1;
-        let a = Math.pow(Math.sin(dlat / 2), 2)
-                 + Math.cos(lat1) * Math.cos(lat2)
-                 * Math.pow(Math.sin(dlon / 2),2);   
-        let c = 2 * Math.asin(Math.sqrt(a));
-        // Radius of earth in kilometers R = 6371. Use 3956
-        // for miles
-        let r = 6371;
-        // calculate the result
-        return(c * r);
-    };
 
 function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocations,distances,setDistances,scores,setScores,
-  currentTime,setIsCountdownStart,setCurrentTime,roundTime,setRoundTime, currentRound, rounds, enableMovement, enablePan, enableZooming}) {
+  roundTime,setRoundTime, currentRound, rounds, enableMovement, enablePan, enableZooming}) {
 
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
 
+  const [isTimerActive, setIsTimerActive] = useState(false);
+
   const [mapClicked, setMapClicked] = useState(false);
+
+  const location = useLocation();
+  const [currentTime, setCurrentTime] = useState(location.state.roundTime);
 
   const streetviewOptions = {
     disableDefaultUI: true,
@@ -87,67 +72,74 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
   };
 
   // keyboard handler for enabling/disabling key presses according to game rules
-  // window.addEventListener(
-  //   'keydown',
-  //   (event) => {
-  //     // if zooming is unallowed in game rules, below code disables keyboard inputs
-  //     if (!enableZooming) {
-  //       if (
-  //         (event.key === '+' || // Zoom in
-  //         event.key === '=' || // Zoom in
-  //         event.key === '_' || // Zoom out
-  //         event.key === '-') // Zoom out
-  //         &&
-  //         !event.metaKey &&
-  //         !event.altKey &&
-  //         !event.ctrlKey
-  //       ) {
-  //         event.stopPropagation();
-  //       }
-  //     }
-  //     // if movement is unallowed in game rules, below code disables keyboard inputs
-  //     if (!enableMovement) {
-  //       if (
-  //         (event.key === 'ArrowUp' || // Move forward
-  //         event.key === 'ArrowDown') // Move backward
-  //         &&
-  //         !event.metaKey &&
-  //         !event.altKey &&
-  //         !event.ctrlKey
-  //       ) {
-  //         event.stopPropagation();
-  //       }
-  //     }
-  //     // if camera Pan is unallowed in game rules, below code disables keyboard inputs
-  //     /* if (!enablePan) {
-  //       if (
-  //         (event.key === 'ArrowLeft' || // Pan left
-  //         event.key === 'ArrowRight') // Pan right
-  //         &&
-  //         !event.metaKey &&
-  //         !event.altKey &&
-  //         !event.ctrlKey
-  //       ) {
-  //         event.stopPropagation();
-  //       }
-  //     } */
-  //   },
-  //   { capture: true },
-  // );
+  window.addEventListener(
+    'keydown',
+    (event) => {
+      // if zooming is unallowed in game rules, below code disables keyboard inputs
+      if (!enableZooming) {
+        if (
+          (event.key === '+' || // Zoom in
+          event.key === '=' || // Zoom in
+          event.key === '_' || // Zoom out
+          event.key === '-') // Zoom out
+          &&
+          !event.metaKey &&
+          !event.altKey &&
+          !event.ctrlKey
+        ) {
+          event.stopPropagation();
+        }
+      }
+      // if movement is unallowed in game rules, below code disables keyboard inputs
+      if (!enableMovement) {
+        if (
+          (event.key === 'ArrowUp' || // Move forward
+          event.key === 'ArrowDown') // Move backward
+          &&
+          !event.metaKey &&
+          !event.altKey &&
+          !event.ctrlKey
+        ) {
+          event.stopPropagation();
+        }
+      }
+      // if camera Pan is unallowed in game rules, below code disables keyboard inputs
+      /* if (!enablePan) {
+        if (
+          (event.key === 'ArrowLeft' || // Pan left
+          event.key === 'ArrowRight') // Pan right
+          &&
+          !event.metaKey &&
+          !event.altKey &&
+          !event.ctrlKey
+        ) {
+          event.stopPropagation();
+        }
+      } */
+    },
+    { capture: true },
+  );
 
   // last 5 seconds alert beep sound
   const [playBeep] = useSound(BeepSound);
+
+  //Activate the timer on inital render
+  useEffect(()=>{
+    setIsTimerActive(true);
+  },[])
 
   //Checks if current time is smaller than 0
   useEffect(() => {
         if(currentTime < 1){
           handleGuessButton();
+          setIsTimerActive(false);
           setCurrentTime(roundTime);
         }
         else if (currentTime >= 1 && currentTime < 6) {
           playBeep();
         }
       }, [currentTime])
+
 
 // Handle the clicks on map (set the marker position on click)
   const handleMapClick = (event) =>{
@@ -159,7 +151,7 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
   // calculate the distance and show alert when guess button is clicked
   const handleGuessButton = () =>{
     // turn off the timer
-    setIsCountdownStart(false);
+    setIsTimerActive(false);
     let roundDistance;
     let roundScore;
     if(markerPosition != null){
@@ -225,7 +217,10 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
         <div class = "play-game-footer">
           <div class= "game-info-section">
             <button type="button" id = "roundInfoButton" class="btn btn-light" disabled >Round: {currentRound+1}/{rounds} </button>
-            <button type="button" id = "timeRemainingButton" class="btn btn-light" disabled >Time: {currentTime} </button>
+            <RoundTimer isTimerActive={isTimerActive}
+                        roundTime ={roundTime}
+                        currentTime={currentTime}
+                        setCurrentTime={setCurrentTime}/> 
           </div>
           <button type="button" id = "guessBtn" class="btn btn-primary" onClick={handleGuessButton} disabled={!mapClicked}>Guess</button>
         </div>

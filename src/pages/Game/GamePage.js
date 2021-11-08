@@ -14,7 +14,7 @@ import RoundEnd from "../../components/RoundEnd/RoundEnd";
 import RoundStart from "../../components/RoundStart/RoundStart";
 import GameResults from "../../components/GameResults/GameResults";
 
-const libraries = ["places", "drawing"]; // for useLoadScript below
+const libraries = ["places"]; // for useLoadScript below
 
 export default function GamePage() {
 
@@ -23,11 +23,6 @@ export default function GamePage() {
   const variables = location.state;
 
   // Game Logic Variables
-
-  // timer related variables
-
-  const [currentTime, setCurrentTime] = useState(location.state.roundTime);
-  const [isCountdownStart, setIsCountdownStart] = useState(false);
 
   // current Round at any time (starts from zero because its easier to associate it with the index of related variables this way)
   const [currentRound, setCurrentRound] = useState(0);
@@ -49,28 +44,6 @@ export default function GamePage() {
   // total rounds (should come from lobby settings later)
   const rounds = variables.numberOfRounds;
 
-
-
-
-  //round time countdown handler
-  useEffect(() => {
-    let interval = 0
-    if (isCountdownStart) {
-      setCurrentTime(variables.roundTime);
-      interval = setInterval(() => {
-        setCurrentTime(prevTime => prevTime - 1);
-      }, 1000)
-    }
-    else {
-      clearInterval(interval);
-    }
-
-    return () => clearInterval(interval);
-
-  }, [isCountdownStart])
-
-
-
   // get random X (number of total rounds above) location when GamePage loads set it to trueLocations
   async function generateRandomStreetView() {
     await randomStreetView.setParameters({
@@ -85,7 +58,6 @@ export default function GamePage() {
   };
 
   useEffect(() => {
-    console.log(variables);
     generateRandomStreetView();
   }, []);
 
@@ -99,7 +71,6 @@ export default function GamePage() {
   // for loading errors
     if (loadError) return "Error loading maps";
     if (!isLoaded) return "Loading maps";
-
 
   // if rounds are finished, render end game page
   if (currentRound >= rounds) {
@@ -126,8 +97,7 @@ export default function GamePage() {
           setShowView={setShowView}
           currentRound={currentRound}
           rounds={rounds}
-          totalScore={totalScore}
-          setIsCountdownStart={setIsCountdownStart} />
+          totalScore={totalScore} />
       }
       {
         showView === "RoundPlay" &&
@@ -140,9 +110,6 @@ export default function GamePage() {
           setDistances={setDistances}
           scores={scores}
           setScores={setScores}
-          currentTime={currentTime}
-          setIsCountdownStart={setIsCountdownStart}
-          setCurrentTime={setCurrentTime}
           roundTime={variables.roundTime}
           setRoundTime={variables.setRoundTime}
           currentRound={currentRound}

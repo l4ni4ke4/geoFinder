@@ -3,10 +3,9 @@ import "./RoundStart.css"
 import playIcon from '../../assets/play_icon.png';
 import exitIcon from '../../assets/exit_icon.png';
 
-function RoundStart({setShowView,currentRound,rounds,totalScore,setIsCountdownStart}){
+function RoundStart({setShowView,currentRound,rounds,totalScore}){
 
     const handleStartRoundBtn = () => {
-        setIsCountdownStart(true);
         setShowView("RoundPlay");
     }
 
