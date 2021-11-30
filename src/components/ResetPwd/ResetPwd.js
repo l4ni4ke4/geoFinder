@@ -11,7 +11,7 @@ function Reset() {
   const history = useHistory();
   useEffect(() => {
     if (loading) return;
-    if (user) history.replace("/Dashboard");
+    if (user) history.replace("/test");
   }, [user, loading]);
   return (
     <div className="reset">

@@ -22,7 +22,7 @@ export default function GameLobbyPage() {
         })
     }
     const exitButtonClick = () => {
-        let path = '/';
+        let path = '/Home';
         history.push(path);
     }
 

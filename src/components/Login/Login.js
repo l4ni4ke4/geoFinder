@@ -14,32 +14,36 @@ function Login() {
             // maybe trigger a loading screen
             return;
         }
-        if (user) history.replace("/Dashboard");
+        if (user) history.replace("/Home");
     }, [user, loading]);
     return (
-        <div className="login">
-            <div className="login__container">
+        <div class="container main-container">
+            <div class="header header-container">
+                <h1 class="headerText">Welcome to Geofinder!</h1>
+                <h4 class="headerText2">Login to start the adventure!</h4>
+            </div>
+            <div class="container login-container">
                 <input
                     type="text"
-                    className="login__textBox"
+                    class="textBox-login"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="E-mail Address"
                 />
                 <input
                     type="password"
-                    className="login__textBox"
+                    class="textBox-login"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                 />
                 <button
-                    className="login__btn"
+                    class="btn-login"
                     onClick={() => signInWithEmailAndPassword(email, password)}
                 >
                     Login
                 </button>
-                <button className="login__btn login__google" onClick={signInWithGoogle}>
+                <button class="btn-login google-login" onClick={signInWithGoogle}>
                     Login with Google
                 </button>
                 <div>

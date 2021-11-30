@@ -2,17 +2,42 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useEffect, useState } from "react";
 import singlePlayerLogo from '../../assets/one-player-game-symbol.png';
 import multiPlayerLogo from '../../assets/network_icon.png';
 import './Home.css';
+import { auth, db, logout } from "../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Home() {
 
     const history = useHistory();
+    const [name, setName] = useState("");
+    const [user, loading, error] = useAuthState(auth);
+    
+    const fetchUserName = async () => {
+        try {
+          const query = await db
+            .collection("users")
+            .where("uid", "==", user?.uid)
+            .get();
+          const data = await query.docs[0].data();
+          setName(data.name);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
     const singlePlayerButtonClick = () =>{ 
         let path = `/GameLobby`; 
         history.push(path);
     }
+    
+    useEffect(() => {
+        fetchUserName();
+        if (loading) return;
+        if (!user) return history.replace("/");
+    }, [user, loading])
 
     return (<>
 
@@ -25,11 +50,12 @@ export default function Home() {
                 <button type="button" class="btn btn-primary">Game History</button>
                 <div class="dropdown">
                     <button class="btn btn-secondary btn-profile dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Profile
+                        {name}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="/accountDetails">Account Details</a>
                         <a class="dropdown-item" href="/stats">Stats</a>
+                        <a class="dropdown-item" href="/" onClick={logout}>Logout</a>
                     </div>
                 </div>
             </div>

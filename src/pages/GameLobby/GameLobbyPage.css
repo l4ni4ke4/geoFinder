@@ -5,7 +5,8 @@
     justify-content: block;
     border: 3px solid #494646;
     border-radius: 5px;
-    margin-top: 5%;
+    margin-top: 10%;
+    background-color: white;
 }
 
 .main-header {

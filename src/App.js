@@ -2,7 +2,8 @@ import React from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 import "./App.css"
 import Game from "./pages/Game/GamePage"
@@ -25,11 +26,10 @@ function App() {
       <Router>
         <div>
           <Switch>
-
             <Route exact path="/" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/reset" component={ResetPwd} />
-            <Route exact path="/Dashboard" component={Dashboard} />
+            <Route exact path="/test" component={Dashboard} />
 
             <Route path="/Game">
               <Game/>
