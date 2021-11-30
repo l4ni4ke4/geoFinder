@@ -14,12 +14,20 @@ import Profile from "./pages/Profile/ProfilePage"
 import RoundStart from "./components/RoundStart/RoundStart"
 import RoundEnd from "./components/RoundEnd/RoundEnd"
 
+import Login from "./components/Login/Login"
+import Register from "./components/Register/Register"
+import ResetPwd from "./components/ResetPwd/ResetPwd"
+
 function App() {
 
   return (
       <Router>
         <div>
           <Switch>
+
+            <Route exact path="/" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/reset" component={ResetPwd} />
 
             <Route path="/Game">
               <Game/>
@@ -49,7 +57,7 @@ function App() {
               <RoundEnd />
             </Route>
             
-            <Route path="/">
+            <Route path="/Home">
               <Home/>
             </Route>
 
