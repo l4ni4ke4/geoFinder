@@ -17,6 +17,7 @@ import RoundEnd from "./components/RoundEnd/RoundEnd"
 import Login from "./components/Login/Login"
 import Register from "./components/Register/Register"
 import ResetPwd from "./components/ResetPwd/ResetPwd"
+import Dashboard from "./components/Dashboard/Dashboard"
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
             <Route exact path="/" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/reset" component={ResetPwd} />
+            <Route exact path="/Dashboard" component={Dashboard} />
 
             <Route path="/Game">
               <Game/>
