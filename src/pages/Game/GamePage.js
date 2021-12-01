@@ -2,9 +2,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import "./GamePage.css";
-import {
+/* import {
   useLoadScript
-} from "@react-google-maps/api";
+} from "@react-google-maps/api"; */
 import {useLocation} from 'react-router-dom';
 
 import randomStreetView from 'random-streetview';
@@ -13,8 +13,9 @@ import RoundPlay from "../../components/RoundPlay/RoundPlay";
 import RoundEnd from "../../components/RoundEnd/RoundEnd";
 import RoundStart from "../../components/RoundStart/RoundStart";
 import GameResults from "../../components/GameResults/GameResults";
+import { useJsApiLoader } from "@react-google-maps/api";
 
-const libraries = ["places"]; // for useLoadScript below
+const libraries = ["places", "drawing"]; // for useLoadScript below
 
 export default function GamePage() {
 
@@ -45,11 +46,12 @@ export default function GamePage() {
   const rounds = variables.numberOfRounds;
 
   // get random X (number of total rounds above) location when GamePage loads set it to trueLocations
-  async function generateRandomStreetView() {
-    await randomStreetView.setParameters({
-      type: 'sv'
+  function generateRandomStreetView() {
+    randomStreetView.setParameters({
+      polygon: [[[42,26], [36,26], [36,36], [37,45], [40,45], [42,42]]]
     });
-    Promise.resolve(await randomStreetView.getRandomLocations(rounds)).then(value => {
+    randomStreetView.getRandomLocations(rounds).then(value => {
+      console.log(value);
       const returnedLocations = value.map((location) => {
         return { lat: location[0], lng: location[1] }
       })
@@ -57,20 +59,27 @@ export default function GamePage() {
     });
   };
 
-  useEffect(() => {
-    generateRandomStreetView();
-  }, []);
+  // Add google scripts
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries: libraries
+  });
 
-    
-    // Add google scripts
-    const { isLoaded, loadError } = useLoadScript({
-      googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-      libraries
-    });
+  useEffect(() => {
+    if (currentRound === 0 && isLoaded) {
+      generateRandomStreetView();
+    }
+  }, [isLoaded]);
+
+  /* useEffect(() => {
+    if (currentRound === 0) {
+      generateRandomStreetView();
+    }
+  }, []); */
 
   // for loading errors
-    if (loadError) return "Error loading maps";
-    if (!isLoaded) return "Loading maps";
+  if (loadError) return "Error loading maps";
+  if (!isLoaded) return "Loading maps";
 
   // if rounds are finished, render end game page
   if (currentRound >= rounds) {
