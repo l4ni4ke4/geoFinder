@@ -2,9 +2,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import "./GamePage.css";
-/* import {
-  useLoadScript
-} from "@react-google-maps/api"; */
+import {
+  useJsApiLoader
+} from "@react-google-maps/api";
 import {useLocation} from 'react-router-dom';
 
 import randomStreetView from 'random-streetview';
@@ -13,11 +13,15 @@ import RoundPlay from "../../components/RoundPlay/RoundPlay";
 import RoundEnd from "../../components/RoundEnd/RoundEnd";
 import RoundStart from "../../components/RoundStart/RoundStart";
 import GameResults from "../../components/GameResults/GameResults";
-import { useJsApiLoader } from "@react-google-maps/api";
 
-const libraries = ["places", "drawing"]; // for useLoadScript below
+const libraries = ["geometry"];
 
 export default function GamePage() {
+
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries: libraries
+  });
 
   const location = useLocation();
 
@@ -46,11 +50,14 @@ export default function GamePage() {
   const rounds = variables.numberOfRounds;
 
   // get random X (number of total rounds above) location when GamePage loads set it to trueLocations
-  function generateRandomStreetView() {
-    randomStreetView.setParameters({
-      polygon: [[[42,26], [36,26], [36,36], [37,45], [40,45], [42,42]]]
-    });
-    randomStreetView.getRandomLocations(rounds).then(value => {
+  async function generateRandomStreetView() {
+    Promise.resolve(randomStreetView.setParameters({
+      type: "sv",
+      /* polygon: [[[42,26], [36,26], [36,36], [37,45], [40,45], [42,42]]] */
+      //google: "https://maps.googleapis.com/maps/api/js?key=%REACT_APP_GOOGLE_MAPS_API_KEY%&libraries=geometry"
+      
+    }));
+    Promise.resolve(randomStreetView.getRandomLocations(rounds)).then(value => {
       console.log(value);
       const returnedLocations = value.map((location) => {
         return { lat: location[0], lng: location[1] }
@@ -59,27 +66,29 @@ export default function GamePage() {
     });
   };
 
-  // Add google scripts
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: libraries
-  });
+  
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (currentRound === 0 && isLoaded) {
       generateRandomStreetView();
     }
-  }, [isLoaded]);
+  }, [isLoaded]); */
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (currentRound === 0) {
       generateRandomStreetView();
     }
-  }, []); */
+  }, []);
+
+  // Add google scripts
+  /* const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries: libraries
+  }); */
 
   // for loading errors
-  if (loadError) return "Error loading maps";
-  if (!isLoaded) return "Loading maps";
+    if (loadError) return "Error loading maps";
+    if (!isLoaded) return "Loading maps";
 
   // if rounds are finished, render end game page
   if (currentRound >= rounds) {
