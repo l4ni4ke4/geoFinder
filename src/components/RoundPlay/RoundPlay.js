@@ -5,8 +5,7 @@ import { useSound } from "use-sound";
 import {
     GoogleMap,
     StreetViewPanorama,
-    Marker,
-    useJsApiLoader
+    Marker
   } from "@react-google-maps/api";
 import {useLocation} from 'react-router-dom';
 import "./RoundPlay.css";
@@ -18,8 +17,8 @@ import RoundTimer from "../RoundTimer";
 
 import BeepSound from "../../assets/beep.mp3";
 
-const libraries = ["places", "drawing"];
-// Map variables
+const libraries = ["places", "geometry", "drawing"]; // for useLoadScript below
+
 
 const mapContainerStyle= {
     width: "100%",
@@ -49,7 +48,7 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
 
     /* const { isLoaded, loadError } = useJsApiLoader({
       googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-      libraries
+      libraries: libraries
     }); */
 
   // Marker's position
@@ -191,7 +190,7 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
 
      
     
-     /* if (loadError) return "Error loading maps";
+    /* if (loadError) return "Error loading maps";
     if (!isLoaded) return "Loading maps"; */
 
     return(
