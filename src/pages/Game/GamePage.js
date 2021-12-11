@@ -2,9 +2,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import "./GamePage.css";
-import {
-  useJsApiLoader
-} from "@react-google-maps/api";
+
 import {useLocation} from 'react-router-dom';
 
 import randomStreetView from 'random-streetview';
@@ -14,14 +12,15 @@ import RoundEnd from "../../components/RoundEnd/RoundEnd";
 import RoundStart from "../../components/RoundStart/RoundStart";
 import GameResults from "../../components/GameResults/GameResults";
 
-const libraries = ["geometry"];
+import {useLoadScript,useJsApiLoader} from '@react-google-maps/api';
+
 
 export default function GamePage() {
 
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: libraries
-  });
+  const { isLoaded } = useLoadScript({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+  })
 
   const location = useLocation();
 
@@ -50,45 +49,36 @@ export default function GamePage() {
   const rounds = variables.numberOfRounds;
 
   // get random X (number of total rounds above) location when GamePage loads set it to trueLocations
-  async function generateRandomStreetView() {
-    Promise.resolve(randomStreetView.setParameters({
-      type: "sv",
-      /* polygon: [[[42,26], [36,26], [36,36], [37,45], [40,45], [42,42]]] */
-      //google: "https://maps.googleapis.com/maps/api/js?key=%REACT_APP_GOOGLE_MAPS_API_KEY%&libraries=geometry"
+  // async function generateRandomStreetView() {
+  //   Promise.resolve(randomStreetView.setParameters({
+  //     type: "sv",
+  //     /* polygon: [[[42,26], [36,26], [36,36], [37,45], [40,45], [42,42]]] */
+  //     // google: window.google
+  //     enableCaching: false
       
-    }));
-    Promise.resolve(randomStreetView.getRandomLocations(rounds)).then(value => {
-      console.log(value);
-      const returnedLocations = value.map((location) => {
-        return { lat: location[0], lng: location[1] }
-      })
-      setTrueLocations(returnedLocations);
-    });
-  };
+  //   }));
+  //   Promise.resolve(randomStreetView.getRandomLocations(rounds)).then(value => {
+  //     const returnedLocations = value.map((location) => {
+  //       return { lat: location[0], lng: location[1] }
+  //     })
+  //     setTrueLocations(returnedLocations);
+  //   });
+  // };
 
   
 
-  /* useEffect(() => {
-    if (currentRound === 0 && isLoaded) {
-      generateRandomStreetView();
-    }
-  }, [isLoaded]); */
 
-  useEffect(() => {
-    if (currentRound === 0) {
-      generateRandomStreetView();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (currentRound === 0) {
+  //   }
+  // }, []);
 
-  // Add google scripts
-  /* const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: libraries
-  }); */
 
-  // for loading errors
-    if (loadError) return "Error loading maps";
-    if (!isLoaded) return "Loading maps";
+  useEffect(()=>{
+    setTrueLocations(variables.fetchedLocations);
+    },[])
+
+
 
   // if rounds are finished, render end game page
   if (currentRound >= rounds) {
@@ -99,7 +89,8 @@ export default function GamePage() {
         guessedLocations={guessedLocations}
         trueLocations = {trueLocations}
         totalScore={totalScore}
-        scores={scores}/>
+        scores={scores}
+        isLoaded={isLoaded}/>
       }
 
     </>
@@ -135,6 +126,7 @@ export default function GamePage() {
           enableMovement={variables.enableMovement}
           enablePan={variables.enablePan}
           enableZooming={variables.enableZooming}
+          isLoaded = {isLoaded}
         />
       }
       {
@@ -149,7 +141,8 @@ export default function GamePage() {
           totalScore={totalScore}
           setTotalScore={setTotalScore}
           guessedLocations={guessedLocations}
-          trueLocations={trueLocations} />
+          trueLocations={trueLocations}
+          isLoaded ={isLoaded} />
       }
 
     </>);

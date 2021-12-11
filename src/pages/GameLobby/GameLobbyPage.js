@@ -1,5 +1,6 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import { useHistory } from "react-router-dom";
+import { generateRandomStreetViewLocations } from "../../utils/GameUtils";
 import "./GameLobbyPage.css";
 
 export default function GameLobbyPage() {
@@ -12,13 +13,20 @@ export default function GameLobbyPage() {
     const [roundTime, setRoundTime] = useState(60);
     const [numberOfRounds, setNumberOfRounds] = useState(5);
 
-    let data = {enablePan: enablePan, enableMovement: enableMovement, enableZooming: enableZooming,
-        roundTime: roundTime, numberOfRounds: numberOfRounds};
     const history = useHistory();
     const startGameButtonClick = () => {
-        history.push({
-            pathname: '/Game',
-            state: data,
+
+        // fetch locations when start button is clicked then send options to gamepage
+        generateRandomStreetViewLocations(numberOfRounds).then((fetchedLocations)=>{
+
+            let data = {enablePan: enablePan, enableMovement: enableMovement, enableZooming: enableZooming,
+                roundTime: roundTime, numberOfRounds: numberOfRounds, fetchedLocations:fetchedLocations};
+    
+            history.push({
+                pathname: '/Game',
+                state: data,
+            })
+            
         })
     }
     const exitButtonClick = () => {
