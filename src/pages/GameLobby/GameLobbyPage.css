@@ -5,8 +5,9 @@
     justify-content: block;
     border: 3px solid #494646;
     border-radius: 5px;
-    margin-top: 10%;
+    margin-top: 5%;
     background-color: white;
+    
 }
 
 .main-header {
@@ -63,4 +64,20 @@
 
 #startGameButton {
     margin-right: 10%;
+}
+
+.country-selection-container{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #494646;
+    width: 80%;
+    border-radius: 5px;
+    margin: 0 auto;
+    align-items: center;
+    max-height: 12rem;
+    overflow: auto;
+}
+.country-selection-container .form-check{
+    display:inline-block;
+    width: 95%;
 }

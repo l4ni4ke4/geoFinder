@@ -1,4 +1,5 @@
 import randomStreetView from 'random-streetview';
+import { translateToPolygonsFromCodes } from './PolygonUtils';
 
 /*  *
     * Gets the score for given distance
@@ -40,11 +41,11 @@ return(c * r);
 };
 
 
-export async function generateRandomStreetViewLocations(rounds) {
+export async function generateRandomStreetViewLocations(rounds,countryCodeArray) {
 
       await randomStreetView.setParameters({
         type: "sv",
-        /* polygon: [[[42,26], [36,26], [36,36], [37,45], [40,45], [42,42]]] */
+        polygon: translateToPolygonsFromCodes(countryCodeArray)
         // google: 
         
       });
