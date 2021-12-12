@@ -41,14 +41,23 @@ return(c * r);
 };
 
 
-export async function generateRandomStreetViewLocations(rounds,countryCodeArray) {
+export async function generateRandomStreetViewLocations(rounds,countryCodeArray,enablePolygon) {
 
-      await randomStreetView.setParameters({
-        type: "sv",
-        polygon: translateToPolygonsFromCodes(countryCodeArray)
-        // google: 
-        
-      });
+    if(enablePolygon){
+        await randomStreetView.setParameters({
+            type: "sv",
+            polygon: translateToPolygonsFromCodes(countryCodeArray)
+            // google: 
+            
+          });
+    }
+    else {
+        await randomStreetView.setParameters({
+            type: "sv",    
+          });
+    }
+
+
       const value = await randomStreetView.getRandomLocations(rounds);
       const returnedLocations = value.map((location) => {
           return { lat: location[0], lng: location[1] }
