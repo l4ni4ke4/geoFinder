@@ -24,6 +24,9 @@ export default function GameLobbyPage() {
             )
         })))
     );
+
+    const [worldIsChecked,setWorldIsChecked] = useState(false);
+    const [disableAllCountries,setDisableAllCountries] = useState(false);
     /********/
 
     const history = useHistory();
@@ -34,7 +37,7 @@ export default function GameLobbyPage() {
 
 
         // fetch locations when start button is clicked then send options to gamepage
-        generateRandomStreetViewLocations(numberOfRounds,countryCodeArray).then((fetchedLocations)=>{
+        generateRandomStreetViewLocations(numberOfRounds,countryCodeArray,!worldIsChecked).then((fetchedLocations)=>{
 
             let data = {enablePan: enablePan, enableMovement: enableMovement, enableZooming: enableZooming,
                 roundTime: roundTime, numberOfRounds: numberOfRounds, fetchedLocations:fetchedLocations};
@@ -58,7 +61,7 @@ export default function GameLobbyPage() {
             return(
                 <div class="form-check" key={code}>
                     <input class="form-check-input" type="checkbox" id={code} checked={countryCheckboxListIsChecked[code]}
-                            onChange={handleCountryCheckbox}/>
+                            onChange={handleCountryCheckbox} disabled={disableAllCountries}/>
                     <label class="form-check-label" for={code}>
                         {country}
                     </label>
@@ -69,7 +72,19 @@ export default function GameLobbyPage() {
 
     const handleCountryCheckbox = (event) =>{
         setCountryCheckboxListIsSelected({...countryCheckboxListIsChecked,[event.target.id]:!countryCheckboxListIsChecked[event.target.id]});
-        console.log();
+    }
+
+    const handleWorldCheck = () => {
+        setWorldIsChecked(!worldIsChecked);
+        setCountryCheckboxListIsSelected(
+            Object.assign(...(
+                countryList.map((countryObj)=>{
+                    return(
+                       { [countryObj.code]:false }
+                    )
+                })))
+        );
+        setDisableAllCountries(!disableAllCountries);
     }
     
 
@@ -114,6 +129,13 @@ export default function GameLobbyPage() {
             </div>
             <div className="country-selection-container">
                 <h4>Country Selection</h4>
+                <div class="form-check" key="world">
+                    <input class="form-check-input" type="checkbox" id="world" checked={worldIsChecked}
+                            onChange={handleWorldCheck}/>
+                    <label class="form-check-label" for="world">
+                        World
+                    </label>
+                </div>
                 <CountryCheckboxList/>
             </div>
             <div class="footer game-settings-footer">
