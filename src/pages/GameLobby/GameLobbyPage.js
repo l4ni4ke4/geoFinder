@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from "react";
 import { useHistory } from "react-router-dom";
 import { generateRandomStreetViewLocations } from "../../utils/GameUtils";
+import { getAllCountries } from "../../utils/Polygons";
 import "./GameLobbyPage.css";
 
 export default function GameLobbyPage() {
@@ -13,11 +14,27 @@ export default function GameLobbyPage() {
     const [roundTime, setRoundTime] = useState(60);
     const [numberOfRounds, setNumberOfRounds] = useState(5);
 
+    /*country selection related variables */
+    const countryList = getAllCountries();
+    const [countryCheckboxListIsChecked,setCountryCheckboxListIsSelected] = useState(
+        Object.assign(...(
+        countryList.map((countryObj)=>{
+            return(
+               { [countryObj.code]:false }
+            )
+        })))
+    );
+    /********/
+
     const history = useHistory();
     const startGameButtonClick = () => {
 
+        // get a country code array from selected countries
+        const countryCodeArray = Object.keys(countryCheckboxListIsChecked).filter(key=>countryCheckboxListIsChecked[key] === true);
+
+
         // fetch locations when start button is clicked then send options to gamepage
-        generateRandomStreetViewLocations(numberOfRounds).then((fetchedLocations)=>{
+        generateRandomStreetViewLocations(numberOfRounds,countryCodeArray).then((fetchedLocations)=>{
 
             let data = {enablePan: enablePan, enableMovement: enableMovement, enableZooming: enableZooming,
                 roundTime: roundTime, numberOfRounds: numberOfRounds, fetchedLocations:fetchedLocations};
@@ -33,6 +50,28 @@ export default function GameLobbyPage() {
         let path = '/Home';
         history.push(path);
     }
+
+    //render country checkboxes
+    const CountryCheckboxList = () =>{
+        return countryList.map((countryObj) => {
+            const {country,code} = countryObj;
+            return(
+                <div class="form-check" key={code}>
+                    <input class="form-check-input" type="checkbox" id={code} checked={countryCheckboxListIsChecked[code]}
+                            onChange={handleCountryCheckbox}/>
+                    <label class="form-check-label" for={code}>
+                        {country}
+                    </label>
+                </div>
+            )
+        })
+    }
+
+    const handleCountryCheckbox = (event) =>{
+        setCountryCheckboxListIsSelected({...countryCheckboxListIsChecked,[event.target.id]:!countryCheckboxListIsChecked[event.target.id]});
+        console.log();
+    }
+    
 
     return (<>
 
@@ -72,6 +111,10 @@ export default function GameLobbyPage() {
                     <label for="customRange1" class="form-round-range-label">Number of Rounds: {numberOfRounds} </label>
                     <input type="range" class="form-range" id="numberOfRoundsRange" min="3" max="10" step="1" defaultValue={numberOfRounds} onChange={ (event) => setNumberOfRounds(event.target.value)} value={numberOfRounds}></input>
                 </div>
+            </div>
+            <div className="country-selection-container">
+                <h4>Country Selection</h4>
+                <CountryCheckboxList/>
             </div>
             <div class="footer game-settings-footer">
                 <button type="button" id = "exitButton" class="btn btn-danger" onClick={exitButtonClick}>Back to Main Menu</button>
