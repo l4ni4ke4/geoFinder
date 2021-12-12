@@ -2,54 +2,23 @@ import React from "react";
 import {useState,useEffect} from "react";
 
 import { useSound } from "use-sound";
-import {
-    GoogleMap,
-    StreetViewPanorama,
-    Marker
-  } from "@react-google-maps/api";
+
 import {useLocation} from 'react-router-dom';
 import "./RoundPlay.css";
 
 import {getScore,calculateDistance} from "../../utils/GameUtils"
 
-import markerDefault from "../../assets/markerDefault.svg"
+
 import RoundTimer from "../RoundTimer";
 
 import BeepSound from "../../assets/beep.mp3";
+import RoundPlayMap from "./RoundPlayMap";
+import RoundPlayStreetview from "./RoundPlayStreetview";
 
-const libraries = ["places", "geometry", "drawing"]; // for useLoadScript below
-
-
-const mapContainerStyle= {
-    width: "100%",
-    height: "100%",
-  };
-
-  const mapCenter = {
-    lat:36,
-    lng:-16
-  };
-  
-  const mapOptions = {
-    disableDefaultUI: true,
-  };
-
-
-// Streetview variables
-  const streetviewContainerStyle = {
-      width: "100%",
-      height: "100%"
-  }
-  
 
 
 function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocations,distances,setDistances,scores,setScores,
-  roundTime,setRoundTime, currentRound, rounds, enableMovement, enablePan, enableZooming}) {
-
-    /* const { isLoaded, loadError } = useJsApiLoader({
-      googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-      libraries: libraries
-    }); */
+  roundTime,setRoundTime, currentRound, rounds, enableMovement, enablePan, enableZooming,isLoaded}) {
 
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
@@ -190,39 +159,23 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
 
      
     
-    /* if (loadError) return "Error loading maps";
-    if (!isLoaded) return "Loading maps"; */
 
     return(
         <div class= "play-game-container">
         {/* Google Map  */}
         <div class='map-view'>
-        {/* <h1>{currentTime}</h1> */}
-          <GoogleMap mapContainerStyle={mapContainerStyle} 
-            zoom ={1} 
-            center={mapCenter} 
-            options ={mapOptions}
-            onClick={handleMapClick}>
-              <Marker position = {markerPosition}
-                      icon={{url:markerDefault,
-                             scaledSize: new window.google.maps.Size(35,35)
-                             }}/>
-          </GoogleMap>
+          <RoundPlayMap markerPosition={markerPosition}
+                        handleMapClick = {handleMapClick}
+                        isLoaded = {isLoaded}
+          />
         </div>
     
         {/* Streetview */}
         <div class='street-view'>
-          <GoogleMap
-            mapContainerStyle={streetviewContainerStyle}
-            zoom={14}
-          >
-            <StreetViewPanorama
-                  position={trueLocation}
-                  visible={true}
-                  options={streetviewOptions}
-
-                />
-          </GoogleMap>
+          <RoundPlayStreetview trueLocation = {trueLocation}
+                               streetviewOptions = {streetviewOptions}
+                               isLoaded = {isLoaded}
+          />
         </div>
   
         <div class = "play-game-footer">

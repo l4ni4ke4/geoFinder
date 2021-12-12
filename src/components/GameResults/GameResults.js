@@ -8,7 +8,7 @@ import markerDefault from "../../assets/markerDefault.svg";
 import markerTrueLocation from "../../assets/markerTrueLocation.svg";
 import { useHistory } from "react-router-dom";
 
-export default function GameResults({guessedLocations,trueLocations,totalScore,scores}){
+export default function GameResults({guessedLocations,trueLocations,totalScore,scores, isLoaded}){
 
 const lineSymbol = {
         path: "M 0,-1 0,1",
@@ -42,8 +42,9 @@ const handleRestart = ()=>{
     return(
         <div className= 'gameresults-container'>
             <div className ='gameresults-mapview'>
+            {isLoaded &&
             <GoogleMap mapContainerStyle={mapContainerStyle} 
-                        zoom ={4} 
+                        zoom ={3} 
                         center={{lat:50,lng:50}} 
                         options ={mapOptions}>
                        
@@ -80,7 +81,7 @@ const handleRestart = ()=>{
                                 )
                             })
                         }
-                    </GoogleMap>
+                    </GoogleMap>}
             </div>
             <div className='gameresults-summary'>
                 <section className='final-leaderboard'>

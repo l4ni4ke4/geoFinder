@@ -1,3 +1,5 @@
+import randomStreetView from 'random-streetview';
+
 /*  *
     * Gets the score for given distance
     * @param {number} distance - Distance(in km) of user's guess from the location.
@@ -36,3 +38,20 @@ let r = 6371;
 // calculate the result
 return(c * r);
 };
+
+
+export async function generateRandomStreetViewLocations(rounds) {
+
+      await randomStreetView.setParameters({
+        type: "sv",
+        /* polygon: [[[42,26], [36,26], [36,36], [37,45], [40,45], [42,42]]] */
+        // google: 
+        
+      });
+      const value = await randomStreetView.getRandomLocations(rounds);
+      const returnedLocations = value.map((location) => {
+          return { lat: location[0], lng: location[1] }
+        });
+      return returnedLocations;
+      };
+    

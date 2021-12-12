@@ -9,10 +9,6 @@ const libraries = ["geometry"]; // for useLoadScript below
 
 function RoundStart({setShowView,currentRound,rounds,totalScore}){
 
-    /* const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-        libraries: libraries
-      }); */
 
     const handleStartRoundBtn = () => {
         setShowView("RoundPlay");
