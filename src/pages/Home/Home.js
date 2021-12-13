@@ -59,14 +59,12 @@ export default function Home() {
             return;
         }
         else {
-            querySnapshot.forEach((doc) => {/* 
-                console.log("id: " + doc.id);
-                console.log("invite: " + `${inviteCodeInput}`) */
+            querySnapshot.forEach((doc) => {
                 if (doc.id === inviteCodeInput) {
                     lobbyFound = true;
-                    alert("A lobby with given code found. Good Luck!");
+                    alert("A lobby with given code found.");
 
-                    const queryResult2 = query(collection(db, "games/" + doc.id + "/gameusers", where("userId", "==", `${userDocumentId}`)));
+                    const queryResult2 = query(collection(db, "games/" + doc.id + "/gameusers"), where("userId", "==", `${userDocumentId}`));
                     const querySnapshot2 = getDocs(queryResult2);
                     if (querySnapshot2.empty) {
                         setDoc(doc(db, "games/" + gameId + "/gameusers", `${userDocumentId}`), {
@@ -79,8 +77,31 @@ export default function Home() {
                         return;
                     }
                     else {
-                        alert("either you're already in this lobby or the lobby isn't active anymore.");
-                        return;
+                        const queryResult3 = query(collection(db, "games/" + doc.id), where("isActive", "==", true));
+                        const querySnapshot3 = getDocs(queryResult3);
+                        if (querySnapshot3.empty) {
+                            alert("The lobby isn't active anymore. Enter another invite code or create new lobby.");
+                            return;
+                        }
+                        else {
+                            const queryResult4 = query(collection(db, "games/" + doc.id + "/gameusers"), where("isHost", "==", true));
+                            const querySnapshot4 = getDocs(queryResult4);
+                            if(querySnapshot4.empty) {
+                                setDoc(doc(db, "games/" + gameId + "/gameusers", `${userDocumentId}`), {
+                                    isHost: false,
+                                    isReady: false
+                                });
+                            }
+                            else {
+                                setDoc(doc(db, "games/" + gameId + "/gameusers", `${userDocumentId}`), {
+                                    isHost: true,
+                                    isReady: false
+                                });
+                            }
+                            let path = `/MultiplayerGameLobby`;
+                            history.push(path);
+                            return;
+                        }
                     }
                 }
             });
@@ -168,7 +189,7 @@ export default function Home() {
                     </Modal.Header>
                     <Modal.Body>
                         <a>Enter lobby link: </a>
-                        <input type="text" id="lobbyLinkTextBox" name="fname" onChange={(event) => setInviteCodeInput(event.target.value)} onInput={(event) => setInviteCodeInput(event.target.value)}></input>
+                        <input type="text" id="lobbyLinkTextBox" name="fname" value={inviteCodeInput} onChange={(event) => setInviteCodeInput(event.target.value)} onInput={(event) => setInviteCodeInput(event.target.value)}></input>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="success" onClick={createNewMultiplayerLobbyButtonClick}>
