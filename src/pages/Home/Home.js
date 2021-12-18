@@ -17,6 +17,7 @@ export default function Home() {
 
     const history = useHistory();
     const [name, setName] = useState("");
+    const [multiPlayerGameCode, setMultiPlayerGameCode] = useState(0);
     const [user, loading, error] = useAuthState(auth);
     const [userDocumentId, setUserDocumentId] = useState(0);
 
@@ -41,18 +42,31 @@ export default function Home() {
         }
       };
 
-    const singlePlayerButtonClick = () =>{ 
+    async function singlePlayerButtonClick () { 
             /* gameId = generateRandomGameCode();
-            await setDoc(doc(db, "games", gameId), {
-            })  */
+            await setDoc(doc(db, "games", `${gameId}`), {
+                inviteCode: gameId,
+                isActive: false,
+                isStarted: false,
+                isMultiplayer: false,
+                noRounds: 5,
+                timeLimit: 60,
+            });
+            await setDoc(doc(db, "games/" + gameId + "/gameusers", `${userDocumentId}`), {
+                userId: db.doc('users/' + userDocumentId)
+            });
+
+            let data = {gameId:gameId, userId: userDocumentId}; */
     
-            let path = `/GameLobby`; 
-            history.push(path);
+            history.push({
+                pathname: `/GameLobby`/* ,
+                state: data */
+            });
     }
 
     async function joinExistingMultiplayerLobbyButtonClick() {
         var lobbyFound = false;
-        const queryResult = await query(collection(db, "games"), where("isActive", "==", true));
+        const queryResult = await query(collection(db, "games"), where("isActive", "==", true), where("isMultiplayer", "==", true));
         const querySnapshot = await getDocs(queryResult);
         if (querySnapshot.empty) {
             alert("no active lobbies. check next time!");
@@ -73,11 +87,14 @@ export default function Home() {
                             isReady: false
                         });
                         let path = `/MultiplayerGameLobby`;
-                        history.push(path);
+                        history.push({
+                            pathname: path,
+                            state: [{ gameId: multiPlayerGameCode }]
+                        });
                         return;
                     }
                     else {
-                        const queryResult3 = query(collection(db, "games/" + doc.id), where("isActive", "==", true));
+                        const queryResult3 = query(collection(db, "games"), where("isActive", "==", true), where("inviteCode", "==", doc.id));
                         const querySnapshot3 = getDocs(queryResult3);
                         if (querySnapshot3.empty) {
                             alert("The lobby isn't active anymore. Enter another invite code or create new lobby.");
@@ -99,7 +116,10 @@ export default function Home() {
                                 });
                             }
                             let path = `/MultiplayerGameLobby`;
-                            history.push(path);
+                            history.push({
+                                pathname: path,
+                                state: [{ gameId: multiPlayerGameCode }]
+                            });
                             return;
                         }
                     }
@@ -122,11 +142,13 @@ export default function Home() {
     //user will be the host, hence have permission to change game settings and rules.
     async function createNewMultiplayerLobbyButtonClick () {
         gameId = generateRandomGameCode();
+        setMultiPlayerGameCode(gameId);
         console.log(gameId);
         console.log(userDocumentId);
         await setDoc(doc(db, "games", `${gameId}`), {
             inviteCode: gameId,
             isActive: true,
+            isInLobby: true,
             isMultiplayer: true,
             noRounds: 5,
             timeLimit: 60,
@@ -137,7 +159,10 @@ export default function Home() {
             isReady: false
         });
         let path = `/MultiplayerGameLobby`;
-        history.push(path);
+        history.push({
+            pathname: path,
+            state: [{ gameId: multiPlayerGameCode }]
+        });
     }
     
     useEffect(() => {
@@ -157,7 +182,7 @@ export default function Home() {
                 <button type="button" class="btn btn-primary">Game History</button>
                 <div class="dropdown">
                     <button class="btn btn-secondary btn-profile dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {name}
+                        {localStorage.getItem("userName")}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="/accountDetails">Account Details</a>

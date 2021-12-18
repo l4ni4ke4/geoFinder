@@ -46,7 +46,20 @@ const signInWithGoogle = async() => {
 // function to sign in via email password
 const signInWithEmailAndPassword = async (email, password) => {
     try {
-      await auth.signInWithEmailAndPassword(email, password);
+      const res = await auth.signInWithEmailAndPassword(email, password);
+      const user = res.user; /*
+      localStorage.setItem("userId", user.uid); */
+      try {
+        const query = await db
+          .collection("users")
+          .where("uid", "==", user?.uid)
+          .get();
+        const data = await query.docs[0].data();
+        localStorage.setItem("userId", query.docs[0].id);
+        localStorage.setItem("userName", data.name);
+      } catch (err) {
+        console.error(err);
+      }
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -85,6 +98,8 @@ const sendPasswordResetEmail = async (email) => {
 // logout handler function
 const logout = () => {
     auth.signOut();
+    localStorage.setItem("userId", "");
+    localStorage.setItem("userName", "");
 };
 
 export {

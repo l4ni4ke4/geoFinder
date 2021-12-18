@@ -7,8 +7,15 @@ import "./GameResults.css";
 import markerDefault from "../../assets/markerDefault.svg";
 import markerTrueLocation from "../../assets/markerTrueLocation.svg";
 import { useHistory } from "react-router-dom";
+import { auth, db, logout } from "../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useEffect, useState } from "react";
+import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore"; 
 
-export default function GameResults({guessedLocations,trueLocations,totalScore,scores, isLoaded}){
+export default function GameResults({guessedLocations,trueLocations,totalScore,scores, isLoaded}){ 
+
+const [name, setName] = useState("");
+const [user, loading, error] = useAuthState(auth);
 
 const lineSymbol = {
         path: "M 0,-1 0,1",
@@ -38,6 +45,24 @@ const handleBackToLobby = ()=>{
 const handleRestart = ()=>{
     window.location.reload();
 }
+
+function generateRandomGameHistoryId() {
+    return Math.floor(100000000 + Math.random() * 900000000); 
+}
+
+async function saveGameHistoryToDb() {
+    let gameHistoryId = generateRandomGameHistoryId();
+    await setDoc(doc(db, "users/" + localStorage.getItem("userId") + "/gameHistory", `${gameHistoryId}`), {
+        pos: trueLocations,
+        mark: guessedLocations,
+        roundScores: scores,
+        totalScore: totalScore
+    });
+}
+
+useEffect(() => {
+    saveGameHistoryToDb();
+}, []);
     
     return(
         <div className= 'gameresults-container'>
