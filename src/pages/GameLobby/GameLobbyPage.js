@@ -1,10 +1,16 @@
 import React, {useState,useEffect} from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { generateRandomStreetViewLocations } from "../../utils/GameUtils";
 import { getAllCountries } from "../../utils/Polygons";
 import "./GameLobbyPage.css";
 
+import { auth, db, logout } from "../../firebase";
+
+import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore"; 
+
 export default function GameLobbyPage() {
+
+    const location = useLocation();
     //variables about game rules
 
     const [enablePan, setEnablePan] = useState(false);
@@ -41,7 +47,17 @@ export default function GameLobbyPage() {
 
             let data = {enablePan: enablePan, enableMovement: enableMovement, enableZooming: enableZooming,
                 roundTime: roundTime, numberOfRounds: numberOfRounds, fetchedLocations:fetchedLocations};
-    
+
+            /* setDoc(doc(db, "games", `${location.state.gameId}`), {
+                inviteCode: location.state.gameId,
+                isActive: false,
+                isStarted: true,
+                isMultiplayer: false,
+                noRounds: numberOfRounds,
+                timeLimit: roundTime,
+                coordinates: fetchedLocations
+            })
+     */
             history.push({
                 pathname: '/Game',
                 state: data,
@@ -87,6 +103,9 @@ export default function GameLobbyPage() {
         setDisableAllCountries(!disableAllCountries);
     }
     
+    /* useEffect(() =>  {
+        console.log("location gameId:"  + location.state.gameId);
+    }) */
 
     return (<>
 
