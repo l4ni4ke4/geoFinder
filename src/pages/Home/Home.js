@@ -16,10 +16,12 @@ import { doc, setDoc, collection, query, where, getDocs } from "firebase/firesto
 export default function Home() {
 
     var lobbyId = 0;
+    var isMultiplayer = false;
 
     const history = useHistory();
     const [name, setName] = useState("");
     const [multiPlayerGameCode, setMultiPlayerGameCode] = useState(0);
+
     const [user, loading, error] = useAuthState(auth);
     const [userDocumentId, setUserDocumentId] = useState(0);
 
@@ -48,6 +50,7 @@ export default function Home() {
     async function singlePlayerButtonClick () { 
         lobbyId = generateRandomLobbyCode();
         //setMultiPlayerGameCode(lobbyId);
+        isMultiplayer = false;
         await setDoc(doc(db, "lobbies", `${lobbyId}`), {
             inviteCode: lobbyId,
             isActive: false,
@@ -58,9 +61,12 @@ export default function Home() {
             gameState: "",
             noRounds: 5,
             timeLimit: 60,
+            enableZooming: false,
+            enableMovement: false
         });
         await setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
             userId: db.doc('users/' + userDocumentId),
+            userName: localStorage.getItem("userName"),
             isHost: true,
             guessedLocations: [],
             distances: [],
@@ -73,7 +79,7 @@ export default function Home() {
 
         history.push({
             pathname: `/GameLobby`,
-            state: { lobbyId: lobbyId }
+            state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
             /* ,
             state: data */
         });
@@ -81,6 +87,7 @@ export default function Home() {
 
     async function joinExistingMultiplayerLobbyButtonClick() {
         var lobbyFound = false;
+        isMultiplayer = true;
         const queryResult = await query(collection(db, "lobbies"), where("isActive", "==", true), where("isMultiplayer", "==", true));
         const querySnapshot = await getDocs(queryResult);
         if (querySnapshot.empty) {
@@ -112,7 +119,7 @@ export default function Home() {
                 let path = `/GameLobby`;
                 history.push({
                     pathname: path,
-                    state: { lobbyId: lobbyId }
+                    state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
                 });
             }
             if (!lobbyFound) {
@@ -132,6 +139,7 @@ export default function Home() {
     async function createNewMultiplayerLobbyButtonClick () {
         lobbyId = generateRandomLobbyCode();
         //setMultiPlayerGameCode(lobbyId);
+        isMultiplayer = true;
         console.log(multiPlayerGameCode);
         console.log(userDocumentId);
         await setDoc(doc(db, "lobbies", `${lobbyId}`), {
@@ -144,16 +152,23 @@ export default function Home() {
             gameState: "",
             noRounds: 5,
             timeLimit: 60,
+            enableZooming: false,
+            enableMovement: false
         });
         await setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
             userId: db.doc('users/' + userDocumentId),
+            userName: localStorage.getItem("userName"),
             isHost: true,
-            isReady: false
+            guessedLocations: [],
+            distances: [],
+            scores: [],
+            totalScore: "",
+            isClickedGuess: ""
         });
         let path = `/GameLobby`;
         history.push({
             pathname: path,
-            state: { lobbyId: lobbyId }
+            state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
         });
     }
     

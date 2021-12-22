@@ -4,9 +4,11 @@ import { generateRandomStreetViewLocations } from "../../utils/GameUtils";
 import { getAllCountries } from "../../utils/Polygons";
 import "./GameLobbyPage.css";
 
+import { Button, Modal, Form } from 'react-bootstrap';
+
 import { auth, db, logout } from "../../firebase";
 
-import { doc, setDoc, collection, query, where, getDocs, onSnapshot } from "firebase/firestore"; 
+import { doc, setDoc, collection, query, where, getDocs, getDoc, onSnapshot, deleteDoc } from "firebase/firestore"; 
 
 export default function GameLobbyPage() {
 
@@ -17,16 +19,26 @@ export default function GameLobbyPage() {
     const [lobbyUsers, setLobbyUsers] = useState([]);
 
     const lobbyId = location.state.lobbyId;
+    const isMultiplayer = location.state.isMultiplayer;
     //console.log("lobby id: " + lobbyId);
     
-    
+    const [popupShow, setPopupShow] = useState(false);
+
+    const handlePopupClose = () => setPopupShow(false);
+    const handlePopupShow = () => setPopupShow(true);
 
     const [enablePan, setEnablePan] = useState(false);
     const [enableMovement, setEnableMovement] = useState(false);
     const [enableZooming, setEnableZooming] = useState(false);
 
+    const [dbEnableMovement, setDbEnableMovement] = useState(false);
+    const [dbEnableZooming, setDbEnableZooming] = useState(false);
+
     const [roundTime, setRoundTime] = useState(60);
     const [numberOfRounds, setNumberOfRounds] = useState(5);
+
+    const [dbRoundTime, setDbRoundTime] = useState(60);
+    const [dbNumberOfRounds, setDbNumberOfRounds] = useState(5);
 
     /*country selection related variables */
     const countryList = getAllCountries();
@@ -73,7 +85,8 @@ export default function GameLobbyPage() {
             
         })
     }
-    const exitButtonClick = () => {
+    const exitButtonClick = async () => {
+        await deleteDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", localStorage.getItem("userId")));
         let path = '/Home';
         history.push(path);
     }
@@ -111,20 +124,101 @@ export default function GameLobbyPage() {
         setDisableAllCountries(!disableAllCountries);
     }
 
+    const updateDbGameRules = async() => {
+        setDoc(doc(db, "lobbies", `${lobbyId}`), {
+            inviteCode: lobbyId,
+            isActive: true,
+            isGameStarted: false,
+            isMultiplayer: isMultiplayer,
+            currentRound: "",
+            trueLocations: [],
+            gameState: "",
+            enableMovement: enableMovement,
+            enableZooming: enableZooming,
+            noRounds: numberOfRounds,
+            timeLimit: roundTime,
+        });
+    }
+
+
+
+    const handleSaveGameSettings = () => {
+        /* setDbEnableMovement(enableMovement);
+        setDbEnableZooming(enableZooming);
+        setDbNumberOfRounds(numberOfRounds);
+        setDbRoundTime(roundTime); */
+        updateDbGameRules();
+        handlePopupClose();
+    }
+
     async function getLobbyUsersFromDatabase () {
         
         
         
     }
+
+    useEffect(() => {
+        const docRef = db.collection("lobbies").doc(`${lobbyId}`);
+        docRef.get().then((doc) => {
+        console.log("Document data:", doc.data());
+        setDbEnableMovement(doc.data().enableMovement);
+        setDbEnableZooming(doc.data().enableZooming);
+        setDbNumberOfRounds(doc.data().noRounds);
+        setDbRoundTime(doc.data().timeLimit)
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+    }, [updateDbGameRules])
     
     useEffect(() =>  {
+        const docRef = db.collection("lobbies").doc(`${lobbyId}`);
+        docRef.get().then((doc) => {
+                console.log("Document data:", doc.data());
+                setDbEnableMovement(doc.data().enableMovement);
+                setDbEnableZooming(doc.data().enableZooming);
+                setDbNumberOfRounds(doc.data().noRounds);
+                setDbRoundTime(doc.data().timeLimit)
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+        
         const q = query(collection(db, "lobbies/" + lobbyId + "/gameUsers"));
         var fetchedUsersFromDatabase = [];
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             fetchedUsersFromDatabase = [];
+            //var hostExists = false;
             querySnapshot.forEach((doc) => {
                 fetchedUsersFromDatabase.push(doc.data());
+                /* if (doc.data().isHost === true) {
+                    hostExists = true;
+                } */
             })
+            //HOST CIKINCA YENI HOST ATANSIN LOGIC INI YAPMAYA CALISTIM AMA OLMADI :(
+            /* alert("host status: " + hostExists);
+            if (!hostExists) {
+                //const q2 = query(collection(db, "lobbies/" + lobbyId + "/gameUsers"));
+                //const querySnapshot2 = getDocs(q2);
+                const q2 = db.collection("lobbies/" + lobbyId + "/gameUsers").get();
+                if (q2.empty) {
+                    alert("no users left.");
+                }
+                else {
+                    console.log(q2.docs);
+                    const nextHostPlayer = q2.docs[0].data();
+                    alert("q2 dolu ");
+                    setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${nextHostPlayer.userId}`), {
+                        userId: db.doc('users/' + q2.docs[0].data().userId),
+                        userName: q2.docs[0].data().userName,
+                        isHost: true,
+                        guessedLocations: [],
+                        distances: [],
+                        scores: [],
+                        totalScore: "",
+                        isClickedGuess: ""
+                    })
+                }
+            } */
+            
             //console.log(fetchedUsersFromDatabase);
             setLobbyUsers(fetchedUsersFromDatabase);
         })
@@ -144,60 +238,133 @@ export default function GameLobbyPage() {
     }, [lobbyUsers]); 
 
     return (<>
-
-        <div class="container game-settings-main-container">
-            <div class="header main-header">
-                <h2>Game Settings</h2>
-            </div>
-            <div class="container game-rules-container">
-                <div class="header game-rules-header">
-                    <h4>Game Rules</h4>
-                </div>
-                <div class="row game-rules-row-1">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="flexCheckZooming" onChange={(event) => setEnableZooming(event.target.checked)} defaultChecked={enableZooming} ></input>
-                        <label class="form-check-label" for="flexCheckZooming">
-                            Zooming
-                        </label>
+        <div className="container game-lobby-main-container">
+            <div className="container game-lobby-inner-container">
+                <div className="container game-rules-overview">
+                    <div className="game-rules-overview-body">
+                        <h1 style={{textAlign:"center", marginBottom:"5%"}}>Multiplayer Lobby</h1>
+                        <div class="row game-overview-zooming">
+                            Zooming: {dbEnableZooming}
+                        </div>
+                        <div class="row game-overview-movement">
+                            Movement: {dbEnableMovement}
+                        </div>
+                        <div class="row game-overview-norounds">
+                            Number of Rounds: {dbNumberOfRounds}
+                        </div>
+                        <div class="row game-overview-roundtime">
+                            Round Time: {dbRoundTime}
+                        </div>
                     </div>
-                    {/* <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="flexCheckCameraPan" onChange={(event) => setEnablePan(event.target.checked)} defaultChecked={enablePan}></input>
-                        <label class="form-check-label" for="flexCheckCameraPan">
-                            Camera Pan
-                        </label>
-                    </div> */}
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="flexCheckMovement" onChange={(event) => setEnableMovement(event.target.checked)} defaultChecked={enableMovement} ></input>
-                        <label class="form-check-label" for="flexCheckMovement">
-                            Movement
-                        </label>
+                    <div className="container game-rules-edit-settings-footer">
+                        <button type="button" id = "editSettingsButton" class="btn btn-success" onClick={handlePopupShow}>Edit Game Settings</button>
+                    </div>
+                    <div class="container game-lobby-footer">
+                        <button type="button" id = "exitButton" class="btn btn-danger" onClick={exitButtonClick}>Back to Main Menu</button>
+                        <button type="button" id = "startGameButton" class="btn btn-success" onClick={startGameButtonClick}>Start Game</button>        
                     </div>
                 </div>
-                <div class="row game-rules-row-2">
-                    <label for="customRange1" class="form-time-range-label">Time Limit: {roundTime} seconds</label>
-                    <input type="range" class="form-range" id="timeLimitRange" min="10" max="60" step="5" defaultValue={roundTime} onChange={ (event) => setRoundTime(event.target.value)} value={roundTime}></input>
-                </div>
-                <div class="row game-rules-row-3">
-                    <label for="customRange1" class="form-round-range-label">Number of Rounds: {numberOfRounds} </label>
-                    <input type="range" class="form-range" id="numberOfRoundsRange" min="3" max="10" step="1" defaultValue={numberOfRounds} onChange={ (event) => setNumberOfRounds(event.target.value)} value={numberOfRounds}></input>
-                </div>
+                <Modal dialogClassName="gameSettingsPopup" show={popupShow} onHide={handlePopupClose}>
+                    <Modal.Header dialogClassName="gameSettingsPopupHeader" closeButton >
+                        <div class="header main-header">
+                            <h2 style={{textAlign: "center"}}>Game Settings</h2>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div class="container game-settings-main-container">
+                            <div class="container game-rules-container">
+                                <div class="header game-rules-header">
+                                    <h4>Game Rules</h4>
+                                </div>
+                                <div class="row game-rules-row-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="flexCheckZooming" onChange={(event) => setEnableZooming(event.target.checked)} defaultChecked={dbEnableZooming} ></input>
+                                        <label class="form-check-label" for="flexCheckZooming">
+                                            Zooming
+                                        </label>
+                                    </div>
+                                    {/* <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="flexCheckCameraPan" onChange={(event) => setEnablePan(event.target.checked)} defaultChecked={enablePan}></input>
+                                        <label class="form-check-label" for="flexCheckCameraPan">
+                                            Camera Pan
+                                        </label>
+                                    </div> */}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="flexCheckMovement" onChange={(event) => setEnableMovement(event.target.checked)} defaultChecked={dbEnableMovement} ></input>
+                                        <label class="form-check-label" for="flexCheckMovement">
+                                            Movement
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row game-rules-row-2">
+                                    <label for="customRange1" class="form-time-range-label">Time Limit: {roundTime} seconds</label>
+                                    <input type="range" class="form-range" id="timeLimitRange" min="10" max="60" step="5" defaultValue={dbRoundTime} onChange={ (event) => setRoundTime(event.target.value)} value={roundTime}></input>
+                                </div>
+                                <div class="row game-rules-row-3">
+                                    <label for="customRange1" class="form-round-range-label">Number of Rounds: {numberOfRounds} </label>
+                                    <input type="range" class="form-range" id="numberOfRoundsRange" min="3" max="10" step="1" defaultValue={dbNumberOfRounds} onChange={ (event) => setNumberOfRounds(event.target.value)} value={numberOfRounds}></input>
+                                </div>
+                            </div>
+                            <div className="country-selection-container">
+                                <div className="country-selection-header">
+                                    <h4>Country Selection</h4>
+                                </div>
+                                <div className="country-selection-body">
+                                    <div class="form-check" key="world">
+                                        <input class="form-check-input" type="checkbox" id="world" checked={worldIsChecked}
+                                                onChange={handleWorldCheck}/>
+                                        <label class="form-check-label" for="world">
+                                            World
+                                        </label>
+                                    </div>
+                                    <CountryCheckboxList/>
+                                </div>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="danger" onClick={handlePopupClose}>
+                            Discard Changes
+                        </Button>
+                        <Button variant="success" onClick={handleSaveGameSettings}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
-            <div className="country-selection-container">
-                <h4>Country Selection</h4>
-                <div class="form-check" key="world">
-                    <input class="form-check-input" type="checkbox" id="world" checked={worldIsChecked}
-                            onChange={handleWorldCheck}/>
-                    <label class="form-check-label" for="world">
-                        World
-                    </label>
-                </div>
-                <CountryCheckboxList/>
-            </div>
-            <div class="footer game-settings-footer">
-                <button type="button" id = "exitButton" class="btn btn-danger" onClick={exitButtonClick}>Back to Main Menu</button>
-                <button type="button" id = "startGameButton" class="btn btn-success" onClick={startGameButtonClick}>Start Game</button>        
+            <div className="game-lobby-players">
+                <section>
+                    <h2>Players</h2>
+                    <div className = 'table-lobby-players'>
+                        <table class="table table-dark">
+                            <tbody>
+                                    {lobbyUsers.map((user, index) => {
+                                        if (user.isHost === true) {
+                                            return (
+                                                <tr /* style={{color:"gainsboro"}} */>
+                                                    <td>{user.userName} (Host)</td>
+                                                </tr>
+                                            )
+                                        }
+                                        else {
+                                            return (
+                                                <tr>
+                                                    <td>{user.userName}</td>
+                                                </tr>
+                                            )
+                                        }
+                                        
+                                    })}
+                                
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </section>
             </div>
         </div>
+        
+        
 
 
     </>)
