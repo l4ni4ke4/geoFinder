@@ -6,12 +6,20 @@ import "./GameLobbyPage.css";
 
 import { auth, db, logout } from "../../firebase";
 
-import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore"; 
+import { doc, setDoc, collection, query, where, getDocs, onSnapshot } from "firebase/firestore"; 
 
 export default function GameLobbyPage() {
 
     const location = useLocation();
     //variables about game rules
+    //var lobbyUsers = [];
+
+    const [lobbyUsers, setLobbyUsers] = useState([]);
+
+    const lobbyId = location.state.lobbyId;
+    //console.log("lobby id: " + lobbyId);
+    
+    
 
     const [enablePan, setEnablePan] = useState(false);
     const [enableMovement, setEnableMovement] = useState(false);
@@ -102,10 +110,38 @@ export default function GameLobbyPage() {
         );
         setDisableAllCountries(!disableAllCountries);
     }
+
+    async function getLobbyUsersFromDatabase () {
+        
+        
+        
+    }
     
-    /* useEffect(() =>  {
-        console.log("location gameId:"  + location.state.gameId);
-    }) */
+    useEffect(() =>  {
+        const q = query(collection(db, "lobbies/" + lobbyId + "/gameUsers"));
+        var fetchedUsersFromDatabase = [];
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            fetchedUsersFromDatabase = [];
+            querySnapshot.forEach((doc) => {
+                fetchedUsersFromDatabase.push(doc.data());
+            })
+            //console.log(fetchedUsersFromDatabase);
+            setLobbyUsers(fetchedUsersFromDatabase);
+        })
+    },[]);
+
+    useEffect(() => {
+        const lobbyUserNames = lobbyUsers.map((user) => {
+            return {
+                userName: `${user.userName}`
+            }
+        })
+        console.log(lobbyUserNames);
+        lobbyUserNames.forEach((iter) => {
+            console.log("user username:" + iter.userName);
+        })
+        
+    }, [lobbyUsers]); 
 
     return (<>
 
