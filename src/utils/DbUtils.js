@@ -10,6 +10,17 @@ export async function setGameState({lobbyId,gameState}){
     }
 }
 
+export async function setTrueLocations({lobbyId,fetchedLocations}){
+    try{
+      await db.collection("lobbies").doc(lobbyId).update({
+            trueLocations: fetchedLocations
+        })
+    }catch(error){
+        console.error(error);
+    }
+
+}
+
 export async function toggleIsClickedGuess({lobbyId,userId}){
     try{
         const queryGetIsClickedGuess = await db.collection("lobbies").doc(lobbyId).collection("gameUsers").doc(userId);

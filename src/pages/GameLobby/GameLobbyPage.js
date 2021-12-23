@@ -9,6 +9,7 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import { auth, db, logout } from "../../firebase";
 
 import { doc, setDoc, collection, query, where, getDocs, getDoc, onSnapshot, deleteDoc } from "firebase/firestore"; 
+import { setGameState, setTrueLocations } from "../../utils/DbUtils";
 
 export default function GameLobbyPage() {
 
@@ -51,7 +52,7 @@ export default function GameLobbyPage() {
         })))
     );
 
-    const [worldIsChecked,setWorldIsChecked] = useState(false);
+    const [worldIsChecked,setWorldIsChecked] = useState(true);
     const [disableAllCountries,setDisableAllCountries] = useState(false);
     /********/
 
@@ -62,29 +63,23 @@ export default function GameLobbyPage() {
         const countryCodeArray = Object.keys(countryCheckboxListIsChecked).filter(key=>countryCheckboxListIsChecked[key] === true);
 
 
-        // fetch locations when start button is clicked then send options to gamepage
-        generateRandomStreetViewLocations(numberOfRounds,countryCodeArray,!worldIsChecked).then((fetchedLocations)=>{
-
-            let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
-                roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, fetchedLocations:fetchedLocations};
-
-            /* setDoc(doc(db, "games", `${location.state.gameId}`), {
-                inviteCode: location.state.gameId,
-                isActive: false,
-                isStarted: true,
-                isMultiplayer: false,
-                noRounds: numberOfRounds,
-                timeLimit: roundTime,
-                coordinates: fetchedLocations
-            })
-     */
-            history.push({
-                pathname: '/Game',
-                state: data,
-            })
-            
-        })
+        // fetch locations when start button is clicked then update db's trueLocations
+        generateRandomStreetViewLocations(numberOfRounds,countryCodeArray,!worldIsChecked)
+        .then((fetchedLocations)=>{
+            setTrueLocations({lobbyId,fetchedLocations})})
+        .then(()=>{
+                let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
+                    roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, lobbyId};
+                
+                history.push({
+                    pathname: '/Game',
+                    state: data})
+                })
+        .then(()=>{
+                setGameState({lobbyId,gameState:"RoundStart"});
+            }).catch((error)=>console.error(error))
     }
+
     const exitButtonClick = async () => {
         await deleteDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", localStorage.getItem("userId")));
         let path = '/Home';

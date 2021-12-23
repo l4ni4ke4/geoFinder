@@ -36,12 +36,13 @@ export default function GamePage() {
 
   // fetch game state from db
   // lobbyId = JA9myMkBRXp3AJxbAWFl
-  const lobbyId = "JA9myMkBRXp3AJxbAWFl" // this should come from lobby page
+  const lobbyId = variables.lobbyId // this should come from lobby page
+
   const {isFetchingLobby,lobby} = useLobby(lobbyId);
 
   // fetch user state from db
-  const [user, loading, error] = useAuthState(auth);
-  const {uid:userId} = user;
+  // const [user, loading, error] = useAuthState(auth);
+  const userId = localStorage.userId;
   const {isFetchingUser, gameUser} = useGameUser({lobbyId,userId});
   const {isFetchingUsers, gameUsers} = useGameUsers({lobbyId})
 
@@ -54,6 +55,7 @@ export default function GamePage() {
 
   
   const {currentRound,gameState:showView, trueLocations, noRounds:rounds} = lobby;
+  console.log(trueLocations)
   // set user specific variables
   const {isHost,isClickedGuess,guessedLocations,distances,scores,totalScore} = gameUser;
   
