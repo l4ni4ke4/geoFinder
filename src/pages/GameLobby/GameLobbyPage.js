@@ -151,13 +151,7 @@ export default function GameLobbyPage() {
         handlePopupClose();
     }
 
-    async function getLobbyUsersFromDatabase () {
-        
-        
-        
-    }
-
-    useEffect(() => {
+    /* useEffect(() => {
         const docRef = db.collection("lobbies").doc(`${lobbyId}`);
         docRef.get().then((doc) => {
         console.log("Document data:", doc.data());
@@ -168,20 +162,27 @@ export default function GameLobbyPage() {
         }).catch((error) => {
             console.log("Error getting document:", error);
         });
-    }, [updateDbGameRules])
+    }, [updateDbGameRules]) */
     
     useEffect(() =>  {
-        const docRef = db.collection("lobbies").doc(`${lobbyId}`);
-        docRef.get().then((doc) => {
+
+        //listener for lobby data changes
+        const q2 = query(collection(db, "lobbies/"));
+        const unsubscribe2 = onSnapshot(q2, (querySnapshot2) => {
+            const docRef = db.collection("lobbies").doc(`${lobbyId}`);
+            docRef.get().then((doc) => {
+                console.log(querySnapshot2);
                 console.log("Document data:", doc.data());
                 setDbEnableMovement(doc.data().enableMovement);
                 setDbEnableZooming(doc.data().enableZooming);
                 setDbNumberOfRounds(doc.data().noRounds);
                 setDbRoundTime(doc.data().timeLimit)
-        }).catch((error) => {
-            console.log("Error getting document:", error);
-        });
+            }).catch((error) => {
+                console.log("Error getting document:", error);
+            });
+        })
         
+        //listener for lobby user data changes
         const q = query(collection(db, "lobbies/" + lobbyId + "/gameUsers"));
         var fetchedUsersFromDatabase = [];
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -242,12 +243,21 @@ export default function GameLobbyPage() {
             <div className="container game-lobby-inner-container">
                 <div className="container game-rules-overview">
                     <div className="game-rules-overview-body">
-                        <h1 style={{textAlign:"center", marginBottom:"5%"}}>Multiplayer Lobby</h1>
+                        {isMultiplayer && 
+                            <h1 style={{textAlign:"center", marginBottom:"5%"}}>
+                                Multiplayer Lobby
+                            </h1>
+                        }
+                        {!isMultiplayer && 
+                            <h1 style={{textAlign:"center", marginBottom:"5%"}}>
+                                Singleplayer Lobby
+                            </h1>
+                        }
                         <div class="row game-overview-zooming">
-                            Zooming: {dbEnableZooming}
+                            Zooming: {`${dbEnableZooming}`}
                         </div>
                         <div class="row game-overview-movement">
-                            Movement: {dbEnableMovement}
+                            Movement: {`${dbEnableMovement}`}
                         </div>
                         <div class="row game-overview-norounds">
                             Number of Rounds: {dbNumberOfRounds}
@@ -334,6 +344,7 @@ export default function GameLobbyPage() {
             </div>
             <div className="game-lobby-players">
                 <section>
+                    
                     <h2>Players</h2>
                     <div className = 'table-lobby-players'>
                         <table class="table table-dark">
@@ -358,8 +369,10 @@ export default function GameLobbyPage() {
                                 
                             </tbody>
                         </table>
-                        
                     </div>
+                </section>
+                <section>
+                    <h4 style={{color:"white"}}>Lobby code: {lobbyId}</h4>
                 </section>
             </div>
         </div>
