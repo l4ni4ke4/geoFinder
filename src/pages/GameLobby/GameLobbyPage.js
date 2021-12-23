@@ -200,11 +200,18 @@ export default function GameLobbyPage() {
                 setDbEnableZooming(doc.data().enableZooming);
                 setDbNumberOfRounds(doc.data().noRounds);
                 setDbRoundTime(doc.data().timeLimit)
-
-                //if game is started, jump into GamePage.js 
-                /* if (doc.data().isGameStarted === true) {
-
-                } */
+                const userRef = db.collection("lobbies/" + lobbyId + "/gameUsers").doc(`${localStorage.getItem("userId")}`);
+                userRef.get().then((doc2) => {
+                    //if game is started, jump into GamePage.js 
+                    if ((doc.data().isGameStarted === true) && (doc2.data().isHost === false)) {
+                        let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
+                            roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, lobbyId};
+                        history.push({
+                            pathname: '/Game',
+                            state: data})
+                    }
+                })
+                
             }).catch((error) => {
                 console.log("Error getting document:", error);
             });
