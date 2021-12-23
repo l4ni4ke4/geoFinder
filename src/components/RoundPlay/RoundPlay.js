@@ -136,7 +136,7 @@ function RoundPlay({lobbyId,userId,isClickedGuess,trueLocation,setShowView,guess
     toggleIsClickedGuess({lobbyId,userId});
     //check if everyone else clicked guess
     //if true: 
-    const queryCheckIfAllGuessed = db.collection("lobbies").doc(lobbyId).collection("gameUsers")
+    const queryCheckIfAllGuessed = db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers")
                                       .where("isClickedGuess","==",false);
     
     queryCheckIfAllGuessed.get().then((querySnapshot)=>{

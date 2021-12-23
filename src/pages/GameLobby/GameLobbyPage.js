@@ -57,27 +57,55 @@ export default function GameLobbyPage() {
     /********/
 
     const history = useHistory();
-    const startGameButtonClick = () => {
+    const startGameButtonClick = async() => {
 
         // get a country code array from selected countries
         const countryCodeArray = Object.keys(countryCheckboxListIsChecked).filter(key=>countryCheckboxListIsChecked[key] === true);
 
+        const fetchedLocations = await generateRandomStreetViewLocations(numberOfRounds,countryCodeArray,!worldIsChecked);
+
+        await db.collection("lobbies").doc(`${lobbyId}`).update({
+            gameState:"RoundStart",
+            currentRound:0,
+            isGameStarted: true,
+            trueLocations: fetchedLocations
+        })
+
+        // await setTrueLocations({lobbyId,fetchedLocations});
+        // await setGameState({lobbyId,gameState:"RoundStart"});
+        // await db.collection("lobbies").doc(lobbyId).update({
+        //     currentRound:0,
+        //     isGameStarted: true
+        // });
+
+        let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
+            roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, lobbyId};
+        
+        history.push({
+            pathname: '/Game',
+            state: data})
 
         // fetch locations when start button is clicked then update db's trueLocations
-        generateRandomStreetViewLocations(numberOfRounds,countryCodeArray,!worldIsChecked)
-        .then((fetchedLocations)=>{
-            setTrueLocations({lobbyId,fetchedLocations})})
-        .then(()=>{
-                let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
-                    roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, lobbyId};
-                
-                history.push({
-                    pathname: '/Game',
-                    state: data})
-                })
-        .then(()=>{
-                setGameState({lobbyId,gameState:"RoundStart"});
-            }).catch((error)=>console.error(error))
+        // generateRandomStreetViewLocations(numberOfRounds,countryCodeArray,!worldIsChecked)
+        // .then((fetchedLocations)=>{
+        //     setTrueLocations({lobbyId,fetchedLocations})})
+        // .then(()=>{
+        //         setGameState({lobbyId,gameState:"RoundStart"});
+        //     })
+        // .then(()=>{
+        //     db.collection("lobbies").doc(lobbyId).update({
+        //         currentRound:0,
+        //         isGameStarted: true
+        //     })
+        // })
+        // .then(()=>{
+        //     let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
+        //         roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, lobbyId};
+            
+        //     history.push({
+        //         pathname: '/Game',
+        //         state: data})
+        //     })
     }
 
     const exitButtonClick = async () => {

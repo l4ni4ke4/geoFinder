@@ -7,7 +7,7 @@ export default function useLobby(lobbyId){
 
     useEffect(()=>{
         const unsubscribe = db.collection("lobbies")
-        .doc(lobbyId)
+        .doc(`${lobbyId}`)
         .onSnapshot((doc) => {
             if (doc.exists) setLobby({ ...doc.data(), id: doc.id })
             else console.log('Lobby Not Found')

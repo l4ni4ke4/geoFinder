@@ -2,7 +2,7 @@ import { db } from "../firebase";
 // RounStart or RoundPlay etc.
 export async function setGameState({lobbyId,gameState}){
     try{
-        await db.collection("lobbies").doc(lobbyId).update({
+        await db.collection("lobbies").doc(`${lobbyId}`).update({
             gameState: gameState
         })
     }catch(error){
@@ -12,7 +12,7 @@ export async function setGameState({lobbyId,gameState}){
 
 export async function setTrueLocations({lobbyId,fetchedLocations}){
     try{
-      await db.collection("lobbies").doc(lobbyId).update({
+      await db.collection("lobbies").doc(`${lobbyId}`).update({
             trueLocations: fetchedLocations
         })
     }catch(error){
@@ -23,7 +23,7 @@ export async function setTrueLocations({lobbyId,fetchedLocations}){
 
 export async function toggleIsClickedGuess({lobbyId,userId}){
     try{
-        const queryGetIsClickedGuess = await db.collection("lobbies").doc(lobbyId).collection("gameUsers").doc(userId);
+        const queryGetIsClickedGuess = await db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers").doc(userId);
         queryGetIsClickedGuess.get().then((doc)=>{
             if(doc.exists){
                 return doc.ref.update({ isClickedGuess: !doc.data().isClickedGuess });
@@ -39,7 +39,7 @@ export async function toggleIsClickedGuess({lobbyId,userId}){
 
 export async function makeIsClickedGuessFalse({lobbyId,userId}){
     try{
-        await db.collection("lobbies").doc(lobbyId).collection("gameUsers").doc(userId).update({
+        await db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers").doc(userId).update({
             isClickedGuess: false
         });
         
@@ -54,14 +54,14 @@ export async function resetLobby({lobbyId}){
     // change isGameStarted to false
     // change each users distances,guessedLocations,scores,totalScore
     try{
-        await db.collection("lobbies").doc(lobbyId).update({
+        await db.collection("lobbies").doc(`${lobbyId}`).update({
             currentRound: null,
             isGameStarted: false,
             gameState: "",
             trueLocations: []
         });
         
-        const query = db.collection("lobbies").doc(lobbyId).collection("gameUsers");
+        const query = db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers");
         query.get().then((querySnapshot)=>{
             querySnapshot.forEach((docUser)=>{
                 docUser.ref.update({

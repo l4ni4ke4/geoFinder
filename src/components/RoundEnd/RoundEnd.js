@@ -48,7 +48,7 @@ function RoundEnd({gameUsers,userId,lobbyId,isHost,currentRound,rounds,distances
        
        try{
         await db.collection("lobbies")
-                .doc(lobbyId)
+                .doc(`${lobbyId}`)
                 .collection("gameUsers")
                 .doc(userId)
                 .update({
@@ -67,8 +67,12 @@ function RoundEnd({gameUsers,userId,lobbyId,isHost,currentRound,rounds,distances
     const handleBtnNextRound = async() =>{
             // setCurrentRound(currentRound+1);
             // setShowView("RoundStart");
+            console.log("abiiiiiiiiiiiiiii")
+            console.log(scores)
+            console.log(currentRound)
+            console.log(scores[currentRound])
             try{
-                await db.collection("lobbies").doc(lobbyId).update({
+                await db.collection("lobbies").doc(`${lobbyId}`).update({
                     currentRound: currentRound+1
                 })
                 setGameState({lobbyId,gameState:"RoundStart"});

@@ -7,7 +7,7 @@ export default function useGameUser({lobbyId,userId}){
 
     useEffect(()=>{
         const unsubscribe = db.collection("lobbies")
-        .doc(lobbyId)
+        .doc(`${lobbyId}`)
         .collection("gameUsers")
         .doc(userId)
         .onSnapshot((doc) => {

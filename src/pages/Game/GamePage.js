@@ -55,7 +55,6 @@ export default function GamePage() {
 
   
   const {currentRound,gameState:showView, trueLocations, noRounds:rounds} = lobby;
-  console.log(trueLocations)
   // set user specific variables
   const {isHost,isClickedGuess,guessedLocations,distances,scores,totalScore} = gameUser;
   
