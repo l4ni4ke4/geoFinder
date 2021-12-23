@@ -65,8 +65,8 @@ export default function GameLobbyPage() {
         // fetch locations when start button is clicked then send options to gamepage
         generateRandomStreetViewLocations(numberOfRounds,countryCodeArray,!worldIsChecked).then((fetchedLocations)=>{
 
-            let data = {enablePan: enablePan, enableMovement: enableMovement, enableZooming: enableZooming,
-                roundTime: roundTime, numberOfRounds: numberOfRounds, fetchedLocations:fetchedLocations};
+            let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
+                roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, fetchedLocations:fetchedLocations};
 
             /* setDoc(doc(db, "games", `${location.state.gameId}`), {
                 inviteCode: location.state.gameId,
@@ -177,6 +177,11 @@ export default function GameLobbyPage() {
                 setDbEnableZooming(doc.data().enableZooming);
                 setDbNumberOfRounds(doc.data().noRounds);
                 setDbRoundTime(doc.data().timeLimit)
+
+                //if game is started, jump into GamePage.js 
+                /* if (doc.data().isGameStarted === true) {
+
+                } */
             }).catch((error) => {
                 console.log("Error getting document:", error);
             });
@@ -364,7 +369,6 @@ export default function GameLobbyPage() {
                                                 </tr>
                                             )
                                         }
-                                        
                                     })}
                                 
                             </tbody>
