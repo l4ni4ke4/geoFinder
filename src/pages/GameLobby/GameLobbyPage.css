@@ -1,24 +1,85 @@
 .game-settings-main-container {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 80%;
     justify-content: block;
-    border: 3px solid #494646;
-    border-radius: 5px;
-    margin-top: 5%;
+    margin-bottom: 5%;
     background-color: white;
     
+}
+
+.game-lobby-main-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2%;
+}
+
+.country-selection-header {
+    position: fixed;
+}
+
+.game-rules-overview {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    margin-right: -2%;
+    margin-top: -4.5%;
+}
+
+.country-selection-body {
+    margin-top: 7%;
+    margin-left: 3%;
+}
+
+.gameSettingsPopup {
+    max-width: 750px;
+}
+
+.game-lobby-inner-container {
+    display:flex;
+    flex-direction: row;
+    position: relative;
+    margin-left: 10%;
+    margin-top: 3%;
+    max-width: 800px;
+    height: 650px;
+}
+
+.game-lobby-players {
+    grid-area: game-lobby-players;
+    background-image: linear-gradient(to right top,rgba(0,0,0,.3),rgba(0,0,0,.3)),url('../../assets/roundend-scores.jpg');
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    /* justify-items: flex-start; */
+    justify-content: space-between;
+    text-align:center;
+    padding: 25px;
+    width: 30%;
 }
 
 .main-header {
     display: flex;
     justify-content: center;
     margin-top: 2%;
+    margin-left: 35%;
     font-weight: bolder;
 }
 
+.game-rules-overview-body {
+    margin-left: 10%;
+    margin-top: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-rules-edit-settings-footer {
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
 .game-rules-container {
-    width: 80%;
+    width: 100%;
     justify-content: center;
     border: 2px solid #494646;
     border-radius: 5px;
@@ -39,21 +100,21 @@
 
 .game-rules-row-2 {
     margin-top: 5%;
-    margin-left: 7%;
+    margin-left: 15%;
 }
 
 .game-rules-row-3 {
     margin-top: 2%;
-    margin-left: 7%;
+    margin-left: 15%;
 }
 
 #timeLimitRange, #numberOfRoundsRange {
     margin-left: 2%;
 }
 
-.game-settings-footer {
+.game-lobby-footer {
     display:flex;
-    margin-top: 5%;
+    margin-top: 40%;
     margin-bottom: 3%;
     justify-content:end;
 }
@@ -70,7 +131,7 @@
     display: flex;
     flex-direction: column;
     border: 2px solid #494646;
-    width: 80%;
+    width: 100%;
     border-radius: 5px;
     margin: 0 auto;
     align-items: center;

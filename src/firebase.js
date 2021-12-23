@@ -29,13 +29,20 @@ const signInWithGoogle = async() => {
         .where("uid", "==", user.uid)
         .get();
         if (query.docs.length === 0) {
-        await db.collection("users").add({
-            uid: user.uid,
-            name: user.displayName,
-            authProvider: "google",
-            email: user.email,
-        });
+          await db.collection("users").add({
+              uid: user.uid,
+              name: user.displayName,
+              authProvider: "google",
+              email: user.email,
+          });
         }
+        const query2 = await db
+          .collection("users")
+          .where("uid", "==", user?.uid)
+          .get();
+        const data = await query2.docs[0].data();
+        localStorage.setItem("userId", query2.docs[0].id);
+        localStorage.setItem("userName", data.name);
     } catch (err) {
         console.log("api key: " + firebaseConfig.apiKey);
         console.error(err);

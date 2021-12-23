@@ -15,9 +15,13 @@ import { doc, setDoc, collection, query, where, getDocs } from "firebase/firesto
 
 export default function Home() {
 
+    var lobbyId = 0;
+    var isMultiplayer = false;
+
     const history = useHistory();
     const [name, setName] = useState("");
     const [multiPlayerGameCode, setMultiPlayerGameCode] = useState(0);
+
     const [user, loading, error] = useAuthState(auth);
     const [userDocumentId, setUserDocumentId] = useState(0);
 
@@ -27,6 +31,7 @@ export default function Home() {
 
     const handlePopupClose = () => setPopupShow(false);
     const handlePopupShow = () => setPopupShow(true);
+
     
     const fetchUserName = async () => {
         try {
@@ -43,30 +48,47 @@ export default function Home() {
       };
 
     async function singlePlayerButtonClick () { 
-            /* gameId = generateRandomGameCode();
-            await setDoc(doc(db, "games", `${gameId}`), {
-                inviteCode: gameId,
-                isActive: false,
-                isStarted: false,
-                isMultiplayer: false,
-                noRounds: 5,
-                timeLimit: 60,
-            });
-            await setDoc(doc(db, "games/" + gameId + "/gameusers", `${userDocumentId}`), {
-                userId: db.doc('users/' + userDocumentId)
-            });
+        lobbyId = generateRandomLobbyCode();
+        //setMultiPlayerGameCode(lobbyId);
+        isMultiplayer = false;
+        await setDoc(doc(db, "lobbies", `${lobbyId}`), {
+            inviteCode: lobbyId,
+            isActive: false,
+            isGameStarted: false,
+            isMultiplayer: false,
+            currentRound: "",
+            trueLocations: [],
+            gameState: "",
+            noRounds: 5,
+            timeLimit: 60,
+            enableZooming: false,
+            enableMovement: false
+        });
+        await setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
+            userId: db.doc('users/' + userDocumentId),
+            userName: localStorage.getItem("userName"),
+            isHost: true,
+            guessedLocations: [],
+            distances: [],
+            scores: [],
+            totalScore: "",
+            isClickedGuess: ""
+        });
 
-            let data = {gameId:gameId, userId: userDocumentId}; */
-    
-            history.push({
-                pathname: `/GameLobby`/* ,
-                state: data */
-            });
+        //let data = {lobbyId:lobbyId, userId: userDocumentId};
+
+        history.push({
+            pathname: `/GameLobby`,
+            state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
+            /* ,
+            state: data */
+        });
     }
 
     async function joinExistingMultiplayerLobbyButtonClick() {
         var lobbyFound = false;
-        const queryResult = await query(collection(db, "games"), where("isActive", "==", true), where("isMultiplayer", "==", true));
+        isMultiplayer = true;
+        const queryResult = await query(collection(db, "lobbies"), where("isActive", "==", true), where("isMultiplayer", "==", true));
         const querySnapshot = await getDocs(queryResult);
         if (querySnapshot.empty) {
             alert("no active lobbies. check next time!");
@@ -76,55 +98,30 @@ export default function Home() {
             querySnapshot.forEach((doc) => {
                 if (doc.id === inviteCodeInput) {
                     lobbyFound = true;
+                    lobbyId = doc.id;
                     alert("A lobby with given code found.");
-
-                    const queryResult2 = query(collection(db, "games/" + doc.id + "/gameusers"), where("userId", "==", `${userDocumentId}`));
-                    const querySnapshot2 = getDocs(queryResult2);
-                    if (querySnapshot2.empty) {
-                        setDoc(doc(db, "games/" + gameId + "/gameusers", `${userDocumentId}`), {
-                            userId: db.doc('users/' + userDocumentId),
-                            isHost: false,
-                            isReady: false
-                        });
-                        let path = `/MultiplayerGameLobby`;
-                        history.push({
-                            pathname: path,
-                            state: [{ gameId: multiPlayerGameCode }]
-                        });
-                        return;
-                    }
-                    else {
-                        const queryResult3 = query(collection(db, "games"), where("isActive", "==", true), where("inviteCode", "==", doc.id));
-                        const querySnapshot3 = getDocs(queryResult3);
-                        if (querySnapshot3.empty) {
-                            alert("The lobby isn't active anymore. Enter another invite code or create new lobby.");
-                            return;
-                        }
-                        else {
-                            const queryResult4 = query(collection(db, "games/" + doc.id + "/gameusers"), where("isHost", "==", true));
-                            const querySnapshot4 = getDocs(queryResult4);
-                            if(querySnapshot4.empty) {
-                                setDoc(doc(db, "games/" + gameId + "/gameusers", `${userDocumentId}`), {
-                                    isHost: false,
-                                    isReady: false
-                                });
-                            }
-                            else {
-                                setDoc(doc(db, "games/" + gameId + "/gameusers", `${userDocumentId}`), {
-                                    isHost: true,
-                                    isReady: false
-                                });
-                            }
-                            let path = `/MultiplayerGameLobby`;
-                            history.push({
-                                pathname: path,
-                                state: [{ gameId: multiPlayerGameCode }]
-                            });
-                            return;
-                        }
-                    }
                 }
             });
+
+            if (lobbyFound) {
+                setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
+                    userId: db.doc('users/' + userDocumentId),
+                    userName: localStorage.getItem("userName"),
+                    isHost: false,
+                    guessedLocations: [],
+                    distances: [],
+                    scores: [],
+                    totalScore: "",
+                    isClickedGuess: ""
+                });
+                //setMultiPlayerGameCode(lobbyId);
+                
+                let path = `/GameLobby`;
+                history.push({
+                    pathname: path,
+                    state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
+                });
+            }
             if (!lobbyFound) {
                 alert("No lobbies exist with code: " + inviteCodeInput);
                 return;
@@ -133,35 +130,45 @@ export default function Home() {
 
     }
 
-    var gameId = 0;
-    function generateRandomGameCode() {
+    function generateRandomLobbyCode() {
         return Math.floor(100000000 + Math.random() * 900000000); 
     }
 
     //below code creates a new db game instance once user creates a new lobby.
     //user will be the host, hence have permission to change game settings and rules.
     async function createNewMultiplayerLobbyButtonClick () {
-        gameId = generateRandomGameCode();
-        setMultiPlayerGameCode(gameId);
-        console.log(gameId);
+        lobbyId = generateRandomLobbyCode();
+        //setMultiPlayerGameCode(lobbyId);
+        isMultiplayer = true;
+        console.log(multiPlayerGameCode);
         console.log(userDocumentId);
-        await setDoc(doc(db, "games", `${gameId}`), {
-            inviteCode: gameId,
+        await setDoc(doc(db, "lobbies", `${lobbyId}`), {
+            inviteCode: lobbyId,
             isActive: true,
-            isInLobby: true,
+            isGameStarted: false,
             isMultiplayer: true,
+            currentRound: "",
+            trueLocations: [],
+            gameState: "",
             noRounds: 5,
             timeLimit: 60,
+            enableZooming: false,
+            enableMovement: false
         });
-        await setDoc(doc(db, "games/" + gameId + "/gameusers", `${userDocumentId}`), {
+        await setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
             userId: db.doc('users/' + userDocumentId),
+            userName: localStorage.getItem("userName"),
             isHost: true,
-            isReady: false
+            guessedLocations: [],
+            distances: [],
+            scores: [],
+            totalScore: "",
+            isClickedGuess: ""
         });
-        let path = `/MultiplayerGameLobby`;
+        let path = `/GameLobby`;
         history.push({
             pathname: path,
-            state: [{ gameId: multiPlayerGameCode }]
+            state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
         });
     }
     
