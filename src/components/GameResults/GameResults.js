@@ -11,8 +11,9 @@ import { auth, db, logout } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
 import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore"; 
+import { resetLobby } from "../../utils/DbUtils";
 
-export default function GameResults({guessedLocations,trueLocations,totalScore,scores, isLoaded}){ 
+export default function GameResults({guessedLocations,trueLocations,totalScore,scores,lobbyId,isLoaded}){ 
 
 const [name, setName] = useState("");
 const [user, loading, error] = useAuthState(auth);
@@ -39,6 +40,7 @@ const handleLeaveGame = ()=>{
 }
 
 const handleBackToLobby = ()=>{
+    resetLobby({lobbyId});
     history.push('/GameLobby');
 };
 

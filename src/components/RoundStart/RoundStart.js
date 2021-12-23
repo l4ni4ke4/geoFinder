@@ -3,16 +3,18 @@ import "./RoundStart.css"
 import playIcon from '../../assets/play_icon.png';
 import exitIcon from '../../assets/exit_icon.png';
 
-/* import {useLoadScript} from "@react-google-maps/api" */
+import { db } from "../../firebase";
 
-const libraries = ["geometry"]; // for useLoadScript below
-
-function RoundStart({setShowView,currentRound,rounds,totalScore}){
+import { setGameState } from "../../utils/DbUtils";
 
 
-    const handleStartRoundBtn = () => {
-        setShowView("RoundPlay");
-        
+function RoundStart({isHost,currentRound,rounds,totalScore,lobbyId}){
+
+
+    const handleStartRoundBtn = async() => {
+        // setShowView("RoundPlay");
+        // update gameState from db
+        setGameState({lobbyId,gameState:"RoundPlay"});
     }
 
     return(
@@ -32,9 +34,13 @@ function RoundStart({setShowView,currentRound,rounds,totalScore}){
                     <img src={exitIcon} id='exitIcon'/>
                 </button>
 
-                <button type='button' id='btn-start-round' className='btn btn-primary' onClick= {handleStartRoundBtn}>
-                   <img src={playIcon} />
-                </button>
+                {isHost ?
+                    <button type='button' id='btn-start-round' className='btn btn-primary' onClick= {handleStartRoundBtn}>
+                    <img src={playIcon} />
+                    </button>
+                    : <h2>waiting for host to start the round...</h2>
+                }
+
 
             </div>
 
