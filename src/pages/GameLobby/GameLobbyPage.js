@@ -71,6 +71,14 @@ export default function GameLobbyPage() {
             trueLocations: fetchedLocations
         })
 
+        await db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers").get().then((qSnapshot)=>{
+            qSnapshot.forEach((docUser)=>{
+                docUser.ref.update({
+                    isClickedGuess:false,         
+                })
+            })
+        })
+
         // await setTrueLocations({lobbyId,fetchedLocations});
         // await setGameState({lobbyId,gameState:"RoundStart"});
         // await db.collection("lobbies").doc(lobbyId).update({
