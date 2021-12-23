@@ -67,15 +67,11 @@ function RoundEnd({gameUsers,userId,lobbyId,isHost,currentRound,rounds,distances
     const handleBtnNextRound = async() =>{
             // setCurrentRound(currentRound+1);
             // setShowView("RoundStart");
-            console.log("abiiiiiiiiiiiiiii")
-            console.log(scores)
-            console.log(currentRound)
-            console.log(scores[currentRound])
             try{
+                setGameState({lobbyId,gameState:"RoundStart"});
                 await db.collection("lobbies").doc(`${lobbyId}`).update({
                     currentRound: currentRound+1
                 })
-                setGameState({lobbyId,gameState:"RoundStart"});
             }catch(error){
                 console.error(error);
             }
