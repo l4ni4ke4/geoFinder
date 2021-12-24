@@ -120,6 +120,7 @@ function RoundEnd({gameUsers,userId,lobbyId,isHost,currentRound,rounds,distances
                 <RoundEndMap trueLocations = {trueLocations}
                              guessedLocations = {guessedLocations}
                              currentRound = {currentRound}
+                             gameUsers = {gameUsers}
                              isLoaded = {isLoaded}
                 />
             </div>
