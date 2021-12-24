@@ -28,6 +28,7 @@ function RoundEnd({gameUsers,userId,lobbyId,isHost,currentRound,rounds,distances
         }else{
           //push the guessed position into guessedPositions variable
           // setGuessedLocations(guessedLocations => [...guessedLocations,markerPosition]);
+          roundGuess = null;
           roundDistance = "null";
           roundScore = 0;
         }

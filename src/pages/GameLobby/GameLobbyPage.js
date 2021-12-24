@@ -53,7 +53,7 @@ export default function GameLobbyPage() {
     );
 
     const [worldIsChecked,setWorldIsChecked] = useState(true);
-    const [disableAllCountries,setDisableAllCountries] = useState(false);
+    const [disableAllCountries,setDisableAllCountries] = useState(true);
     /********/
 
     const history = useHistory();
