@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore"; 
 import { resetLobby } from "../../utils/DbUtils";
 
-export default function GameResults({guessedLocations,trueLocations,totalScore,scores,lobbyId,isLoaded,setShowExitModal}){ 
+export default function GameResults({gameUsers,guessedLocations,trueLocations,totalScore,scores,lobbyId,isLoaded,setShowExitModal,isMultiplayer}){ 
 
 const [name, setName] = useState("");
 const [user, loading, error] = useAuthState(auth);
@@ -41,8 +41,13 @@ const handleLeaveGame = ()=>{
 }
 
 const handleBackToLobby = ()=>{
-    resetLobby({lobbyId});
-    history.push('/GameLobby');
+    // TODO
+    // resetLobby({lobbyId});
+    
+    // history.push({
+    //     pathname: '/GameLobby',
+    //     state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
+    // });
 };
 
 const handleRestart = ()=>{
@@ -66,6 +71,47 @@ async function saveGameHistoryToDb() {
 useEffect(() => {
     saveGameHistoryToDb();
 }, []);
+
+function FinalLeaderboard(){
+    let nameScorePairs = [];
+    nameScorePairs = gameUsers.map((user)=>{
+            return {userName: user.userName,totalScore: user.totalScore}
+    })
+    
+    nameScorePairs.sort((firstItem, secondItem) => secondItem.totalScore -firstItem.totalScore)
+
+    return(
+        nameScorePairs.map((user)=>{
+            return( <tr>
+                        <td>{user.userName}</td>
+                        <td>{Math.round(user.totalScore)}</td>
+                   </tr>)
+                            })
+            )
+}
+
+function DetailedLeaderBoard(){
+    let nameAndScores = [];
+    nameAndScores = gameUsers.map((user)=>{
+            return {userName: user.userName,totalScore: user.totalScore, scores: user.scores}
+    })
+    
+    nameAndScores.sort((firstItem, secondItem) => secondItem.totalScore -firstItem.totalScore)
+    return(
+        nameAndScores.map((user)=>{
+            return(
+            <tr>
+            <td>{user.userName}</td>
+                {user.scores.map((score,index)=>{
+                    return(
+                        <td>{Math.round(score)}</td>
+                    )
+                })}
+             </tr>)
+
+        })
+    )
+}
     
     return(
         <div className= 'gameresults-container'>
@@ -116,10 +162,7 @@ useEffect(() => {
                     <h2>Final Leaderboard</h2>
                     <table class="table table-dark" id='finalTable'>
                         <tbody>
-                            <tr>
-                                <td>Total Score</td>
-                                <td>{Math.round(totalScore)}</td>
-                            </tr>
+                            <FinalLeaderboard/>
 
                         </tbody>
                     </table>
@@ -140,14 +183,7 @@ useEffect(() => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Score</td>
-                                {scores.map((score,index)=>{
-                                    return(
-                                        <td>{Math.round(score)}</td>
-                                    )
-                                })}
-                            </tr>
+                            <DetailedLeaderBoard/>
 
                         </tbody>
                     </table>

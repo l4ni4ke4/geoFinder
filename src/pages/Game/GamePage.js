@@ -41,6 +41,7 @@ export default function GamePage() {
   // fetch game state from db
   // lobbyId = JA9myMkBRXp3AJxbAWFl
   const lobbyId = variables.lobbyId // this should come from lobby page
+  const isMultiplayer = variables.isMultiplayer
 
   const {isFetchingLobby,lobby} = useLobby(lobbyId);
 
@@ -107,13 +108,15 @@ export default function GamePage() {
                    isHost={isHost}/>
       }
         <GameResults
+        gameUsers={gameUsers}
         lobbyId = {lobbyId}
         guessedLocations={guessedLocations}
         trueLocations = {trueLocations}
         totalScore={totalScore}
         scores={scores}
         setShowExitModal={setShowExitModal}
-        isLoaded={isLoaded}/>
+        isLoaded={isLoaded}
+        isMultiplayer={isMultiplayer}/>
       
 
     </>

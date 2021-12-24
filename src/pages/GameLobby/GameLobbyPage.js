@@ -87,7 +87,7 @@ export default function GameLobbyPage() {
         // });
 
         let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
-            roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, lobbyId};
+            roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, lobbyId, isMultiplayer};
         
         history.push({
             pathname: '/Game',
@@ -213,7 +213,7 @@ export default function GameLobbyPage() {
                     //if game is started, jump into GamePage.js 
                     if ((doc.data().isGameStarted === true) && (doc2.data().isHost === false)) {
                         let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
-                            roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, lobbyId};
+                            roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, lobbyId,isMultiplayer};
                         history.push({
                             pathname: '/Game',
                             state: data})
