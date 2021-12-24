@@ -78,6 +78,41 @@ export async function resetLobby({lobbyId}){
     }
 }
 
+export async function exitLobbyDb({lobbyId,userId,isHost}){
+    if(isHost){
+        //delete user
+        try{
+            await db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers").doc(userId).delete()
+        }catch(error){
+            console.error("Db error at deleting user from lobby")
+        }
+
+        //select another user to make him host
+        try{
+            const nextHostSnapshot = await db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers").limit(1).get();
+            if(!nextHostSnapshot.isEmpty){
+                const nextHost = nextHostSnapshot.docs[0];
+                nextHost.ref.update({
+                    isHost: true
+                })
+            }
+            else{
+                 //no one left in the lobby do something here...
+            }
+        }catch(error){
+            console.error("Db error at making someone else host")
+        }
+    }
+    else{
+        //delete user
+        try{
+            await db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers").doc(userId).delete()
+        }catch(error){
+            console.error("Db error at deleting user from lobby")
+        }
+    }
+}
+
 
 
 

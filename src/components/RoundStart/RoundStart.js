@@ -8,13 +8,17 @@ import { db } from "../../firebase";
 import { setGameState } from "../../utils/DbUtils";
 
 
-function RoundStart({isHost,currentRound,rounds,totalScore,lobbyId}){
+function RoundStart({isHost,currentRound,rounds,totalScore,lobbyId,setShowExitModal}){
 
 
     const handleStartRoundBtn = async() => {
         // setShowView("RoundPlay");
         // update gameState from db
         setGameState({lobbyId,gameState:"RoundPlay"});
+    }
+
+    const handleExitBtn = () =>{
+        setShowExitModal(true);
     }
 
     return(
@@ -30,7 +34,7 @@ function RoundStart({isHost,currentRound,rounds,totalScore,lobbyId}){
 
                 </div>
 
-                <button type= 'button' id='btn-exit-game' className='btn btn-danger'>
+                <button type= 'button' id='btn-exit-game' className='btn btn-danger' onClick= {handleExitBtn}>
                     <img src={exitIcon} id='exitIcon'/>
                 </button>
 

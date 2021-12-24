@@ -17,6 +17,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import useLobby from "../../Hooks/useLobby";
 import useGameUser from "../../Hooks/useGameUser";
 import useGameUsers from "../../Hooks/useGameUsers";
+import ExitPopup from "../../components/ExitPopup";
 
 
 export default function GamePage() {
@@ -32,6 +33,9 @@ export default function GamePage() {
 
   // Marker's position
   const [markerPosition,setMarkerPosition] = useState();
+
+  // exit Lobby modal
+  const [showExitModal,setShowExitModal] = useState(false);
 
 
   // fetch game state from db
@@ -96,14 +100,21 @@ export default function GamePage() {
     // Burda EndGame componenti render olcak
     return (<>
       {
+        <ExitPopup showExitModal={showExitModal}
+                   setShowExitModal={setShowExitModal}
+                   lobbyId={lobbyId}
+                   userId={userId}
+                   isHost={isHost}/>
+      }
         <GameResults
         lobbyId = {lobbyId}
         guessedLocations={guessedLocations}
         trueLocations = {trueLocations}
         totalScore={totalScore}
         scores={scores}
+        setShowExitModal={setShowExitModal}
         isLoaded={isLoaded}/>
-      }
+      
 
     </>
     )
@@ -113,13 +124,21 @@ export default function GamePage() {
 
     return (<>
       {
+        <ExitPopup showExitModal={showExitModal}
+                   setShowExitModal={setShowExitModal}
+                   lobbyId={lobbyId}
+                   userId={userId}
+                   isHost={isHost}/>
+      }
+      {
         showView === "RoundStart" &&
         <RoundStart
           isHost = {isHost}
           currentRound={currentRound}
           rounds={rounds}
           totalScore={totalScore}
-          lobbyId = {lobbyId} />
+          lobbyId = {lobbyId}
+          setShowExitModal= {setShowExitModal} />
       }
       {
         showView === "RoundPlay" &&

@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore"; 
 import { resetLobby } from "../../utils/DbUtils";
 
-export default function GameResults({guessedLocations,trueLocations,totalScore,scores,lobbyId,isLoaded}){ 
+export default function GameResults({guessedLocations,trueLocations,totalScore,scores,lobbyId,isLoaded,setShowExitModal}){ 
 
 const [name, setName] = useState("");
 const [user, loading, error] = useAuthState(auth);
@@ -36,7 +36,8 @@ const mapOptions = {
 const history = useHistory();
 
 const handleLeaveGame = ()=>{
-    history.push('/');
+    setShowExitModal(true);
+    // history.push('/');
 }
 
 const handleBackToLobby = ()=>{
