@@ -96,16 +96,29 @@
 
 .game-rules-row-1 {
     justify-content:space-around;
+    margin-left: 0.5rem;
 }
 
 .game-rules-row-2 {
-    margin-top: 5%;
-    margin-left: 15%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    /* margin-top: 5%;
+    margin-left: 15%; */
+}
+.game-rules-row-2 input{
+    width: 70%;
 }
 
 .game-rules-row-3 {
-    margin-top: 2%;
-    margin-left: 15%;
+    /* margin-top: 2%;
+    margin-left: 15%; */
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+.game-rules-row-3 input{
+    width: 70%;
 }
 
 #timeLimitRange, #numberOfRoundsRange {
