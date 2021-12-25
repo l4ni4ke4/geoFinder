@@ -29,7 +29,7 @@ function RoundPlay({lobbyId,userId,isClickedGuess,trueLocation,setShowView,guess
   const [mapClicked, setMapClicked] = useState(false);
 
   const location = useLocation();
-  const [currentTime, setCurrentTime] = useState(location.state.roundTime);
+  const [currentTime, setCurrentTime] = useState(roundTime);
   const [isAllClicked,setIsAllClicked] = useState(false);
 
   

@@ -59,7 +59,7 @@ export default function GamePage() {
   if(isFetchingUsers) return <h1>Loading Lobby Users</h1>
 
   
-  const {currentRound,gameState:showView, trueLocations, noRounds:rounds} = lobby;
+  const {currentRound,gameState:showView, trueLocations, noRounds:rounds, timeLimit} = lobby;
   // set user specific variables
   const {isHost,isClickedGuess,guessedLocations,distances,scores,totalScore} = gameUser;
   
@@ -155,8 +155,7 @@ export default function GamePage() {
           guessedLocations={guessedLocations}
           distances={distances}
           scores={scores}
-          roundTime={variables.roundTime}
-          setRoundTime={variables.setRoundTime}
+          roundTime={timeLimit}
           currentRound={currentRound}
           rounds={rounds}
           enableMovement={variables.enableMovement}
