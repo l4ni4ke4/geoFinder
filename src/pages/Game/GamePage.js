@@ -63,9 +63,9 @@ export default function GamePage() {
 
   
   
-  const {currentRound,gameState:showView, trueLocations, noRounds:rounds, timeLimit} = lobby;
+  const {currentRound,gameState:showView, trueLocations, noRounds:rounds, timeLimit, enableMovement, enableZooming} = lobby;
   // set user specific variables
-  const {isHost,isClickedGuess,guessedLocations,distances,scores,totalScore,enableMovement,enableZooming} = gameUser;
+  const {isHost,isClickedGuess,guessedLocations,distances,scores,totalScore} = gameUser;
   
   // const [user, loading, error] = useAuthState(auth);
   // const {uid} = user;
