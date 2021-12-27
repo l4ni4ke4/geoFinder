@@ -13,10 +13,9 @@ import { useEffect, useState } from "react";
 import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore"; 
 import { resetLobby } from "../../utils/DbUtils";
 
-export default function GameResults({gameUsers,guessedLocations,trueLocations,totalScore,scores,lobbyId,isLoaded,setShowExitModal,isMultiplayer}){ 
+export default function GameResults({gameUsers,guessedLocations,trueLocations,totalScore,scores,lobbyId,isLoaded,
+    setShowExitModal,isHost}){ 
 
-const [name, setName] = useState("");
-const [user, loading, error] = useAuthState(auth);
 
 const lineSymbol = {
         path: "M 0,-1 0,1",
@@ -42,17 +41,13 @@ const handleLeaveGame = ()=>{
 
 const handleBackToLobby = ()=>{
     // TODO
-    // resetLobby({lobbyId});
-    
-    // history.push({
-    //     pathname: '/GameLobby',
-    //     state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
-    // });
+    resetLobby({lobbyId});
 };
 
-const handleRestart = ()=>{
-    window.location.reload();
-}
+// const handleRestart = ()=>{
+//      window.location.reload();
+    
+// }
 
 function generateRandomGameHistoryId() {
     return Math.floor(100000000 + Math.random() * 900000000); 
@@ -68,9 +63,20 @@ async function saveGameHistoryToDb() {
     });
 }
 
-useEffect(() => {
-    saveGameHistoryToDb();
-}, []);
+// burayı boşuna dbye girdi açılmasın diye kapadım şimdilik
+// useEffect(() => {
+//     saveGameHistoryToDb();
+// }, []);
+
+// useEffect(()=>{
+//     if(showView === "Lobby"){
+//         history.push({
+//         pathname: '/GameLobby',
+//         state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
+//     });
+//     }
+    
+//   },[])
 
 function FinalLeaderboard(){
     let nameScorePairs = [];
@@ -190,8 +196,8 @@ function DetailedLeaderBoard(){
                 </section>
                 <section className='gameresults-footer'>
                     <button type= 'button' className= 'btn btn-danger' onClick={handleLeaveGame}>Leave Game</button>
-                    <button type= 'button' className= 'btn btn-secondary' onClick={handleBackToLobby}>Back to Lobby</button>
-                    <button type= 'button' className= 'btn btn-primary' onClick={handleRestart}>Restart</button>
+                    <button type= 'button' className= 'btn btn-secondary' disabled = {!isHost} onClick={handleBackToLobby}>Back to Lobby</button>
+                    {/* <button type= 'button' className= 'btn btn-primary' disabled = {!isHost} onClick={handleRestart}>Restart</button> */}
                 </section>
             </div>
         </div>

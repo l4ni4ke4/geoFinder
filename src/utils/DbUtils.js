@@ -57,7 +57,7 @@ export async function resetLobby({lobbyId}){
         await db.collection("lobbies").doc(`${lobbyId}`).update({
             currentRound: null,
             isGameStarted: false,
-            gameState: "",
+            gameState: "Lobby",
             trueLocations: []
         });
         
@@ -77,6 +77,7 @@ export async function resetLobby({lobbyId}){
         console.error("Error resetting the lobby");
     }
 }
+
 
 export async function exitLobbyDb({lobbyId,userId,isHost}){
     if(isHost){

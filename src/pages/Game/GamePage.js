@@ -11,13 +11,11 @@ import RoundStart from "../../components/RoundStart/RoundStart";
 import GameResults from "../../components/GameResults/GameResults";
 import {useLoadScript,useJsApiLoader} from '@react-google-maps/api';
 
-import { auth } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
-
 import useLobby from "../../Hooks/useLobby";
 import useGameUser from "../../Hooks/useGameUser";
 import useGameUsers from "../../Hooks/useGameUsers";
 import ExitPopup from "../../components/ExitPopup";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 
 export default function GamePage() {
@@ -28,6 +26,7 @@ export default function GamePage() {
   })
 
   const location = useLocation();
+  const history = useHistory();
 
   const variables = location.state;
 
@@ -51,6 +50,10 @@ export default function GamePage() {
   const {isFetchingUser, gameUser} = useGameUser({lobbyId,userId});
   const {isFetchingUsers, gameUsers} = useGameUsers({lobbyId})
 
+
+
+
+
   // get Game Logic Variables
   if(isFetchingLobby) return <h1>Loading Lobby</h1>
   if(!lobby) return <h1>Lobby Not Found</h1>
@@ -58,6 +61,7 @@ export default function GamePage() {
   if(!gameUser) return <h1>???</h1>
   if(isFetchingUsers) return <h1>Loading Lobby Users</h1>
 
+  
   
   const {currentRound,gameState:showView, trueLocations, noRounds:rounds, timeLimit} = lobby;
   // set user specific variables
@@ -94,6 +98,11 @@ export default function GamePage() {
 
 
 
+  if(showView === "Lobby"){
+            history.push({
+            pathname: '/GameLobby',
+            state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
+        })};
 
 
   // if rounds are finished, render end game page 
@@ -108,6 +117,7 @@ export default function GamePage() {
                    isHost={isHost}/>
       }
         <GameResults
+        isHost={isHost}
         gameUsers={gameUsers}
         lobbyId = {lobbyId}
         guessedLocations={guessedLocations}
@@ -116,7 +126,7 @@ export default function GamePage() {
         scores={scores}
         setShowExitModal={setShowExitModal}
         isLoaded={isLoaded}
-        isMultiplayer={isMultiplayer}/>
+        showView= {showView}/>
       
 
     </>
