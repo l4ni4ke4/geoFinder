@@ -186,16 +186,21 @@ export default function Home() {
             <i class="icon-language fas fa-language fa-2x"></i>
 
             <div class="container home-top-right-flex-container flex-container justify-content-end">
-                <button type="button" class="btn btn-primary">Game History</button>
+                <button type="button" class="btn btn-primary btn-gamehistory">Game History</button>
                 <div class="dropdown">
-                    <button class="btn btn-secondary btn-profile dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-secondary btn-profile dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {localStorage.getItem("userName")}
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="/accountDetails">Account Details</a></li>
+                        <li><a class="dropdown-item" href="/stats">Stats</a></li>
+                        <li><a class="dropdown-item" href="/" onClick={logout}>Logout</a></li>
+                    </ul>
+                    {/* <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="/accountDetails">Account Details</a>
                         <a class="dropdown-item" href="/stats">Stats</a>
                         <a class="dropdown-item" href="/" onClick={logout}>Logout</a>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
