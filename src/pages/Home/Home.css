@@ -26,9 +26,20 @@ body {
     margin-left: 4%;
 }
 
+.navbar-brand {
+    margin-left: 2%;
+}
+
+.dropdown {
+    margin-right: 8%;
+}
+
 .btn-profile {
     width: 130%;
-    margin-left: 30%;
+}
+
+.btn-gamehistory {
+    margin-right: 2%;
 }
 
 .sp-image, .mp-image {

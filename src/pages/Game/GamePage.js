@@ -5,14 +5,17 @@ import "./GamePage.css";
 
 import {useLocation} from 'react-router-dom';
 
-import randomStreetView from 'random-streetview';
-
 import RoundPlay from "../../components/RoundPlay/RoundPlay";
 import RoundEnd from "../../components/RoundEnd/RoundEnd";
 import RoundStart from "../../components/RoundStart/RoundStart";
 import GameResults from "../../components/GameResults/GameResults";
-
 import {useLoadScript,useJsApiLoader} from '@react-google-maps/api';
+
+import useLobby from "../../Hooks/useLobby";
+import useGameUser from "../../Hooks/useGameUser";
+import useGameUsers from "../../Hooks/useGameUsers";
+import ExitPopup from "../../components/ExitPopup";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 
 export default function GamePage() {
@@ -23,75 +26,108 @@ export default function GamePage() {
   })
 
   const location = useLocation();
+  const history = useHistory();
 
   const variables = location.state;
 
-  // Game Logic Variables
+  // Marker's position
+  const [markerPosition,setMarkerPosition] = useState();
 
-  // current Round at any time (starts from zero because its easier to associate it with the index of related variables this way)
-  const [currentRound, setCurrentRound] = useState(0);
-  // user guesses stored here
-  const [guessedLocations, setGuessedLocations] = useState([]);
-  // distances of each round stored here
-  const [distances, setDistances] = useState([]);
-  // user scores stored here
-  const [scores, setScores] = useState([]);
-  // total score stored here
-  const [totalScore, setTotalScore] = useState(0);
+  // exit Lobby modal
+  const [showExitModal,setShowExitModal] = useState(false);
 
-  // this used for conditional rendering
-  const [showView, setShowView] = useState("RoundStart");
 
-  // true streetview locations
-  const [trueLocations, setTrueLocations] = useState([]);
+  // fetch game state from db
+  // lobbyId = JA9myMkBRXp3AJxbAWFl
+  const lobbyId = variables.lobbyId // this should come from lobby page
+  const isMultiplayer = variables.isMultiplayer
 
-  // total rounds (should come from lobby settings later)
-  const rounds = variables.numberOfRounds;
+  const {isFetchingLobby,lobby} = useLobby(lobbyId);
 
-  // get random X (number of total rounds above) location when GamePage loads set it to trueLocations
-  // async function generateRandomStreetView() {
-  //   Promise.resolve(randomStreetView.setParameters({
-  //     type: "sv",
-  //     /* polygon: [[[42,26], [36,26], [36,36], [37,45], [40,45], [42,42]]] */
-  //     // google: window.google
-  //     enableCaching: false
-      
-  //   }));
-  //   Promise.resolve(randomStreetView.getRandomLocations(rounds)).then(value => {
-  //     const returnedLocations = value.map((location) => {
-  //       return { lat: location[0], lng: location[1] }
-  //     })
-  //     setTrueLocations(returnedLocations);
-  //   });
-  // };
+  // fetch user state from db
+  // const [user, loading, error] = useAuthState(auth);
+  const userId = localStorage.userId;
+  const {isFetchingUser, gameUser} = useGameUser({lobbyId,userId});
+  const {isFetchingUsers, gameUsers} = useGameUsers({lobbyId})
+
+
+
+
+
+  // get Game Logic Variables
+  if(isFetchingLobby) return <h1>Loading Lobby</h1>
+  if(!lobby) return <h1>Lobby Not Found</h1>
+  if(isFetchingUser) return <h1>Loading Lobby</h1>
+  if(!gameUser) return <h1>???</h1>
+  if(isFetchingUsers) return <h1>Loading Lobby Users</h1>
 
   
+  
+  const {currentRound,gameState:showView, trueLocations, noRounds:rounds, timeLimit, enableMovement, enableZooming} = lobby;
+  // set user specific variables
+  const {isHost,isClickedGuess,guessedLocations,distances,scores,totalScore} = gameUser;
+  
+  // const [user, loading, error] = useAuthState(auth);
+  // const {uid} = user;
+  // const {gameUsers} = useGameUsers({lobbyId:"JA9myMkBRXp3AJxbAWFl",userId:uid});
+  // console.log(gameUsers);
+
+  // current Round at any time (starts from zero because its easier to associate it with the index of related variables this way)
+  // const [currentRound, setCurrentRound] = useState(0);
+  // user guesses stored here
+  // const [guessedLocations, setGuessedLocations] = useState([]);
+  // distances of each round stored here
+  // const [distances, setDistances] = useState([]);
+  // user scores stored here
+  // const [scores, setScores] = useState([]);
+  // total score stored here
+  // const [totalScore, setTotalScore] = useState(0);
+
+  // this used for conditional rendering
+  // const [showView, setShowView] = useState("RoundStart");
+
+  // true streetview locations
+  // const [trueLocations, setTrueLocations] = useState([]);
+
+  // total rounds (should come from lobby settings later)
+  // const rounds = variables.numberOfRounds;
+
+  // useEffect(()=>{
+  //   setTrueLocations(variables.fetchedLocations);
+  //   },[])
 
 
-  // useEffect(() => {
-  //   if (currentRound === 0) {
-  //   }
-  // }, []);
+
+  if(showView === "Lobby"){
+            history.push({
+            pathname: '/GameLobby',
+            state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
+        })};
 
 
-  useEffect(()=>{
-    setTrueLocations(variables.fetchedLocations);
-    },[])
-
-
-
-  // if rounds are finished, render end game page
+  // if rounds are finished, render end game page 
   if (currentRound >= rounds) {
     // Burda EndGame componenti render olcak
     return (<>
       {
+        <ExitPopup showExitModal={showExitModal}
+                   setShowExitModal={setShowExitModal}
+                   lobbyId={lobbyId}
+                   userId={userId}
+                   isHost={isHost}/>
+      }
         <GameResults
+        isHost={isHost}
+        gameUsers={gameUsers}
+        lobbyId = {lobbyId}
         guessedLocations={guessedLocations}
         trueLocations = {trueLocations}
         totalScore={totalScore}
         scores={scores}
-        isLoaded={isLoaded}/>
-      }
+        setShowExitModal={setShowExitModal}
+        isLoaded={isLoaded}
+        showView= {showView}/>
+      
 
     </>
     )
@@ -101,48 +137,63 @@ export default function GamePage() {
 
     return (<>
       {
+        <ExitPopup showExitModal={showExitModal}
+                   setShowExitModal={setShowExitModal}
+                   lobbyId={lobbyId}
+                   userId={userId}
+                   isHost={isHost}/>
+      }
+      {
         showView === "RoundStart" &&
         <RoundStart
-          setShowView={setShowView}
+          isHost = {isHost}
           currentRound={currentRound}
           rounds={rounds}
-          totalScore={totalScore} />
+          totalScore={totalScore}
+          lobbyId = {lobbyId}
+          setShowExitModal= {setShowExitModal} />
       }
       {
         showView === "RoundPlay" &&
         <RoundPlay
-          setShowView={setShowView}
+          // setShowView={setShowView}
+          isClickedGuess = {isClickedGuess}
+          isHost = {isHost}
+          lobbyId = {lobbyId}
+          userId = {userId}
           trueLocation={trueLocations[currentRound]}
           guessedLocations={guessedLocations}
-          setGuessedLocations={setGuessedLocations}
           distances={distances}
-          setDistances={setDistances}
           scores={scores}
-          setScores={setScores}
-          roundTime={variables.roundTime}
-          setRoundTime={variables.setRoundTime}
+          roundTime={timeLimit}
           currentRound={currentRound}
           rounds={rounds}
-          enableMovement={variables.enableMovement}
+          enableMovement={enableMovement}
           enablePan={variables.enablePan}
-          enableZooming={variables.enableZooming}
+          enableZooming={enableZooming}
+          markerPosition={markerPosition}
+          setMarkerPosition={setMarkerPosition}
           isLoaded = {isLoaded}
         />
       }
       {
         showView === "RoundEnd" &&
         <RoundEnd
-          setShowView={setShowView}
+          gameUsers = {gameUsers}
           currentRound={currentRound}
-          setCurrentRound={setCurrentRound}
+          isHost = {isHost}
+          userId = {userId}
+          lobbyId={lobbyId}
           rounds={rounds}
           distances={distances}
           scores={scores}
           totalScore={totalScore}
-          setTotalScore={setTotalScore}
           guessedLocations={guessedLocations}
           trueLocations={trueLocations}
-          isLoaded ={isLoaded} />
+          trueLocation={trueLocations[currentRound]}
+          isLoaded ={isLoaded}
+          markerPosition = {markerPosition}
+          setMarkerPosition = {setMarkerPosition} />
       }
 
     </>);

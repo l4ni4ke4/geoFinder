@@ -25,7 +25,7 @@ const mapOptions = {
     disableDefaultUI: true,
   };
 
-function RoundEndMap({trueLocations,guessedLocations,currentRound,isLoaded}) {
+function RoundEndMap({trueLocations,guessedLocations,currentRound,gameUsers,isLoaded}) {
 
        
       const [map, setMap] = React.useState(null)
@@ -49,27 +49,45 @@ function RoundEndMap({trueLocations,guessedLocations,currentRound,isLoaded}) {
           onLoad={onLoad}
           onUnmount={onUnmount}
         >
-            <Marker position={guessedLocations[currentRound]}
-                                    icon= {{url:markerDefault,
-                                            scaledSize: new window.google.maps.Size(45,45)}}/>
+            <Marker position={trueLocations[currentRound]}
+                    icon={{
+                      url: markerTrueLocation,
+                      scaledSize: new window.google.maps.Size(35, 35)
+                              }} />
+          {
+          gameUsers.map((user)=>{
+              return(
+                    <div className="RoundResultMarkers" id={`100${user.id}`}>
+                      <Marker position={user.guessedLocations[currentRound]}
+                              label={{
+                                text:user.userName,
+                                color: "green"
+                                }}
+                              icon={{
+                              url: markerDefault,
+                              labelOrigin: new window.google.maps.Point(5, -3),
+                              scaledSize: new window.google.maps.Size(45, 45)
+                                     }} />
 
-                            <Marker position ={trueLocations[currentRound]}
-                                    icon = {{url:markerTrueLocation,
-                                             scaledSize: new window.google.maps.Size(35,35)}}/>
-                            
-                            <Polyline path ={[guessedLocations[currentRound],trueLocations[currentRound]]}
-                                      options = {{
-                                        icons: [
-                                            {
-                                              icon: lineSymbol,
-                                              offset: "10px",
-                                              repeat: "20px",
-                                            },
+                      <Polyline path={[user.guessedLocations[currentRound], trueLocations[currentRound]]}
+                                options={{
+                                  icons: [
+                                    {
+                                      icon: lineSymbol,
+                                      offset: "10px",
+                                      repeat: "20px",
+                                    },
                                           ],
-                                        strokeOpacity:0,
-                                        strokeColor:"#000000"
-                                      }}
-                                      />            
+                                  strokeOpacity: 0,
+                                  strokeColor: "#000000"
+                                          }} />
+
+                    </div>      
+
+              )
+            })
+          }
+      
           <></>
         </GoogleMap>
     ) : <></>

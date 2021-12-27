@@ -11,11 +11,11 @@ import { auth, db, logout } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
 import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore"; 
+import { resetLobby } from "../../utils/DbUtils";
 
-export default function GameResults({guessedLocations,trueLocations,totalScore,scores, isLoaded}){ 
+export default function GameResults({gameUsers,guessedLocations,trueLocations,totalScore,scores,lobbyId,isLoaded,
+    setShowExitModal,isHost}){ 
 
-const [name, setName] = useState("");
-const [user, loading, error] = useAuthState(auth);
 
 const lineSymbol = {
         path: "M 0,-1 0,1",
@@ -35,16 +35,19 @@ const mapOptions = {
 const history = useHistory();
 
 const handleLeaveGame = ()=>{
-    history.push('/');
+    setShowExitModal(true);
+    // history.push('/');
 }
 
 const handleBackToLobby = ()=>{
-    history.push('/GameLobby');
+    // TODO
+    resetLobby({lobbyId});
 };
 
-const handleRestart = ()=>{
-    window.location.reload();
-}
+// const handleRestart = ()=>{
+//      window.location.reload();
+    
+// }
 
 function generateRandomGameHistoryId() {
     return Math.floor(100000000 + Math.random() * 900000000); 
@@ -60,9 +63,61 @@ async function saveGameHistoryToDb() {
     });
 }
 
-useEffect(() => {
-    saveGameHistoryToDb();
-}, []);
+// burayı boşuna dbye girdi açılmasın diye kapadım şimdilik
+// useEffect(() => {
+//     saveGameHistoryToDb();
+// }, []);
+
+// useEffect(()=>{
+//     if(showView === "Lobby"){
+//         history.push({
+//         pathname: '/GameLobby',
+//         state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
+//     });
+//     }
+    
+//   },[])
+
+function FinalLeaderboard(){
+    let nameScorePairs = [];
+    nameScorePairs = gameUsers.map((user)=>{
+            return {userName: user.userName,totalScore: user.totalScore}
+    })
+    
+    nameScorePairs.sort((firstItem, secondItem) => secondItem.totalScore -firstItem.totalScore)
+
+    return(
+        nameScorePairs.map((user)=>{
+            return( <tr>
+                        <td>{user.userName}</td>
+                        <td>{Math.round(user.totalScore)}</td>
+                   </tr>)
+                            })
+            )
+}
+
+function DetailedLeaderBoard(){
+    let nameAndScores = [];
+    nameAndScores = gameUsers.map((user)=>{
+            return {userName: user.userName,totalScore: user.totalScore, scores: user.scores}
+    })
+    
+    nameAndScores.sort((firstItem, secondItem) => secondItem.totalScore -firstItem.totalScore)
+    return(
+        nameAndScores.map((user)=>{
+            return(
+            <tr>
+            <td>{user.userName}</td>
+                {user.scores.map((score,index)=>{
+                    return(
+                        <td>{Math.round(score)}</td>
+                    )
+                })}
+             </tr>)
+
+        })
+    )
+}
     
     return(
         <div className= 'gameresults-container'>
@@ -113,10 +168,7 @@ useEffect(() => {
                     <h2>Final Leaderboard</h2>
                     <table class="table table-dark" id='finalTable'>
                         <tbody>
-                            <tr>
-                                <td>Total Score</td>
-                                <td>{Math.round(totalScore)}</td>
-                            </tr>
+                            <FinalLeaderboard/>
 
                         </tbody>
                     </table>
@@ -137,22 +189,15 @@ useEffect(() => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Score</td>
-                                {scores.map((score,index)=>{
-                                    return(
-                                        <td>{Math.round(score)}</td>
-                                    )
-                                })}
-                            </tr>
+                            <DetailedLeaderBoard/>
 
                         </tbody>
                     </table>
                 </section>
                 <section className='gameresults-footer'>
                     <button type= 'button' className= 'btn btn-danger' onClick={handleLeaveGame}>Leave Game</button>
-                    <button type= 'button' className= 'btn btn-secondary' onClick={handleBackToLobby}>Back to Lobby</button>
-                    <button type= 'button' className= 'btn btn-primary' onClick={handleRestart}>Restart</button>
+                    <button type= 'button' className= 'btn btn-secondary' disabled = {!isHost} onClick={handleBackToLobby}>Back to Lobby</button>
+                    {/* <button type= 'button' className= 'btn btn-primary' disabled = {!isHost} onClick={handleRestart}>Restart</button> */}
                 </section>
             </div>
         </div>

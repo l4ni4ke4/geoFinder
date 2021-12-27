@@ -14,21 +14,23 @@ import RoundTimer from "../RoundTimer";
 import BeepSound from "../../assets/beep.mp3";
 import RoundPlayMap from "./RoundPlayMap";
 import RoundPlayStreetview from "./RoundPlayStreetview";
+import { db } from "../../firebase";
+import { setGameState, toggleIsClickedGuess } from "../../utils/DbUtils";
 
 
 
-function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocations,distances,setDistances,scores,setScores,
-  roundTime,setRoundTime, currentRound, rounds, enableMovement, enablePan, enableZooming,isLoaded}) {
+function RoundPlay({lobbyId,userId,isClickedGuess,trueLocation,setShowView,guessedLocations,distances,scores,markerPosition,setMarkerPosition,
+  roundTime, currentRound, rounds, enableMovement, enablePan, enableZooming,isLoaded}) {
 
-  // Marker's position
-  const [markerPosition,setMarkerPosition] = useState();
+
 
   const [isTimerActive, setIsTimerActive] = useState(false);
 
   const [mapClicked, setMapClicked] = useState(false);
 
   const location = useLocation();
-  const [currentTime, setCurrentTime] = useState(location.state.roundTime);
+  const [currentTime, setCurrentTime] = useState(roundTime);
+  const [isAllClicked,setIsAllClicked] = useState(false);
 
   
 
@@ -108,8 +110,10 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
   //Checks if current time is smaller than 0
   useEffect(() => {
         if(currentTime < 1){
-          handleGuessButton();
           setIsTimerActive(false);
+          setGameState({lobbyId,gameState:"RoundEnd"})
+          // handleGuessButton();
+          // setIsTimerActive(false);
           setCurrentTime(roundTime);
         }
         else if (currentTime >= 1 && currentTime < 6) {
@@ -122,40 +126,44 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
   const handleMapClick = (event) =>{
     setMarkerPosition({lat: event.latLng.lat(),
                        lng: event.latLng.lng()});
+    console.log(markerPosition);
     setMapClicked(true);
      };
 
   // calculate the distance and show alert when guess button is clicked
-  const handleGuessButton = () =>{
-    // turn off the timer
-    setIsTimerActive(false);
-    let roundDistance;
-    let roundScore;
-    if(markerPosition != null){
-      //push the guessed position into guessedPositions variable
-      setGuessedLocations(guessedLocations => [...guessedLocations,markerPosition]);
+  const handleGuessButton = async() =>{
 
-      // calculate distance
-      roundDistance = calculateDistance(trueLocation.lat,markerPosition.lat,trueLocation.lng,markerPosition.lng);
+    toggleIsClickedGuess({lobbyId,userId});
+    //check if everyone else clicked guess
+    //if true: 
+    const queryCheckIfAllGuessed = db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers")
+                                      .where("isClickedGuess","==",false);
+    
+    queryCheckIfAllGuessed.get().then((querySnapshot)=>{
+      if(querySnapshot.empty){
+        // everyone clicked guess
+          // turn off the timer
+        setIsTimerActive(false);
+        setGameState({lobbyId,gameState:"RoundEnd"})
+      }
+      else {
+        // some people havent clicked guess yet
 
-      // calculate score
-      roundScore = getScore(roundDistance,12000);
-    }else{
-      //push the guessed position into guessedPositions variable
-      setGuessedLocations(guessedLocations => [...guessedLocations,markerPosition]);
-      roundDistance = "aa";
-      roundScore = 0;
-    }
+      }
 
+    })
     // push round distance to distances array
-    setDistances(distances=>[...distances,roundDistance]);
+    // setDistances(distances=>[...distances,roundDistance]);
+
     
     // push round score to scores array
-    setScores(scores =>[...scores,roundScore]);
+    // setScores(scores =>[...scores,roundScore]);
     
-    setShowView("RoundEnd");
+    // setShowView("RoundEnd");
   
      };
+
+
 
      
     
@@ -186,7 +194,10 @@ function RoundPlay({trueLocation,setShowView,guessedLocations,setGuessedLocation
                         currentTime={currentTime}
                         setCurrentTime={setCurrentTime}/> 
           </div>
+          {!isClickedGuess ? 
           <button type="button" id = "guessBtn" class="btn btn-primary" onClick={handleGuessButton} disabled={!mapClicked}>Guess</button>
+          :<button type="button" id = "guessBtn" class="btn btn-secondary" onClick={handleGuessButton} disabled={!mapClicked}>Waiting for others</button>
+           }
         </div>
           
       </div>

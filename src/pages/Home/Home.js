@@ -16,10 +16,12 @@ import { doc, setDoc, collection, query, where, getDocs } from "firebase/firesto
 export default function Home() {
 
     var lobbyId = 0;
+    var isMultiplayer = false;
 
     const history = useHistory();
     const [name, setName] = useState("");
     const [multiPlayerGameCode, setMultiPlayerGameCode] = useState(0);
+
     const [user, loading, error] = useAuthState(auth);
     const [userDocumentId, setUserDocumentId] = useState(0);
 
@@ -48,6 +50,7 @@ export default function Home() {
     async function singlePlayerButtonClick () { 
         lobbyId = generateRandomLobbyCode();
         //setMultiPlayerGameCode(lobbyId);
+        isMultiplayer = false;
         await setDoc(doc(db, "lobbies", `${lobbyId}`), {
             inviteCode: lobbyId,
             isActive: false,
@@ -55,12 +58,15 @@ export default function Home() {
             isMultiplayer: false,
             currentRound: "",
             trueLocations: [],
-            gameState: "",
+            gameState: "Lobby",
             noRounds: 5,
             timeLimit: 60,
+            enableZooming: false,
+            enableMovement: false
         });
         await setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
             userId: db.doc('users/' + userDocumentId),
+            userName: localStorage.getItem("userName"),
             isHost: true,
             guessedLocations: [],
             distances: [],
@@ -73,7 +79,7 @@ export default function Home() {
 
         history.push({
             pathname: `/GameLobby`,
-            state: { lobbyId: lobbyId }
+            state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
             /* ,
             state: data */
         });
@@ -81,6 +87,7 @@ export default function Home() {
 
     async function joinExistingMultiplayerLobbyButtonClick() {
         var lobbyFound = false;
+        isMultiplayer = true;
         const queryResult = await query(collection(db, "lobbies"), where("isActive", "==", true), where("isMultiplayer", "==", true));
         const querySnapshot = await getDocs(queryResult);
         if (querySnapshot.empty) {
@@ -112,7 +119,7 @@ export default function Home() {
                 let path = `/GameLobby`;
                 history.push({
                     pathname: path,
-                    state: { lobbyId: lobbyId }
+                    state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
                 });
             }
             if (!lobbyFound) {
@@ -132,6 +139,7 @@ export default function Home() {
     async function createNewMultiplayerLobbyButtonClick () {
         lobbyId = generateRandomLobbyCode();
         //setMultiPlayerGameCode(lobbyId);
+        isMultiplayer = true;
         console.log(multiPlayerGameCode);
         console.log(userDocumentId);
         await setDoc(doc(db, "lobbies", `${lobbyId}`), {
@@ -141,19 +149,26 @@ export default function Home() {
             isMultiplayer: true,
             currentRound: "",
             trueLocations: [],
-            gameState: "",
+            gameState: "Lobby",
             noRounds: 5,
             timeLimit: 60,
+            enableZooming: false,
+            enableMovement: false
         });
         await setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
             userId: db.doc('users/' + userDocumentId),
+            userName: localStorage.getItem("userName"),
             isHost: true,
-            isReady: false
+            guessedLocations: [],
+            distances: [],
+            scores: [],
+            totalScore: "",
+            isClickedGuess: ""
         });
         let path = `/GameLobby`;
         history.push({
             pathname: path,
-            state: { lobbyId: lobbyId }
+            state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
         });
     }
     
@@ -171,16 +186,21 @@ export default function Home() {
             <i class="icon-language fas fa-language fa-2x"></i>
 
             <div class="container home-top-right-flex-container flex-container justify-content-end">
-                <button type="button" class="btn btn-primary">Game History</button>
+                <button type="button" class="btn btn-primary btn-gamehistory">Game History</button>
                 <div class="dropdown">
-                    <button class="btn btn-secondary btn-profile dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-secondary btn-profile dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {localStorage.getItem("userName")}
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="/accountDetails">Account Details</a></li>
+                        <li><a class="dropdown-item" href="/stats">Stats</a></li>
+                        <li><a class="dropdown-item" href="/" onClick={logout}>Logout</a></li>
+                    </ul>
+                    {/* <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="/accountDetails">Account Details</a>
                         <a class="dropdown-item" href="/stats">Stats</a>
                         <a class="dropdown-item" href="/" onClick={logout}>Logout</a>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
