@@ -9,7 +9,7 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import { auth, db, logout } from "../../firebase";
 
 import { doc, setDoc, collection, query, where, getDocs, getDoc, onSnapshot, deleteDoc } from "firebase/firestore"; 
-import { setGameState, setTrueLocations } from "../../utils/DbUtils";
+import { setGameState, setTrueLocations, exitLobbyDb } from "../../utils/DbUtils";
 
 export default function GameLobbyPage() {
 
@@ -34,6 +34,8 @@ export default function GameLobbyPage() {
 
     const [dbEnableMovement, setDbEnableMovement] = useState(false);
     const [dbEnableZooming, setDbEnableZooming] = useState(false);
+
+    const [isDbHost, setDbHost] = useState(false);
 
     const [roundTime, setRoundTime] = useState(60);
     const [numberOfRounds, setNumberOfRounds] = useState(5);
@@ -117,7 +119,13 @@ export default function GameLobbyPage() {
     }
 
     const exitButtonClick = async () => {
-        await deleteDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", localStorage.getItem("userId")));
+        let userId = localStorage.getItem("userId");
+        console.log("is host: " + isDbHost);
+        /* let host = `${isDbHost}`;
+        console.log(host); */
+        let isHost = isDbHost;
+        exitLobbyDb({lobbyId, userId, isHost});
+        //await deleteDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", localStorage.getItem("userId")));
         let path = '/Home';
         history.push(path);
     }
@@ -210,6 +218,20 @@ export default function GameLobbyPage() {
                 setDbRoundTime(doc.data().timeLimit)
                 const userRef = db.collection("lobbies/" + lobbyId + "/gameUsers").doc(`${localStorage.getItem("userId")}`);
                 userRef.get().then((doc2) => {
+                    /* try {
+                        setDbHost(doc2.data().isHost);
+                        //if game is started, jump into GamePage.js 
+                        if ((doc.data().isGameStarted === true) && (doc2.data().isHost === false)) {
+                            let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
+                                roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, lobbyId,isMultiplayer};
+                            history.push({
+                                pathname: '/Game',
+                                state: data})
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    } */
+                    setDbHost(doc2.data().isHost);
                     //if game is started, jump into GamePage.js 
                     if ((doc.data().isGameStarted === true) && (doc2.data().isHost === false)) {
                         let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
@@ -218,13 +240,20 @@ export default function GameLobbyPage() {
                             pathname: '/Game',
                             state: data})
                     }
+                    
                 })
                 
             }).catch((error) => {
                 console.log("Error getting document:", error);
             });
         })
-        
+        return () => {
+            unsubscribe2();
+        }
+        //return unsubscribe2();
+    },[]);
+
+    useEffect(() => {
         //listener for lobby user data changes
         const q = query(collection(db, "lobbies/" + lobbyId + "/gameUsers"));
         var fetchedUsersFromDatabase = [];
@@ -233,40 +262,25 @@ export default function GameLobbyPage() {
             //var hostExists = false;
             querySnapshot.forEach((doc) => {
                 fetchedUsersFromDatabase.push(doc.data());
-                /* if (doc.data().isHost === true) {
-                    hostExists = true;
-                } */
             })
-            //HOST CIKINCA YENI HOST ATANSIN LOGIC INI YAPMAYA CALISTIM AMA OLMADI :(
-            /* alert("host status: " + hostExists);
-            if (!hostExists) {
-                //const q2 = query(collection(db, "lobbies/" + lobbyId + "/gameUsers"));
-                //const querySnapshot2 = getDocs(q2);
-                const q2 = db.collection("lobbies/" + lobbyId + "/gameUsers").get();
-                if (q2.empty) {
-                    alert("no users left.");
-                }
-                else {
-                    console.log(q2.docs);
-                    const nextHostPlayer = q2.docs[0].data();
-                    alert("q2 dolu ");
-                    setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${nextHostPlayer.userId}`), {
-                        userId: db.doc('users/' + q2.docs[0].data().userId),
-                        userName: q2.docs[0].data().userName,
-                        isHost: true,
-                        guessedLocations: [],
-                        distances: [],
-                        scores: [],
-                        totalScore: "",
-                        isClickedGuess: ""
-                    })
-                }
-            } */
-            
-            //console.log(fetchedUsersFromDatabase);
+            const userRef = db.collection("lobbies/" + lobbyId + "/gameUsers").doc(`${localStorage.getItem("userId")}`);
+            userRef.get().then((doc2) => {
+                setDbHost(doc2.data().isHost);
+                /* try {
+                    setDbHost(doc2.data().isHost);
+                } catch (error) {
+                    console.log(error);
+                } */
+                
+            })
             setLobbyUsers(fetchedUsersFromDatabase);
         })
-    },[]);
+        //return unsubscribe();
+        return () => {
+            unsubscribe();
+        }
+    }, [])
+    
 
     useEffect(() => {
         const lobbyUserNames = lobbyUsers.map((user) => {
@@ -310,11 +324,11 @@ export default function GameLobbyPage() {
                         </div>
                     </div>
                     <div className="container game-rules-edit-settings-footer">
-                        <button type="button" id = "editSettingsButton" class="btn btn-success" onClick={handlePopupShow}>Edit Game Settings</button>
+                        <button type="button" id = "editSettingsButton" class="btn btn-success" onClick={handlePopupShow} disabled={!isDbHost}>Edit Game Settings</button>
                     </div>
                     <div class="container game-lobby-footer">
                         <button type="button" id = "exitButton" class="btn btn-danger" onClick={exitButtonClick}>Back to Main Menu</button>
-                        <button type="button" id = "startGameButton" class="btn btn-success" onClick={startGameButtonClick}>Start Game</button>        
+                        <button type="button" id = "startGameButton" class="btn btn-success" onClick={startGameButtonClick} disabled={!isDbHost}>Start Game</button>        
                     </div>
                 </div>
                 <Modal dialogClassName="gameSettingsPopup" show={popupShow} onHide={handlePopupClose}>

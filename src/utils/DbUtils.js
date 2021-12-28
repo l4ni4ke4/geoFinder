@@ -80,18 +80,21 @@ export async function resetLobby({lobbyId}){
 
 
 export async function exitLobbyDb({lobbyId,userId,isHost}){
+    console.log(isHost);
     if(isHost){
+        console.log("1");
         //delete user
         try{
             await db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers").doc(userId).delete()
         }catch(error){
             console.error("Db error at deleting user from lobby")
         }
-
+        console.log("2");
         //select another user to make him host
         try{
             const nextHostSnapshot = await db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers").limit(1).get();
             if(!nextHostSnapshot.isEmpty){
+                console.log("3");
                 const nextHost = nextHostSnapshot.docs[0];
                 nextHost.ref.update({
                     isHost: true
@@ -105,6 +108,7 @@ export async function exitLobbyDb({lobbyId,userId,isHost}){
         }
     }
     else{
+        console.log("4");
         //delete user
         try{
             await db.collection("lobbies").doc(`${lobbyId}`).collection("gameUsers").doc(userId).delete()
