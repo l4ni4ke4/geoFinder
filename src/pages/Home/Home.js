@@ -11,7 +11,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 import { Button, Modal, Form } from 'react-bootstrap';
 
-import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore"; 
+import { doc, setDoc, collection, query, where, getDocs, getDoc } from "firebase/firestore"; 
 
 export default function Home() {
 
@@ -99,18 +99,34 @@ export default function Home() {
                 if (doc.id === inviteCodeInput) {
                     lobbyFound = true;
                     lobbyId = doc.id;
-                    alert("A lobby with given code found.");
+                    console.log("A lobby with given code found.");
                 }
             });
 
             if (lobbyFound) {
+                // get lobby currentRound
+                const docRef = doc(db, "lobbies", `${lobbyId}`);
+                const docSnap = await getDoc(docRef);
+                const {currentRound:currR} = docSnap.data();
+
+                // add nulls to db for missed rounds
+                let missedLocs = [];
+                let missedDists= [];
+                let missedScores =[];
+                
+                for(let i =0; i<currR; i++){
+                    missedLocs.push(null);
+                    missedDists.push("null");
+                    missedScores.push(0);
+                }
+
                 setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
                     userId: db.doc('users/' + userDocumentId),
                     userName: localStorage.getItem("userName"),
                     isHost: false,
-                    guessedLocations: [],
-                    distances: [],
-                    scores: [],
+                    guessedLocations: missedLocs,
+                    distances: missedDists,
+                    scores: missedScores,
                     totalScore: "",
                     isClickedGuess: ""
                 });
@@ -140,8 +156,8 @@ export default function Home() {
         lobbyId = generateRandomLobbyCode();
         //setMultiPlayerGameCode(lobbyId);
         isMultiplayer = true;
-        console.log(multiPlayerGameCode);
-        console.log(userDocumentId);
+        // console.log(multiPlayerGameCode);
+        // console.log(userDocumentId);
         await setDoc(doc(db, "lobbies", `${lobbyId}`), {
             inviteCode: lobbyId,
             isActive: true,
