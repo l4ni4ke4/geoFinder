@@ -107,36 +107,43 @@ export default function Home() {
                 // get lobby currentRound
                 const docRef = doc(db, "lobbies", `${lobbyId}`);
                 const docSnap = await getDoc(docRef);
-                const {currentRound:currR} = docSnap.data();
+                const {currentRound:currR,gameState} = docSnap.data();
 
-                // add nulls to db for missed rounds
-                let missedLocs = [];
-                let missedDists= [];
-                let missedScores =[];
-                
-                for(let i =0; i<currR; i++){
-                    missedLocs.push(null);
-                    missedDists.push("null");
-                    missedScores.push(0);
+                if(gameState === "RoundPlay"){
+                    alert("Round is already started, you can join next round !")
                 }
+                else{
+                    // add nulls to db for missed rounds
+                    let missedLocs = [];
+                    let missedDists= [];
+                    let missedScores =[];
+                    
+                    for(let i =0; i<currR; i++){
+                        missedLocs.push(null);
+                        missedDists.push("null");
+                        missedScores.push(0);
+                    }
 
-                setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
-                    userId: db.doc('users/' + userDocumentId),
-                    userName: localStorage.getItem("userName"),
-                    isHost: false,
-                    guessedLocations: missedLocs,
-                    distances: missedDists,
-                    scores: missedScores,
-                    totalScore: "",
-                    isClickedGuess: ""
-                });
-                //setMultiPlayerGameCode(lobbyId);
-                
-                let path = `/GameLobby`;
-                history.push({
-                    pathname: path,
-                    state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
-                });
+                    setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
+                        userId: db.doc('users/' + userDocumentId),
+                        userName: localStorage.getItem("userName"),
+                        isHost: false,
+                        guessedLocations: missedLocs,
+                        distances: missedDists,
+                        scores: missedScores,
+                        totalScore: "",
+                        isClickedGuess: false
+                    });
+                    //setMultiPlayerGameCode(lobbyId);
+                    
+                    let path = `/GameLobby`;
+                    history.push({
+                        pathname: path,
+                        state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
+                    });
+
+                    }
+
             }
             if (!lobbyFound) {
                 alert("No lobbies exist with code: " + inviteCodeInput);
