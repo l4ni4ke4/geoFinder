@@ -46,6 +46,9 @@ test('Distance 5001 - 0 Points', () => {
 
 const polygonTrue = [[42,26], [36,26], [36,36], [37,45], [40,45], [42,42]];
 
+//Tests if the returned random locations are inside of the choosen polygon.
+//Assumes the polygon is convex.
+//Tests only 1 polygon, not multiple
 test('Are returned locations are inside of the defined polygon ?', () => {
     var polygon = translateToPolygonsFromCodes(['TR']);
     expect(polygon[0]).toEqual(polygonTrue);
@@ -103,6 +106,6 @@ test('Are returned locations are inside of the defined polygon ?', () => {
             else boolY = false;
         }
         else boolY = false;
-        expect(boolX && boolY).toBeTruthy();
+        expect(boolX && boolY).toBeTruthy();    //Will fail if the point is outside of the polygon
     }
 })
