@@ -41,12 +41,7 @@ test('Are returned locations are inside of the defined polygon ?', () => {
     expect(bottom).toBe(36);
 
     var noRounds = 5;
-    try{
-        var randomLocs = generateRandomStreetViewLocations(noRounds, 'TR', true);
-    }
-    catch{
-
-    }
+    var randomLocs = generateRandomStreetViewLocations(noRounds, ['TR'], true);
     var boolX;
     var boolY;
     for(var i = 0; i < randomLocs.length; i++){
