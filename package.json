@@ -8,7 +8,9 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.24.0",
+    "canvas": "^2.8.0",
     "firebase": "^9.5.0",
+    "jest": "^26.6.0",
     "random-streetview": "^1.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -21,8 +23,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "eject": "react-scripts eject"
+  },
+  "type": "module",
+  "jest": {
+    "transform": {}
   },
   "eslintConfig": {
     "extends": [
