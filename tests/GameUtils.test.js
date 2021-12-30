@@ -1,4 +1,5 @@
 import {getScore, calculateDistance} from '../src/utils/GameUtils'
+import {translateToPolygonsFromCodes} from '../src/utils/PolygonUtils'
 
 test('66N 1E -- 60N 1E ~= 668.77 km', () => {
     //Distance calculated from Google Earth results to be 668.77 km
@@ -42,3 +43,17 @@ test('Distance 5001 - 0 Points', () => {
     var score = getScore(5001, 5000)
     expect(score).toBe(0)
 });
+
+test('Are returned locations are inside of the defined polygon ?', () => {
+    var polygon = translateToPolygonsFromCodes(['TR'])
+    var leftmost = 90;
+    leftmost = polygon.forEach(function(x, i){
+        var temp = x[i];
+        if(leftmost > x[i])
+            return x[i]
+        else return leftmost
+    })
+    var rightmost;
+    var top;
+    var bottom;
+})
