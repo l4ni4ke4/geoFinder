@@ -1,5 +1,26 @@
-body {
+html,body{
   margin: 0;
+  height:100%;
+}
+
+@font-face {
+  font-family: 'ProText';
+  src: local('ProText'), url(./fonts/FontsFree-Net-SFProText-Regular-1.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'ProDisplay';
+  src: local('ProDisplay'), url(./fonts/FontsFree-Net-SFProDisplay-Black.ttf) format('truetype');
+}
+
+body {
+  background-image: linear-gradient(to right top,rgba(0,0,0,.2),rgba(0,0,0,.5)), url("../src/assets/backgroundImgaeMain.png");
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -8,6 +29,6 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  /* font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace; */
 }
