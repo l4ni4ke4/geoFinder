@@ -159,7 +159,7 @@ function RoundEnd({gameUsers,userId,lobbyId,isHost,currentRound,rounds,distances
                     <RoundEndLeaderboard/>
                 </section>
                 {isHost ?
-                    <button type= 'button' className= 'btn btn-primary' id = 'btnNextround' onClick={handleBtnNextRound}>
+                    <button type= 'button' className= 'btn btn-success' id = 'btnNextround' onClick={handleBtnNextRound}>
                         {currentRound === rounds-1 ? "End Game" : "Next Round"}
                     </button> 
                   : <h3>waiting for host...</h3>}

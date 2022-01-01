@@ -1,4 +1,153 @@
 
+.round-start-container{
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    grid-template-rows: 2fr 3fr 3fr 2fr;
+    grid-auto-columns: 1fr;
+    grid-auto-rows: 1fr;
+    gap: 40px;
+    /* grid-auto-flow: row; */
+    grid-template-areas:
+      ". . . . . . . . . . . ."
+      ". . . gr-box gr-box gr-box  gr-box  gr-box  gr-box . . ."
+      ". . . . btn-group btn-group btn-group btn-group  . . . ."
+      ". . . rsfooter rsfooter rsfooter rsfooter rsfooter rsfooter . . .";
+}
+
+.get-ready-box{
+    grid-area: gr-box;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(70px);
+    border-radius: 16px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    padding:3rem;
+}
+
+.get-ready-header p {
+    font-family: "ProDisplay";
+    font-style: normal;
+    font-weight: 900;
+    font-size: 84px;
+    line-height: 110%;
+    letter-spacing: 0.01em;
+    text-align: center;
+
+    color: #FFFFFF;
+}
+
+.round-box{
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(70px);
+    border-radius: 16px;
+    width: 50%;
+}
+
+.round-box p{
+    font-family: "ProText";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 135%;
+    text-align: center;
+    color: #FFFFFF;
+    padding-top: 0.5rem;
+}
+
+.button-group{
+    grid-area:btn-group;
+    display:flex;
+    justify-content: center;
+}
+
+.button-group p{
+    margin: 1rem;
+    font-family: "ProText";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 22px;
+    /* line-height: 135%; */
+    text-align: center;
+    color: #FFFFFF;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+#btn-exit-game{
+    width: 72px;
+    height: 72px;
+    margin:1rem;
+    padding:0 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+#btn-start-round{
+    width: 72px;
+    height: 72px;
+    margin:1rem;
+    padding:0 5rem;
+    background-color: #91CB82;
+    border-color: #91CB82;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+#btn-start-round:hover{
+    background-color: #71A663;
+}
+
+#exitIcon {
+    height: 32px;
+    width: 32px;
+}
+
+.round-start-footer{
+    grid-area: rsfooter;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(70px);
+    border-radius: 16px;
+    margin-bottom: 4rem;
+}
+
+.round-start-footer{
+    font-family: "ProText";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 135%;
+    color: black;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.round-start-footer p {
+    padding-top: 0.5rem;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
 
 
 .round-start-container {
@@ -31,10 +180,8 @@
   
 .round-start-main {
        grid-area: round-start-main; 
-       /* align-self: center; */
        margin: auto;
        text-align: center;
-       /* background-color: yellow; */
        
     }
 
@@ -103,4 +250,4 @@
 
 .roundBox h5{
     padding:5px;
-}
+} */

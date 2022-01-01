@@ -20,8 +20,10 @@
   
   .gameresults-summary {
       grid-area: gameresults-summary;
-      background-image: linear-gradient(to right top,rgba(0,0,0,.3),rgba(0,0,0,.3)),url('../../assets/roundend-scores.jpg');
-      background-size: cover;
+      /* background-image: linear-gradient(to right top,rgba(0,0,0,.3),rgba(0,0,0,.3)),url('../../assets/roundend-scores.jpg');
+      background-size: cover; */
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(70px);
       display:flex;
       flex-direction: column;
       /* justify-items: flex-start; */
