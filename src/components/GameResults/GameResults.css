@@ -16,6 +16,8 @@
   
   .gameresults-mapview {
       grid-area: gameresults-mapview;
+      -webkit-animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+      animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     }
   
   .gameresults-summary {
@@ -30,6 +32,8 @@
       justify-content: space-between;
       text-align:center;
       padding:25px;
+      -webkit-animation: scale-up-right 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: scale-up-right 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     }
   
 .marker-label{
@@ -52,3 +56,4 @@
 #finalTable{
     text-align:start;
 }
+

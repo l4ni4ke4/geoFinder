@@ -24,19 +24,23 @@
     flex-direction: column;
     align-items: center;
     align-content: center;
-    padding:3rem;
+    padding:4rem;
+    -webkit-animation: fade-in 1.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: fade-in 1.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 }
 
 .get-ready-header p {
     font-family: "ProDisplay";
     font-style: normal;
     font-weight: 900;
-    font-size: 84px;
+    font-size: 72px;
     line-height: 110%;
     letter-spacing: 0.01em;
     text-align: center;
 
     color: #FFFFFF;
+    -webkit-animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+    animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
 }
 
 .round-box{
@@ -50,11 +54,13 @@
     font-family: "ProText";
     font-style: normal;
     font-weight: 600;
-    font-size: 32px;
+    font-size: 24px;
     line-height: 135%;
     text-align: center;
     color: #FFFFFF;
-    padding-top: 0.5rem;
+    padding-top: 0.75rem;
+    -webkit-animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+    animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
 }
 
 .button-group{
@@ -103,6 +109,7 @@
 
 #btn-start-round:hover{
     background-color: #71A663;
+    border-color: #71A663;
 }
 
 #exitIcon {
@@ -129,6 +136,8 @@
     justify-content: center;
     align-items: center;
     align-content: center;
+    -webkit-animation: scale-in-ver-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    animation: scale-in-ver-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 }
 
 .round-start-footer p {
