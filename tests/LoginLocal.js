@@ -9,7 +9,7 @@ var driver = new webdriver.Builder()
                  .withCapabilities(webdriver.Capabilities.chrome())
                  .build();
 
-async function example() {
+async function testLocal() {
   //6 chars random name
   var randomName = Math.random().toString(36).substr(2, 6);
   //8 chars random password
@@ -39,4 +39,5 @@ async function example() {
   }
 };
 
-example()
+
+testLocal()
