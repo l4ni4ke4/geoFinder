@@ -196,7 +196,7 @@ function RoundPlay({lobbyId,userId,isClickedGuess,trueLocation,setShowView,guess
           </div>
           {!isClickedGuess ? 
           <button type="button" id = "guessBtn" class="btn btn-success" onClick={handleGuessButton} disabled={!mapClicked}>Guess</button>
-          :<button type="button" id = "guessBtn" class="btn btn-secondary" onClick={handleGuessButton} disabled={!mapClicked}>Waiting for others</button>
+          :<button type="button" id = "guessBtnWait" class="btn btn-secondary" onClick={handleGuessButton} disabled={!mapClicked}>Waiting for others</button>
            }
         </div>
           

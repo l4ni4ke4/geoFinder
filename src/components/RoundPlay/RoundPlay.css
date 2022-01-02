@@ -52,6 +52,16 @@
     /* float:right; */
 }
 
+#guessBtnWait{
+    grid-area: 4 / 7 / 5 / 9;
+    z-index:3;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    padding:5px;
+    width: 23.3%;
+    /* float:right; */
+}
+
 .game-info-section {
     z-index: 3;
     margin-right: 1%;
