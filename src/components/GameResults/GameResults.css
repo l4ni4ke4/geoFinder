@@ -16,18 +16,24 @@
   
   .gameresults-mapview {
       grid-area: gameresults-mapview;
+      -webkit-animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+      animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     }
   
   .gameresults-summary {
       grid-area: gameresults-summary;
-      background-image: linear-gradient(to right top,rgba(0,0,0,.3),rgba(0,0,0,.3)),url('../../assets/roundend-scores.jpg');
-      background-size: cover;
+      /* background-image: linear-gradient(to right top,rgba(0,0,0,.3),rgba(0,0,0,.3)),url('../../assets/roundend-scores.jpg');
+      background-size: cover; */
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(70px);
       display:flex;
       flex-direction: column;
       /* justify-items: flex-start; */
       justify-content: space-between;
       text-align:center;
       padding:25px;
+      -webkit-animation: scale-up-right 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: scale-up-right 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     }
   
 .marker-label{
@@ -50,3 +56,4 @@
 #finalTable{
     text-align:start;
 }
+

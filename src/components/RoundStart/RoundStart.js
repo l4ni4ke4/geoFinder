@@ -23,35 +23,27 @@ function RoundStart({isHost,currentRound,rounds,totalScore,lobbyId,setShowExitMo
 
     return(
         <div className = "round-start-container">
-            <div className = 'round-start-main'>
-                
-                <div className='roundBox'>
-                    <h5>Round: {currentRound+1}/{rounds}</h5>
+            <div className= "get-ready-box">
+                <div className="get-ready-header">
+                    <p>GET READY !</p>
                 </div>
-
-                <h1>GET READY</h1>
-                <div className= 'box'>
-
+                <div className ="round-box">
+                    <p>Round {currentRound+1}/{rounds}</p>
                 </div>
-
+            </div>
+            <div className="button-group">
                 <button type= 'button' id='btn-exit-game' className='btn btn-danger' onClick= {handleExitBtn}>
-                    <img src={exitIcon} id='exitIcon'/>
+                        <img src={exitIcon} id='exitIcon'/>
                 </button>
-
                 {isHost ?
                     <button type='button' id='btn-start-round' className='btn btn-primary' onClick= {handleStartRoundBtn}>
-                    <img src={playIcon} />
+                        <img src={playIcon} />
                     </button>
-                    : <h2>waiting for host to start the round...</h2>
+                    : <p>waiting for the host to start the round...</p>
                 }
-
-
             </div>
-
             <div className= 'round-start-footer'>
-                <div className ='player_score'>
-                    <h2>Current Score: {Math.round(totalScore)} </h2>
-                </div>
+                    <p>Current Score: {Math.round(totalScore)} </p>
             </div>
         </div>
     )

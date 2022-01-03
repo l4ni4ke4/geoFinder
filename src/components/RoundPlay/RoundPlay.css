@@ -30,14 +30,29 @@
     z-index: 3;
     margin-right: 20px;
     opacity: 0.5;
+
 }
 
 .map-view:hover{
+    -webkit-animation: scale-up-right-bottom 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+    animation: scale-up-right-bottom  0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     grid-area: 2 / 5 / 4 / 9;
     opacity: 1;
 }
 
+
 #guessBtn{
+    grid-area: 4 / 7 / 5 / 9;
+    z-index:3;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    padding:5px;
+    width: 23.3%;
+    border-color: #91CB82;
+    /* float:right; */
+}
+
+#guessBtnWait{
     grid-area: 4 / 7 / 5 / 9;
     z-index:3;
     margin-right: 20px;

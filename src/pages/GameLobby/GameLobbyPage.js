@@ -135,7 +135,7 @@ export default function GameLobbyPage() {
         return countryList.map((countryObj) => {
             const {country,code} = countryObj;
             return(
-                <div class="form-check" key={code}>
+                <div class="custom-checkbox" key={code}>
                     <input class="form-check-input" type="checkbox" id={code} checked={countryCheckboxListIsChecked[code]}
                             onChange={handleCountryCheckbox} disabled={disableAllCountries}/>
                     <label class="form-check-label" for={code}>
@@ -293,91 +293,90 @@ export default function GameLobbyPage() {
             console.log("user username:" + iter.userName);
         })
         
-    }, [lobbyUsers]); 
+    }, [lobbyUsers]);
+
+    // const LobbyPlayers = ()=>{
+    //     lobbyUsers.map((user)=>{
+    //         return(
+    //             <div className="lobby-player">
+    //                 <p>{user.isHost ? `${user.userName} (Host)` : user.userName}</p>
+    //             </div>
+    //         )
+    //     })
+    // }
 
     return (<>
-        <div className="container game-lobby-main-container">
-            <div className="container game-lobby-inner-container">
-                <div className="container game-rules-overview">
-                    <div className="game-rules-overview-body">
-                        {isMultiplayer && 
-                            <h1 style={{textAlign:"center", marginBottom:"5%"}}>
-                                Multiplayer Lobby
-                            </h1>
-                        }
-                        {!isMultiplayer && 
-                            <h1 style={{textAlign:"center", marginBottom:"5%"}}>
-                                Singleplayer Lobby
-                            </h1>
-                        }
-                        <div class="row game-overview-zooming">
-                            Zooming: {`${dbEnableZooming}`}
-                        </div>
-                        <div class="row game-overview-movement">
-                            Movement: {`${dbEnableMovement}`}
-                        </div>
-                        <div class="row game-overview-norounds">
-                            Number of Rounds: {dbNumberOfRounds}
-                        </div>
-                        <div class="row game-overview-roundtime">
-                            Round Time: {dbRoundTime}
-                        </div>
-                    </div>
-                    <div className="container game-rules-edit-settings-footer">
-                        <button type="button" id = "editSettingsButton" class="btn btn-success" onClick={handlePopupShow} disabled={!isDbHost}>Edit Game Settings</button>
-                    </div>
-                    <div class="container game-lobby-footer">
-                        <button type="button" id = "exitButton" class="btn btn-danger" onClick={exitButtonClick}>Back to Main Menu</button>
-                        <button type="button" id = "startGameButton" class="btn btn-success" onClick={startGameButtonClick} disabled={!isDbHost}>Start Game</button>        
-                    </div>
+        <div className="game-lobby-main-container">
+            <div className ="game-lobby-header">
+                {isMultiplayer ? <p>Multiplayer Lobby</p> : <p>Singleplayer Lobby</p>}
+            </div>
+            <div className = "game-settings">
+                <p>Game Settings</p>
+                <div className="settings-container">
+                    <p>Zooming: <span>{`${dbEnableZooming}`}</span></p>
+                    <p>Movement: <span>{`${dbEnableMovement}`}</span></p>
+                    <p>Rounds: <span>{dbNumberOfRounds}</span></p>
+                    <p>Round Time: <span>{dbRoundTime}</span></p>
                 </div>
-                <Modal dialogClassName="gameSettingsPopup" show={popupShow} onHide={handlePopupClose}>
-                    <Modal.Header dialogClassName="gameSettingsPopupHeader" closeButton >
-                        <div class="header main-header">
-                            <h2 style={{textAlign: "center"}}>Game Settings</h2>
+                <h2>Lobby Code: {lobbyId}</h2>
+            </div>
+            <div className= "players">
+                <p>Players</p>
+                <div className="players-container">
+                    {lobbyUsers.map((user)=>{
+                        return(
+                        <div className="lobby-player">
+                            <p>{user.isHost ? `${user.userName} (Host)` : user.userName}</p>
+                        </div>)  
+                                             })
+                    }
+                </div>
+            </div>
+            <div className="edit-btn">
+                <button type="button" id = "editSettingsButton" class="btn btn-secondary"
+                    onClick={handlePopupShow} disabled={!isDbHost}>Edit Game Settings</button>
+            </div>
+            <div className ="back-btn">
+                <button type="button" id = "exitButton" class="btn btn-danger"
+                    onClick={exitButtonClick}>Back Home </button>
+            </div>
+            <div className="start-btn">
+                <button type="button" id = "startGameButton" class="btn btn-success"
+                    onClick={startGameButtonClick} disabled={!isDbHost}>Start Game</button>
+            </div>
+            <Modal show={popupShow} onHide={handlePopupClose}>
+                    <Modal.Header closeButton >
+                        <div class="modal-header-text">
+                            <p>Game Settings</p>
                         </div>
                     </Modal.Header>
                     <Modal.Body>
-                        <div class="container game-settings-main-container">
-                            <div class="container game-rules-container">
-                                <div class="header game-rules-header">
-                                    <h4>Game Rules</h4>
+                        <div className="modal-container">
+                            <div class="modal-enables-container">
+                                <div class="custom-checkbox">
+                                    <input class="form-check-input" type="checkbox" id="flexCheckZooming" onChange={(event) => setEnableZooming(event.target.checked)} defaultChecked={dbEnableZooming} />
+                                    <label class="form-check-label" for="flexCheckZooming">Zooming</label>
                                 </div>
-                                <div class="row game-rules-row-1">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="flexCheckZooming" onChange={(event) => setEnableZooming(event.target.checked)} defaultChecked={dbEnableZooming} ></input>
-                                        <label class="form-check-label" for="flexCheckZooming">
-                                            Zooming
-                                        </label>
-                                    </div>
-                                    {/* <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="flexCheckCameraPan" onChange={(event) => setEnablePan(event.target.checked)} defaultChecked={enablePan}></input>
-                                        <label class="form-check-label" for="flexCheckCameraPan">
-                                            Camera Pan
-                                        </label>
-                                    </div> */}
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="flexCheckMovement" onChange={(event) => setEnableMovement(event.target.checked)} defaultChecked={dbEnableMovement} ></input>
-                                        <label class="form-check-label" for="flexCheckMovement">
-                                            Movement
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="row game-rules-row-2">
-                                    <label for="customRange1" class="form-time-range-label">Time Limit: {roundTime} seconds</label>
-                                    <input type="range" class="form-range" id="timeLimitRange" min="10" max="60" step="5" defaultValue={dbRoundTime} onChange={ (event) => setRoundTime(event.target.value)} value={roundTime}></input>
-                                </div>
-                                <div class="row game-rules-row-3">
-                                    <label for="customRange1" class="form-round-range-label">Number of Rounds: {numberOfRounds} </label>
-                                    <input type="range" class="form-range" id="numberOfRoundsRange" min="3" max="10" step="1" defaultValue={dbNumberOfRounds} onChange={ (event) => setNumberOfRounds(event.target.value)} value={numberOfRounds}></input>
+                                <div class="custom-checkbox">
+                                    <input class="form-check-input" type="checkbox" id="flexCheckMovement" onChange={(event) => setEnableMovement(event.target.checked)} defaultChecked={dbEnableMovement} ></input>
+                                    <label class="form-check-label" for="flexCheckMovement">Movement</label>
                                 </div>
                             </div>
+                            <div class="slider-round-time">
+                                <label for="customRange1" class="form-time-range-label">Time Limit: {roundTime} seconds</label>
+                                <input type="range" class="form-range" id="timeLimitRange" min="10" max="60" step="5" defaultValue={dbRoundTime} onChange={ (event) => setRoundTime(event.target.value)} value={roundTime}></input>
+                            </div>
+                            <div class="slider-no-rounds">
+                                <label for="customRange1" class="form-round-range-label">Number of Rounds: {numberOfRounds} </label>
+                                <input type="range" class="form-range" id="numberOfRoundsRange" min="3" max="10" step="1" defaultValue={dbNumberOfRounds} onChange={ (event) => setNumberOfRounds(event.target.value)} value={numberOfRounds}></input>
+                            </div>
+
                             <div className="country-selection-container">
                                 <div className="country-selection-header">
                                     <h4>Country Selection</h4>
                                 </div>
                                 <div className="country-selection-body">
-                                    <div class="form-check" key="world">
+                                    <div class="custom-checkbox" key="world">
                                         <input class="form-check-input" type="checkbox" id="world" checked={worldIsChecked}
                                                 onChange={handleWorldCheck}/>
                                         <label class="form-check-label" for="world">
@@ -388,6 +387,7 @@ export default function GameLobbyPage() {
                                 </div>
                             </div>
                         </div>
+
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="danger" onClick={handlePopupClose}>
@@ -398,39 +398,6 @@ export default function GameLobbyPage() {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-            </div>
-            <div className="game-lobby-players">
-                <section>
-                    
-                    <h2>Players</h2>
-                    <div className = 'table-lobby-players'>
-                        <table class="table table-dark">
-                            <tbody>
-                                    {lobbyUsers.map((user, index) => {
-                                        if (user.isHost === true) {
-                                            return (
-                                                <tr /* style={{color:"gainsboro"}} */>
-                                                    <td>{user.userName} (Host)</td>
-                                                </tr>
-                                            )
-                                        }
-                                        else {
-                                            return (
-                                                <tr>
-                                                    <td>{user.userName}</td>
-                                                </tr>
-                                            )
-                                        }
-                                    })}
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-                <section>
-                    <h4 style={{color:"white"}}>Lobby code: {lobbyId}</h4>
-                </section>
-            </div>
         </div>
         
         

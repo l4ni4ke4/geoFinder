@@ -5,6 +5,10 @@ import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import singlePlayerLogo from '../../assets/one-player-game-symbol.png';
 import multiPlayerLogo from '../../assets/network_icon.png';
+import multiPicture from "../../assets/round-start-nature-1.png";
+import singlePicture from "../../assets/singleplayer.png";
+import Vector from "../../assets/Vector.svg";
+import whiteLine from "../../assets/whiteLine.png";
 import './Home.css';
 import { auth, db, logout } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -202,100 +206,75 @@ export default function Home() {
     }, [user, loading])
 
     return (<>
-
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/">Geofinder</a>
-            <i class="icon-help fas fa-question fa-2x"></i>
-            <i class="icon-language fas fa-language fa-2x"></i>
-
-            <div class="container home-top-right-flex-container flex-container justify-content-end">
-                <button type="button" class="btn btn-primary btn-gamehistory">Game History</button>
-                <div class="dropdown">
-                    <button class="btn btn-secondary btn-profile dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {localStorage.getItem("userName")}
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <div className ="home-container">
+        <div className = "navbar">
+            <div className= "navbar-left ">
+                    <p>About</p>
+                    <p>Contact</p>
+            </div>
+            <div className = "navbar-center">
+                    <p>GeoFinder</p>
+            </div>
+            <div className="navbar-right ">
+                    <p>Game History</p>
+                    <p className="dropdown-toggle" data-bs-toggle="dropdown">{localStorage.getItem("userName")}</p>
+                    <ul class="dropdown-menu" >
                         <li><a class="dropdown-item" href="/accountDetails">Account Details</a></li>
                         <li><a class="dropdown-item" href="/stats">Stats</a></li>
                         <li><a class="dropdown-item" href="/" onClick={logout}>Logout</a></li>
                     </ul>
-                    {/* <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="/accountDetails">Account Details</a>
-                        <a class="dropdown-item" href="/stats">Stats</a>
-                        <a class="dropdown-item" href="/" onClick={logout}>Logout</a>
-                    </div> */}
-                </div>
             </div>
 
-        </nav>
-
-        <div className="home-main" style={{ height:"680px" }}>
-            <div class="row" style={{ paddingTop:"9%", paddingLeft: "11%", width:"fitContent" }}>
-                <div class="col-sm-3">
-                    <div class="card" style={{ height: "400px", backgroundColor: "gainsboro", color: "white", cursor: "pointer" }} onClick={singlePlayerButtonClick}>
-                        <h1 style={{ textAlign: "center" }}>Single Player</h1>
-                        <img src={singlePlayerLogo} width="80%" class="sp-image image"></img>
-                    </div>
-                </div>
-                <div class="col-sm-3" style={{ marginLeft: "2%" }}>
-                    <div class="card" style={{ height: "400px", backgroundColor: "gainsboro", color: "white", cursor: "pointer" }} onClick={handlePopupShow}>
-                        <h1 style={{ textAlign: "center" }}>Multiplayer</h1>
-                        <img src={multiPlayerLogo} width="80%" class="mp-image image"></img>
-                    </div>
-                </div>
-                <Modal show={popupShow} style={{ marginTop: "15%" }} onHide={handlePopupClose}>
+        </div>
+        <div className ="play-box-singleplayer" onClick={singlePlayerButtonClick}>
+            <div className="play-box-singleplayer-left">
+                <p className = "play-box-left-text">Play on your own !</p>
+                <p className = "play-box-left-text2">Single Player</p>
+                <img className= "vector" src={Vector}/>
+            </div>
+            <div className="play-box-singleplayer-right">
+                <img src={singlePicture}/>
+            </div>
+            
+        </div>
+        <div className ="play-box-multiplayer">
+            <div className="play-box-multiplayer-left" onClick={handlePopupShow}>
+                    <p className = "play-box-left-text">Play with friends !</p>
+                    <p className = "play-box-left-text2">Multiplayer</p>
+                    <img className= "vector" src={Vector}/>
+            </div>
+            <div className="play-box-multiplayer-right">
+                 <img src={multiPicture}/>
+            </div>
+            <Modal show={popupShow} className="modal" onHide={handlePopupClose}>
                     <Modal.Header closeButton>
-                        <h1 style={{ textAlign: "center" }}>Multiplayer</h1>
+                        <p>Multiplayer</p>
                     </Modal.Header>
-                    <Modal.Body>
-                        <a>Enter lobby link: </a>
+                    <Modal.Body className="modal-body">
+                        <h2>Enter lobby link: </h2>
                         <input type="text" id="lobbyLinkTextBox" name="fname" value={inviteCodeInput} onChange={(event) => setInviteCodeInput(event.target.value)} onInput={(event) => setInviteCodeInput(event.target.value)}></input>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="success" onClick={createNewMultiplayerLobbyButtonClick}>
+                        <Button variant="outline-dark" onClick={createNewMultiplayerLobbyButtonClick}>
                             Create new Lobby
                         </Button>
-                        <Button variant="danger" onClick={joinExistingMultiplayerLobbyButtonClick} disabled={inviteCodeInput === ""}>
+                        <Button variant="secondary" onClick={joinExistingMultiplayerLobbyButtonClick} disabled={inviteCodeInput === ""}>
                             Join an existing Lobby
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                <div class="col-sm-4" style={{ marginLeft: "10%", marginTop: "-3%" }}>
-                    <div class="card" style={{ height: "500px" }}>
-                        <h2 style={{ textAlign: "center" }}>Scoreboard</h2>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Username</th>
-                                    <th scope="col">Points</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Berat</td>
-                                    <td>3000</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Serdar</td>
-                                    <td>2000</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Arman</td>
-                                    <td>1000</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        <div/>
+                
+    </div>
 
-            </div>
-        </div>
+        
         
 
+
+
+    </div>
+
+    
 
 
 
