@@ -84,10 +84,22 @@ const registerWithEmailAndPassword = async (name, email, password) => {
         authProvider: "local",
         email,
       });
+      try {
+        const query = await db
+          .collection("users")
+          .where("uid", "==", user?.uid)
+          .get();
+        const data = await query.docs[0].data();
+        localStorage.setItem("userId", query.docs[0].id);
+        localStorage.setItem("userName", data.name);
+      } catch (err) {
+        console.error(err);
+      }
     } catch (err) {
       console.error(err);
       alert(err.message);
     }
+    
 };
 
 
