@@ -258,8 +258,8 @@ export default function Home() {
             </div>
             
         </div>
-        <div className ="play-box-multiplayer">
-            <div className="play-box-multiplayer-left" onClick={handlePopupShow}>
+        <div className ="play-box-multiplayer" onClick={handlePopupShow}>
+            <div className="play-box-multiplayer-left" >
                 <div className="play-box-left-top">
                     <p className = "play-box-left-text">Play with friends !</p>
                     <p className = "play-box-left-text2">Multiplayer</p>
@@ -269,6 +269,7 @@ export default function Home() {
             <div className="play-box-multiplayer-right">
                  <img src={multiPicture}/>
             </div>
+        </div>
             <Modal show={popupShow} className="modal" onHide={handlePopupClose}>
                     <Modal.Header closeButton>
                         <p>Multiplayer</p>
@@ -286,14 +287,10 @@ export default function Home() {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-        <div/>
+        
                 
     </div>
     
-    </div>
-
-    
-
 
 
     </>)
