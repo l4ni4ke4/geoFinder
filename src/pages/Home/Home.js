@@ -104,6 +104,7 @@ export default function Home() {
         const querySnapshot = await getDocs(queryResult);
         if (querySnapshot.empty) {
             alert("no active lobbies. check next time!");
+            setShowLoading(false);
             return;
         }
         else {
@@ -159,6 +160,7 @@ export default function Home() {
             }
             if (!lobbyFound) {
                 alert("No lobbies exist with code: " + inviteCodeInput);
+                setShowLoading(false);
                 return;
             }
         }
