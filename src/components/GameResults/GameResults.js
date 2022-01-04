@@ -164,20 +164,24 @@ function DetailedLeaderBoard(){
                     </GoogleMap>}
             </div>
             <div className='gameresults-summary'>
-                <section className='final-leaderboard'>
+
+                <section>
                     <h2>Final Leaderboard</h2>
-                    <table class="table table-dark" id='finalTable'>
-                        <tbody>
-                            <FinalLeaderboard/>
+                    <div className='final-leaderboard'>
+                        <table class="custom-table" id='finalTable'>
+                            <tbody>
+                                <FinalLeaderboard/>
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
 
+                    </div>
                 </section>
 
-                <section className='detailed-leaderboard'>
-                    <h2>Detailed Leaderboard</h2>
-                    <table class="table table-dark">
+                <section>
+                <h2>Detailed Leaderboard</h2>
+                <div className='detailed-leaderboard'>
+                    <table class="custom-table">
                         <thead>
                             <tr>
                                 <td></td>
@@ -193,7 +197,9 @@ function DetailedLeaderBoard(){
 
                         </tbody>
                     </table>
+                </div>
                 </section>
+
                 <section className='gameresults-footer'>
                     <button type= 'button' className= 'btn btn-danger' onClick={handleLeaveGame}>Leave Game</button>
                     <button type= 'button' className= 'btn btn-secondary' disabled = {!isHost} onClick={handleBackToLobby}>Back to Lobby</button>
