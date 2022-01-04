@@ -27,8 +27,13 @@ async function testHomePageUserName() {
     await driver.findElement(By.xpath("//input[@placeholder='Password']")).sendKeys("kekkek");        
     await driver.findElement(By.xpath("//button[@class='btn-login']")).click();     //Click login button
 
-    await driver.findElement(By.xpath("//p['kek']"));   //The username is kek so it should apper on dropdown menu
-    console.log("TESTHOMEPAGEUSERNAME SUCCESS");
+    var userName = await driver.findElement(By.xpath("//p[text() = 'kek']"));   //The username is kek so it should apper on dropdown menu
+    if(await userName.getText() == 'kek')
+        console.log("TESTHOMEPAGEUSERNAME SUCCESS");
+    else{
+        console.log("TESTHOMEPAGEUSERNAME FAILED");
+        console.log(await userName.getText());
+    }
   } 
   finally {
     await driver.quit();

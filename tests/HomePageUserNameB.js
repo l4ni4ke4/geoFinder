@@ -32,8 +32,13 @@ async function testHomePageUserName() {
     await driver.findElement(By.xpath("//input[@placeholder='Password']")).sendKeys(randomPass);  //enter random password
     await driver.findElement(By.xpath("//button[@class='register__btn']")).click();     //Click on register button
 
-    await driver.findElement(By.xpath("//p['" + randomName + "']"));   //The username is randomName so it should apper on dropdown menu
-    console.log("TESTHOMEPAGEUSERNAMEB SUCCESS");
+    var userName = await driver.findElement(By.xpath("//p[text()='" + randomName + "']"));   //The username is randomName so it should apper on dropdown menu
+    if(await userName.getText() == randomName)
+        console.log("TESTHOMEPAGEUSERNAME SUCCESS");
+    else{
+        console.log("TESTHOMEPAGEUSERNAME FAILED");
+        console.log(await userName.getText());
+    }
   } 
   finally {
     await driver.quit();
