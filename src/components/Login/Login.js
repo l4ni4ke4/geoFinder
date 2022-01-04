@@ -19,7 +19,7 @@ function Login() {
         }
     }, [user, loading]);
     return (
-        <div class="container main-container">
+        <div class="login-main-container">
             <div class="header header-container">
                 <h1 class="headerText">Welcome to Geofinder!</h1>
                 <h4 class="headerText2">Login to start the adventure!</h4>
@@ -49,10 +49,10 @@ function Login() {
                     Login with Google
                 </button>
                 <div>
-                    <Link to="/reset">Forgot Password</Link>
+                    <Link to="/reset"><a>Forgot Password</a></Link>
                 </div>
                 <div>
-                    Don't have an account? <Link to="/register">Register</Link> now.
+                    Don't have an account? <Link to="/register"><a>Register</a></Link> now.
                 </div>
             </div>
         </div>

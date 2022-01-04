@@ -56,7 +56,7 @@ function Register() {
           Register with Google
         </button>
         <div>
-          Already have an account? <Link to="/">Login</Link> now.
+          Already have an account? <Link to="/"><a>Login</a></Link> now.
         </div>
       </div>
     </div>
