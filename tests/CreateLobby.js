@@ -24,7 +24,7 @@ async function createLobbyTest() {
         .setTimeouts({
         'pageLoad': 10000,
         'script': 60000,
-        'implicit': 5000
+        'implicit': 10000
         });
   try {
     await driver.get('https://geofinder-9a266.web.app/');     //go to geofinder login page
@@ -34,11 +34,15 @@ async function createLobbyTest() {
     await driver.findElement(By.xpath("//button[@class='btn-login']")).click();     //Click login button
     //await driver.wait(until.urlContains('Home'), 1000 * 5);     //wait for home page
 
-    await driver.findElement(By.xpath("//div[@class='play-box-multiplayer-left']")).click();   //Click MP button
-    //await driver.wait(until.elementLocated(By.xpath("//button['Create new Lobby']")));
-    await driver.findElement(By.xpath("//button['Create new Lobby']")).click();   //Click Create new lobby
-    await driver.findElement(By.xpath("//p['Multiplayer Lobby']"));    //This text shows up when the lobby is created
-    console.log("CREATELOBBY SUCCESS");
+    await driver.wait(until.elementLocated(By.xpath("//div[@class='play-box-multiplayer']")), 5 * 1000);
+    
+    await driver.findElement(By.xpath("//div[@class='play-box-multiplayer']")).click();   //Click MP button
+
+    await driver.wait(until.elementLocated(By.xpath("/html/body/div[3]/div/div/div[3]/button[1]")), 5 * 1000);
+    await driver.findElement(By.xpath("/html/body/div[3]/div/div/div[3]/button[1]")).click();   //Click Create new lobby
+
+    await driver.findElement(By.xpath("//div[@class='game-lobby-header']"));
+    await console.log("CREATELOBBY SUCCESS");
   } 
   finally {
     await driver.quit();
