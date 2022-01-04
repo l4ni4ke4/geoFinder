@@ -20,7 +20,7 @@ async function testLocal() {
         'pageLoad': 10000,
         'script': 60000,
         'implicit': 5000
-      });
+        });
   try {
     await driver.get('https://geofinder-9a266.web.app/');     //go to geofinder login page
     
