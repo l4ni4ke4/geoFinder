@@ -16,11 +16,11 @@ const Loading = () => {
 
 
     return (
-        <div style={{position: "fixed", top:"30vh", left:"40vw", zIndex:1056}}>
-
+        <div style={{position: "fixed", display:"block",width:"100%", height:"100%",backdropFilter:"blur(8px)",zIndex:1056}}>
             <Lottie options={defaultOptions}
             height="40vh"
             width={"20vw"}
+            style={{position:"relative", top:"30vh"}}
             />
         </div>
     )
