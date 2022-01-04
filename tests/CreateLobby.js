@@ -38,11 +38,18 @@ async function createLobbyTest() {
     
     await driver.findElement(By.xpath("//div[@class='play-box-multiplayer']")).click();   //Click MP button
 
-    await driver.wait(until.elementLocated(By.xpath("/html/body/div[3]/div/div/div[3]/button[1]")), 5 * 1000);
-    await driver.findElement(By.xpath("/html/body/div[3]/div/div/div[3]/button[1]")).click();   //Click Create new lobby
+    await driver.wait(until.elementLocated(By.xpath("//button[text()='Create new Lobby']")), 5 * 1000);
+    await driver.findElement(By.xpath("//button[text()='Create new Lobby']")).click();   //Click Create new lobby
 
-    await driver.findElement(By.xpath("//div[@class='game-lobby-header']"));
-    await console.log("CREATELOBBY SUCCESS");
+    //await driver.findElement(By.xpath("//div[@class='game-lobby-header']"));
+    var text = await driver.findElement(By.xpath("//p[text()='Multiplayer Lobby']"));  //this text should appear only in a lobby
+    if(await text.getText() == 'Multiplayer Lobby')
+        console.log("TESTCREATELOBBY SUCCESS");
+    else{
+        console.log("TESTCREATELOBBY FAILED");
+        console.log(await text.getText());
+    }
+
   } 
   finally {
     await driver.quit();
