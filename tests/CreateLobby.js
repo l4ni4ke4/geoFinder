@@ -16,7 +16,9 @@ const logins = {
     pass: process.env.FIREBASE_TEST_PASS
 };
 
-
+/**
+ * Tests if a multiplayer lobby is created successfully or not
+ */
 async function createLobbyTest() {
   driver.manage()
         .setTimeouts({

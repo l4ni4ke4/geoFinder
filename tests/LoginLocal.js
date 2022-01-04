@@ -9,7 +9,9 @@ var driver = new webdriver.Builder()
                  .withCapabilities(webdriver.Capabilities.chrome())
                  .build();
 
-
+/**
+ * Tests if local account registeration and login works or not
+ */
 async function testLocal() {
   //6 chars random name
   var randomName = Math.random().toString(36).substr(2, 6);
