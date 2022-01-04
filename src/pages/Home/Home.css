@@ -84,7 +84,7 @@
 
 .play-box-singleplayer {
     grid-area: play-single;
-    height: 400px;
+    /* height: 400px; */
     /* display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "lsingle rsingle"; */
@@ -100,9 +100,38 @@
     cursor:pointer;
 }
 
+.play-box-singleplayer-right{
+    width: 50%;
+}
+
+.play-box-singleplayer-left{
+    width: 50%;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.vector{
+    /* margin-top: 12rem;
+    margin-left: 2rem; */
+    /* height: 6rem; */
+    width: 25%;
+    margin-left:16px;
+}
+
+
+.play-box-singleplayer-right img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 50%;
+    border-radius: 0 16px 16px 0;
+}
+
+
 .play-box-multiplayer {
     grid-area: play-multi;
-    height: 400px;
+    
     /* display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "lmulti rmulti"; */
@@ -119,18 +148,6 @@
 }
 
 .play-box-multiplayer-right{
-    /* grid-area: rmulti;  */
-    width: 50%;
-    /* background-image: url("../../assets/round-start-nature-1.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    border-radius: 16px 16px 16px 16px; */
-}
-
-.play-box-multiplayer-left{
     width: 50%;
 }
 
@@ -141,33 +158,12 @@
     border-radius: 0 16px 16px 0;
 }
 
-
-.play-box-singleplayer-right{
-    /* grid-area: rsingle; */
+.play-box-multiplayer-left{
     width: 50%;
-    /* background-image: url("../../assets/singleplayer.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    border-radius: 16px 16px 16px 16px; */
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
     
-}
-
-
-.play-box-singleplayer-right img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 0 16px 16px 0;
-}
-
-
-
-
-.play-box-singleplayer-left{
-    width: 50%;
 }
 
 .play-box-left-text {
@@ -196,10 +192,6 @@
     margin: 0 0.5rem;
 }
 
-.vector{
-    margin-top: 12rem;
-    margin-left: 2rem;
-}
 
 @media screen and (max-width:1300px){
 
@@ -261,7 +253,37 @@
 
 }
 
+.custom-dropdown{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+    position:absolute;
+    top:4rem;
+    right:2rem;
+    background: rgba(255, 255, 255, 0.50);
+    backdrop-filter: blur(70px);
+    border-radius: 8px;
+    z-index: 2;
+}
+.custom-dropdown a{
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0.5rem;
+    text-decoration: none;
+    color:inherit;
+}
 
+.custom-dropdown li{
+    padding:0.5rem;
+}
+
+.custom-dropdown li:hover{
+    background: rgba(255, 255, 255, 0.50);
+    backdrop-filter: blur(70px);
+    border-radius: 8px;
+}
 /*
 .home-main {
     background-image: url('../../assets/pisa-tower.png');

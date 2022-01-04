@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import singlePlayerLogo from '../../assets/one-player-game-symbol.png';
 import multiPlayerLogo from '../../assets/network_icon.png';
 import multiPicture from "../../assets/round-start-nature-1.png";
-import singlePicture from "../../assets/singleplayer.png";
+import singlePicture from "../../assets/singleplayer.jpg";
 import Vector from "../../assets/Vector.svg";
 import whiteLine from "../../assets/whiteLine.png";
 import './Home.css';
@@ -21,7 +21,9 @@ export default function Home() {
 
     var lobbyId = 0;
     var isMultiplayer = false;
+    
 
+    const [showDropdown,setShowDropdown] = useState(false);
     const history = useHistory();
     const [name, setName] = useState("");
     const [multiPlayerGameCode, setMultiPlayerGameCode] = useState(0);
@@ -217,19 +219,25 @@ export default function Home() {
             </div>
             <div className="navbar-right ">
                     <p>Game History</p>
-                    <p className="dropdown-toggle" data-bs-toggle="dropdown">{localStorage.getItem("userName")}</p>
-                    <ul class="dropdown-menu" >
-                        <li><a class="dropdown-item" href="/accountDetails">Account Details</a></li>
-                        <li><a class="dropdown-item" href="/stats">Stats</a></li>
-                        <li><a class="dropdown-item" href="/" onClick={logout}>Logout</a></li>
-                    </ul>
+                    <p className="dropdown-toggle" data-bs-toggle="dropdown" onClick={()=>setShowDropdown(!showDropdown)}>
+                        {localStorage.getItem("userName")}
+                    </p>
+                    {showDropdown &&
+                        <ul class="custom-dropdown" >
+                            <li><a href="/accountDetails">Account Details</a></li>
+                            <li><a href="/stats">Stats</a></li>
+                            <li><a href="/" onClick={logout}>Logout</a></li>
+                        </ul>}
+
             </div>
 
         </div>
         <div className ="play-box-singleplayer" onClick={singlePlayerButtonClick}>
             <div className="play-box-singleplayer-left">
-                <p className = "play-box-left-text">Play on your own !</p>
-                <p className = "play-box-left-text2">Single Player</p>
+                <div className="play-box-left-top">
+                    <p className = "play-box-left-text">Play on your own !</p>
+                    <p className = "play-box-left-text2">Single Player</p>
+                </div>
                 <img className= "vector" src={Vector}/>
             </div>
             <div className="play-box-singleplayer-right">
@@ -239,9 +247,11 @@ export default function Home() {
         </div>
         <div className ="play-box-multiplayer">
             <div className="play-box-multiplayer-left" onClick={handlePopupShow}>
+                <div className="play-box-left-top">
                     <p className = "play-box-left-text">Play with friends !</p>
                     <p className = "play-box-left-text2">Multiplayer</p>
-                    <img className= "vector" src={Vector}/>
+                </div>
+                <img className= "vector" src={Vector}/>
             </div>
             <div className="play-box-multiplayer-right">
                  <img src={multiPicture}/>
