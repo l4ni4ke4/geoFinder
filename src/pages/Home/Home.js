@@ -17,6 +17,8 @@ import { Button, Modal, Form } from 'react-bootstrap';
 
 import { doc, setDoc, collection, query, where, getDocs, getDoc } from "firebase/firestore"; 
 
+import Loading from "../../components/Loading";
+
 export default function Home() {
 
     var lobbyId = 0;
@@ -38,6 +40,8 @@ export default function Home() {
     const handlePopupClose = () => setPopupShow(false);
     const handlePopupShow = () => setPopupShow(true);
 
+    const [showLoading,setShowLoading] = useState(false);
+
     
     const fetchUserName = async () => {
         try {
@@ -54,6 +58,7 @@ export default function Home() {
       };
 
     async function singlePlayerButtonClick () { 
+        setShowLoading(true);
         lobbyId = generateRandomLobbyCode();
         //setMultiPlayerGameCode(lobbyId);
         isMultiplayer = false;
@@ -82,7 +87,7 @@ export default function Home() {
         });
 
         //let data = {lobbyId:lobbyId, userId: userDocumentId};
-
+        setShowLoading(false);
         history.push({
             pathname: `/GameLobby`,
             state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
@@ -92,6 +97,7 @@ export default function Home() {
     }
 
     async function joinExistingMultiplayerLobbyButtonClick() {
+        setShowLoading(true);
         var lobbyFound = false;
         isMultiplayer = true;
         const queryResult = await query(collection(db, "lobbies"), where("isActive", "==", true), where("isMultiplayer", "==", true));
@@ -156,6 +162,7 @@ export default function Home() {
                 return;
             }
         }
+        setShowLoading(false)
 
     }
 
@@ -166,6 +173,7 @@ export default function Home() {
     //below code creates a new db game instance once user creates a new lobby.
     //user will be the host, hence have permission to change game settings and rules.
     async function createNewMultiplayerLobbyButtonClick () {
+        setShowLoading(true)
         lobbyId = generateRandomLobbyCode();
         //setMultiPlayerGameCode(lobbyId);
         isMultiplayer = true;
@@ -194,11 +202,13 @@ export default function Home() {
             totalScore: "",
             isClickedGuess: ""
         });
+        setShowLoading(false)
         let path = `/GameLobby`;
         history.push({
             pathname: path,
             state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
         });
+
     }
     
     useEffect(() => {
@@ -208,6 +218,7 @@ export default function Home() {
     }, [user, loading])
 
     return (<>
+    {showLoading && <Loading/>}
     <div className ="home-container">
         <div className = "navbar">
             <div className= "navbar-left ">
@@ -276,12 +287,7 @@ export default function Home() {
         <div/>
                 
     </div>
-
-        
-        
-
-
-
+    
     </div>
 
     
