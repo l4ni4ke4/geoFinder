@@ -8,21 +8,37 @@ import {
 } from "../../firebase";
 import "./Register.css";
 
+import Loading from "../Loading";
+
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [user, loading, error] = useAuthState(auth);
   const history = useHistory();
-  const register = () => {
-    if (!name) alert("Please enter name");
-    registerWithEmailAndPassword(name, email, password);
+
+  const [showLoading, setShowLoading] = useState(false);
+
+  const register = async() => {
+    setShowLoading(true);
+    if (!name){
+      setShowLoading(false);
+      alert("Please enter name");
+    }
+    else {
+      await registerWithEmailAndPassword(name, email, password);
+      setShowLoading(false);
+    }
+    
   };
+
   useEffect(() => {
     if (loading) return;
     if (user) history.replace("/Home");
   }, [user, loading]);
   return (
+    <>
+    {showLoading && <Loading/>}
     <div className="register">
       <div className="register__container">
         <input
@@ -60,6 +76,7 @@ function Register() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 export default Register;

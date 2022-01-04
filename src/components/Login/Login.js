@@ -4,11 +4,22 @@ import { auth, signInWithEmailAndPassword, signInWithGoogle } from "../../fireba
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./Login.css";
 
+import Loading from "../Loading";
+
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [user, loading, error] = useAuthState(auth);
     const history = useHistory();
+
+    const [showLoading,setShowLoading] = useState(false);
+
+    const handleLoginButtonClickEmail = async() =>{
+        setShowLoading(true);
+        await signInWithEmailAndPassword(email, password);
+        setShowLoading(false);
+    }
+
     useEffect(() => {
         if (loading) {
             // maybe trigger a loading screen
@@ -19,6 +30,8 @@ function Login() {
         }
     }, [user, loading]);
     return (
+        <>
+        {showLoading && <Loading/>}
         <div class="login-main-container">
             <div class="header header-container">
                 <h1 class="headerText">Welcome to Geofinder!</h1>
@@ -41,7 +54,7 @@ function Login() {
                 />
                 <button
                     class="btn-login"
-                    onClick={() => signInWithEmailAndPassword(email, password)}
+                    onClick={handleLoginButtonClickEmail}
                 >
                     Login
                 </button>
@@ -56,6 +69,7 @@ function Login() {
                 </div>
             </div>
         </div>
+        </>
     );
 }
 export default Login;

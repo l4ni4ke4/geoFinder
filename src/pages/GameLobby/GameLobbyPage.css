@@ -2,10 +2,10 @@
     margin: 0 150px;
     display: grid; 
     grid-auto-columns: 1fr; 
-    grid-auto-rows: 1fr; 
+    /* grid-auto-rows: 1fr;  */
     /* grid-template-columns: repeat(12,1fr); */
     gap:  40px; 
-    grid-template-rows: 1fr 5fr 2fr;
+    /* grid-template-rows: 1fr 6fr 2fr; */
     
     grid-template-areas: 
     ". . . . header header header header . . . ."
@@ -38,6 +38,7 @@
     text-align: center;
     -webkit-animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+    padding: 1.5rem;
 }
 
 .game-settings p{
@@ -63,6 +64,7 @@
     text-align: center;
     -webkit-animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+    padding: 1.5rem;
 }
 
 .players p {
