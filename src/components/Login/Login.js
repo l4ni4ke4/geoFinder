@@ -4,11 +4,22 @@ import { auth, signInWithEmailAndPassword, signInWithGoogle } from "../../fireba
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./Login.css";
 
+import Loading from "../Loading";
+
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [user, loading, error] = useAuthState(auth);
     const history = useHistory();
+
+    const [showLoading,setShowLoading] = useState(false);
+
+    const handleLoginButtonClickEmail = async() =>{
+        setShowLoading(true);
+        await signInWithEmailAndPassword(email, password);
+        setShowLoading(false);
+    }
+
     useEffect(() => {
         if (loading) {
             // maybe trigger a loading screen
@@ -19,7 +30,9 @@ function Login() {
         }
     }, [user, loading]);
     return (
-        <div class="container main-container">
+        <>
+        {showLoading && <Loading/>}
+        <div class="login-main-container">
             <div class="header header-container">
                 <h1 class="headerText">Welcome to Geofinder!</h1>
                 <h4 class="headerText2">Login to start the adventure!</h4>
@@ -41,7 +54,7 @@ function Login() {
                 />
                 <button
                     class="btn-login"
-                    onClick={() => signInWithEmailAndPassword(email, password)}
+                    onClick={handleLoginButtonClickEmail}
                 >
                     Login
                 </button>
@@ -49,13 +62,14 @@ function Login() {
                     Login with Google
                 </button>
                 <div>
-                    <Link to="/reset">Forgot Password</Link>
+                    <Link to="/reset"><a>Forgot Password</a></Link>
                 </div>
                 <div>
-                    Don't have an account? <Link to="/register">Register</Link> now.
+                    Don't have an account? <Link to="/register"><a>Register</a></Link> now.
                 </div>
             </div>
         </div>
+        </>
     );
 }
 export default Login;

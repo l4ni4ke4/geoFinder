@@ -17,6 +17,7 @@ import useGameUsers from "../../Hooks/useGameUsers";
 import ExitPopup from "../../components/ExitPopup";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
+import Loading from "../../components/Loading";
 
 export default function GamePage() {
 
@@ -55,11 +56,11 @@ export default function GamePage() {
 
 
   // get Game Logic Variables
-  if(isFetchingLobby) return <h1>Loading Lobby</h1>
+  if(isFetchingLobby) return <Loading/>
   if(!lobby) return <h1>Lobby Not Found</h1>
-  if(isFetchingUser) return <h1>Loading Lobby</h1>
+  if(isFetchingUser) return <Loading/>
   if(!gameUser) return <h1>???</h1>
-  if(isFetchingUsers) return <h1>Loading Lobby Users</h1>
+  if(isFetchingUsers) return <Loading/>
 
   
   

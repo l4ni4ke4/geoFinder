@@ -82,20 +82,26 @@ function RoundEnd({gameUsers,userId,lobbyId,isHost,currentRound,rounds,distances
 
         let nameScorePairs = [];
         nameScorePairs = gameUsers.map((user)=>{
-                return {userName: user.userName,totalScore: user.totalScore}
+                return {userName: user.userName,totalScore: user.totalScore,roundScore: user.scores[currentRound]}
         })
         
         nameScorePairs.sort((firstItem, secondItem) => secondItem.totalScore -firstItem.totalScore)
 
         return(
-            <div className = 'table-round-end lb'>
-                <table class="table table-dark">
+            <div className = 'table-round-end'>
+                <table class="custom-table">
                     
                     <tbody>
+                        <tr>
+                            <td>Name</td>
+                            <td>Round Score</td>
+                            <td>Total Score</td>
+                        </tr>
                             {
                                 nameScorePairs.map((user)=>{
                                     return( <tr>
                                                 <td>{user.userName}</td>
+                                                <td>{Math.round(user.roundScore)}</td>
                                                 <td>{Math.round(user.totalScore)}</td>
                                             </tr>
                                                      )
@@ -129,7 +135,7 @@ function RoundEnd({gameUsers,userId,lobbyId,isHost,currentRound,rounds,distances
                 <section >
                     <h2>Round Results</h2>
                     <div className = 'table-round-end roundresult'>
-                        <table class="table table-dark">
+                        <table class="custom-table">
 
                             <tbody>
                                 <tr>

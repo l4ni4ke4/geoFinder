@@ -11,6 +11,8 @@ import { auth, db, logout } from "../../firebase";
 import { doc, setDoc, collection, query, where, getDocs, getDoc, onSnapshot, deleteDoc } from "firebase/firestore"; 
 import { setGameState, setTrueLocations, exitLobbyDb } from "../../utils/DbUtils";
 
+import Loading from "../../components/Loading";
+
 export default function GameLobbyPage() {
 
     const location = useLocation();
@@ -43,6 +45,8 @@ export default function GameLobbyPage() {
     const [dbRoundTime, setDbRoundTime] = useState(60);
     const [dbNumberOfRounds, setDbNumberOfRounds] = useState(5);
 
+    const [showLoading,setShowLoading] = useState(false);
+
     /*country selection related variables */
     const countryList = getAllCountries();
     const [countryCheckboxListIsChecked,setCountryCheckboxListIsSelected] = useState(
@@ -60,7 +64,7 @@ export default function GameLobbyPage() {
 
     const history = useHistory();
     const startGameButtonClick = async() => {
-
+        setShowLoading(true);
         // get a country code array from selected countries
         const countryCodeArray = Object.keys(countryCheckboxListIsChecked).filter(key=>countryCheckboxListIsChecked[key] === true);
 
@@ -91,6 +95,7 @@ export default function GameLobbyPage() {
         let data = {enablePan: enablePan, enableMovement: dbEnableMovement, enableZooming: dbEnableZooming,
             roundTime: dbRoundTime, numberOfRounds: dbNumberOfRounds, lobbyId, isMultiplayer};
         
+        setShowLoading(false);
         history.push({
             pathname: '/Game',
             state: data})
@@ -119,6 +124,7 @@ export default function GameLobbyPage() {
     }
 
     const exitButtonClick = async () => {
+        setShowLoading(true);
         let userId = localStorage.getItem("userId");
         console.log("is host: " + isDbHost);
         /* let host = `${isDbHost}`;
@@ -126,6 +132,7 @@ export default function GameLobbyPage() {
         let isHost = isDbHost;
         exitLobbyDb({lobbyId, userId, isHost});
         //await deleteDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", localStorage.getItem("userId")));
+        setShowLoading(false);
         let path = '/Home';
         history.push(path);
     }
@@ -306,6 +313,7 @@ export default function GameLobbyPage() {
     // }
 
     return (<>
+        {showLoading && <Loading/>}
         <div className="game-lobby-main-container">
             <div className ="game-lobby-header">
                 {isMultiplayer ? <p>Multiplayer Lobby</p> : <p>Singleplayer Lobby</p>}
