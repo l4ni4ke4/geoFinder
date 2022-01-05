@@ -1,6 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { arrayRemove, collection, getDocs } from "firebase/firestore";
 
 import "firebase/compat/firestore";
 
@@ -65,6 +66,30 @@ const signInWithEmailAndPassword = async (email, password) => {
       alert(err.message);
     }
 };
+
+/* function that fetches all registered users */
+const getAllUsers = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    querySnapshot.forEach((doc) => {
+      console.log(" registered user => ", doc.data());
+    });
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+/* function that fetches all users in given lobby */
+const getUsersInGivenLobby = async (lobbyId) => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "lobbies/" + lobbyId + "/gameUsers"));
+    querySnapshot.forEach((doc) => {
+      console.log(" lobby user => ", doc.data());
+    })
+  } catch(err) {
+    console.error(err);
+  }
+}
 
 // function to register via email password
 const registerWithEmailAndPassword = async (name, email, password) => {
