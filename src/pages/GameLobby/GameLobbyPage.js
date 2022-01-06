@@ -326,7 +326,7 @@ export default function GameLobbyPage() {
                     <p>Rounds: <span>{dbNumberOfRounds}</span></p>
                     <p>Round Time: <span>{dbRoundTime}</span></p>
                 </div>
-                <h2>Lobby Code: {lobbyId}</h2>
+                {isMultiplayer ? <h2>Lobby Code: {lobbyId}</h2>: <h2></h2>}
             </div>
             <div className= "players">
                 <p>Players</p>
