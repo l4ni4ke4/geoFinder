@@ -126,7 +126,7 @@ export default function GameLobbyPage() {
     const exitButtonClick = async () => {
         setShowLoading(true);
         let userId = localStorage.getItem("userId");
-        console.log("is host: " + isDbHost);
+        // console.log("is host: " + isDbHost);
         /* let host = `${isDbHost}`;
         console.log(host); */
         let isHost = isDbHost;
@@ -217,8 +217,8 @@ export default function GameLobbyPage() {
         const unsubscribe2 = onSnapshot(q2, (querySnapshot2) => {
             const docRef = db.collection("lobbies").doc(`${lobbyId}`);
             docRef.get().then((doc) => {
-                console.log(querySnapshot2);
-                console.log("Document data:", doc.data());
+                // console.log(querySnapshot2);
+                // console.log("Document data:", doc.data());
                 setDbEnableMovement(doc.data().enableMovement);
                 setDbEnableZooming(doc.data().enableZooming);
                 setDbNumberOfRounds(doc.data().noRounds);
@@ -295,10 +295,10 @@ export default function GameLobbyPage() {
                 userName: `${user.userName}`
             }
         })
-        console.log(lobbyUserNames);
-        lobbyUserNames.forEach((iter) => {
-            console.log("user username:" + iter.userName);
-        })
+        // console.log(lobbyUserNames);
+        // lobbyUserNames.forEach((iter) => {
+        //     console.log("user username:" + iter.userName);
+        // })
         
     }, [lobbyUsers]);
 

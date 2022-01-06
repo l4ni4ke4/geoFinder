@@ -126,7 +126,7 @@ function RoundPlay({lobbyId,userId,isClickedGuess,trueLocation,setShowView,guess
   const handleMapClick = (event) =>{
     setMarkerPosition({lat: event.latLng.lat(),
                        lng: event.latLng.lng()});
-    console.log(markerPosition);
+    // console.log(markerPosition);
     setMapClicked(true);
      };
 

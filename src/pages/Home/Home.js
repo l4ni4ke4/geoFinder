@@ -112,7 +112,7 @@ export default function Home() {
                 if (doc.id === inviteCodeInput) {
                     lobbyFound = true;
                     lobbyId = doc.id;
-                    console.log("A lobby with given code found.");
+                    // console.log("A lobby with given code found.");
                 }
             });
 
