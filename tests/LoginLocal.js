@@ -28,7 +28,7 @@ async function testLocal() {
     
     await driver.findElement(By.xpath("//a[@href='/register']")).click();   //go to register page
     await driver.wait(until.urlContains('register'), 1000 * 5);     //wait until register page comes up
-    await driver.findElement(By.xpath("//input[@placeholder='Full Name']")).sendKeys(randomName);   //enter random name
+    await driver.findElement(By.xpath("//input[@placeholder='Nickname']")).sendKeys(randomName);   //enter random name
     await driver.findElement(By.xpath("//input[@placeholder='E-mail Address']")).sendKeys(randomName + "@random.com");  //enter random email
     await driver.findElement(By.xpath("//input[@placeholder='Password']")).sendKeys(randomPass);  //enter random password
     await driver.findElement(By.xpath("//button[@class='register__btn']")).click();     //Click on register button
