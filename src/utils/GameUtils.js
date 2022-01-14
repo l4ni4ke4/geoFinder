@@ -6,14 +6,14 @@ import { translateToPolygonsFromCodes } from './PolygonUtils';
     * @param {number} distance - Distance(in km) of user's guess from the location.
     * @param {number} maxDistance - Max. distance(in km) to be scored. */
 export const getScore = (distance, maxDistance) => {
-    let deadzone = 30;
+    let deadzone = 5;
     let maxPoints = 5000;
     let a = maxPoints/Math.pow(maxDistance, 2);
 
-    if(distance < deadzone)
+    if(distance <= deadzone)
         return maxPoints;
     else if(distance < maxDistance)
-        return (-1*a) * Math.pow(distance, 2) + maxPoints;
+        return Math.floor(((-1*a) * Math.pow(distance, 2) + maxPoints) * (Math.exp(-0.00037 * distance)));
     else
         return 0;
 }
