@@ -81,13 +81,19 @@ const getAllUsers = async () => {
 
 /* function that fetches all users in given lobby */
 const getUsersInGivenLobby = async (lobbyId) => {
+  var users = [];
   try {
     const querySnapshot = await getDocs(collection(db, "lobbies/" + lobbyId + "/gameUsers"));
     querySnapshot.forEach((doc) => {
       console.log(" lobby user => ", doc.data());
+      //console.log(" lobby user => ", doc.data());
+      users.push(doc.data());
     })
   } catch(err) {
     console.error(err);
+  }
+  finally{
+    return users;
   }
 }
 
@@ -134,5 +140,6 @@ export {
     signInWithEmailAndPassword,
     registerWithEmailAndPassword,
     sendPasswordResetEmail,
+    getUsersInGivenLobby,
     logout,
 };
