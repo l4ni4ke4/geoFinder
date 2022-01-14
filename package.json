@@ -26,7 +26,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "eject": "react-scripts eject"
   },
-  "type": "commonjs",
+  "type": "module",
   "jest": {
     "transform": {}
   },
