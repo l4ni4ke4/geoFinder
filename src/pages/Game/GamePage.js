@@ -51,10 +51,6 @@ export default function GamePage() {
   const {isFetchingUser, gameUser} = useGameUser({lobbyId,userId});
   const {isFetchingUsers, gameUsers} = useGameUsers({lobbyId})
 
-
-
-
-
   // get Game Logic Variables
   if(isFetchingLobby) return <Loading/>
   if(!lobby) return <h1>Lobby Not Found</h1>
@@ -67,6 +63,7 @@ export default function GamePage() {
   const {currentRound,gameState:showView, trueLocations, noRounds:rounds, timeLimit, enableMovement, enableZooming} = lobby;
   // set user specific variables
   const {isHost,isClickedGuess,guessedLocations,distances,scores,totalScore} = gameUser;
+
   
   // const [user, loading, error] = useAuthState(auth);
   // const {uid} = user;
@@ -118,8 +115,10 @@ export default function GamePage() {
                    isHost={isHost}/>
       }
         <GameResults
+        rounds = {rounds}
         isHost={isHost}
         gameUsers={gameUsers}
+        gameUser = {gameUser}
         lobbyId = {lobbyId}
         guessedLocations={guessedLocations}
         trueLocations = {trueLocations}
@@ -127,7 +126,13 @@ export default function GamePage() {
         scores={scores}
         setShowExitModal={setShowExitModal}
         isLoaded={isLoaded}
-        showView= {showView}/>
+        showView= {showView}
+        isMultiplayer={isMultiplayer}
+        enableMovement={enableMovement}
+        enableZooming={enableZooming}
+        timeLimit={timeLimit}
+        
+        />
       
 
     </>

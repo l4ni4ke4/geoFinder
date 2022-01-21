@@ -1,0 +1,77 @@
+.game-history-container{
+    width: 100vw;
+    height: 100vh;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-history-table-container{
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(70px);
+    width: 60vw;
+    height: 60vh;
+    border-radius: 16px;
+    padding:2rem;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-history-table{
+    width: 100%;
+    overflow: auto;
+}
+
+.game-history-table-row{
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(70px);
+    width: 100%;
+
+    padding:0.5rem;
+    display:flex;
+    justify-content: space-between;
+    border: solid white 1px;
+    
+}
+
+.table-data{
+    width: 25%;
+    text-align: center;
+}
+
+.table-data p{
+    font-family: "ProText";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 135%;
+    margin:auto;
+    color: black;
+}
+
+
+#table-header{
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(70px);
+    border: none;
+    /* position:fixed; */
+}
+
+#table-header p{
+    font-family: "ProText";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 135%;
+    margin:auto;
+    /* identical to box height, or 49px */
+    border:none;
+    color: white;
+}
+
+#btn-back-home{
+    margin-top: 2rem;
+}
+
