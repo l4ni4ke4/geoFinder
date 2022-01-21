@@ -19,6 +19,7 @@ import Login from "./components/Login/Login"
 import Register from "./components/Register/Register"
 import ResetPwd from "./components/ResetPwd/ResetPwd"
 import Dashboard from "./components/Dashboard/Dashboard"
+import GameHistory from "./pages/GameHistory/GameHistory";
 
 function App() {
 
@@ -45,6 +46,10 @@ function App() {
 
             <Route path="/GameResults">
               <GameResults />
+            </Route>
+
+            <Route path="/GameHistory">
+              <GameHistory />
             </Route>
 
             <Route path="/Profile">

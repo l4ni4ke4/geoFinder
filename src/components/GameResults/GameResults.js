@@ -14,7 +14,7 @@ import { doc, setDoc, collection, query, where, getDocs } from "firebase/firesto
 import { resetLobby } from "../../utils/DbUtils";
 
 export default function GameResults({gameUsers,guessedLocations,trueLocations,totalScore,scores,lobbyId,isLoaded,
-    setShowExitModal,isHost}){ 
+    setShowExitModal,isHost,rounds,gameUser,isMultiplayer,enableMovement,enableZooming,timeLimit}){ 
 
 
 const lineSymbol = {
@@ -56,17 +56,23 @@ function generateRandomGameHistoryId() {
 async function saveGameHistoryToDb() {
     let gameHistoryId = generateRandomGameHistoryId();
     await setDoc(doc(db, "users/" + localStorage.getItem("userId") + "/gameHistory", `${gameHistoryId}`), {
+        date: Date.now(),
+        isMultiplayer: isMultiplayer,
+        timeLimit:timeLimit,
+        enableMovement:enableMovement,
+        enableZooming:enableZooming,
+        rounds: rounds,
         pos: trueLocations,
-        mark: guessedLocations,
-        roundScores: scores,
-        totalScore: totalScore
+        guessedLocations: gameUser.guessedLocations,
+        roundScores: gameUser.scores,
+        totalScore: gameUser.totalScore
     });
 }
 
 // burayı boşuna dbye girdi açılmasın diye kapadım şimdilik
-// useEffect(() => {
-//     saveGameHistoryToDb();
-// }, []);
+useEffect(() => {
+    saveGameHistoryToDb();
+}, []);
 
 // useEffect(()=>{
 //     if(showView === "Lobby"){
