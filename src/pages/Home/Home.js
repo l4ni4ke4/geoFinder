@@ -231,20 +231,20 @@ export default function Home() {
                     <p>GeoFinder</p>
             </div>
             <div className="navbar-right ">
-                    <p id="gamehistory-p"><a id="gamehistory-a" href="/GameHistory">Game History</a></p>
+                    <p>Game History</p>
                     <p className="dropdown-toggle" data-bs-toggle="dropdown" onClick={()=>setShowDropdown(!showDropdown)}>
                         {localStorage.getItem("userName")}
                     </p>
                     {showDropdown &&
                         <ul class="custom-dropdown" >
-                            {/* <li><a href="/accountDetails">Account Details</a></li> */}
-                            {/* <li><a href="/GameHistory">Stats</a></li> */}
+                            <li><a href="/accountDetails">Account Details</a></li>
+                            <li><a href="/stats">Stats</a></li>
                             <li><a href="/" onClick={logout}>Logout</a></li>
                         </ul>}
 
             </div>
+
         </div>
-        
         <div className ="play-box-singleplayer" onClick={singlePlayerButtonClick}>
             <div className="play-box-singleplayer-left">
                 <div className="play-box-left-top">

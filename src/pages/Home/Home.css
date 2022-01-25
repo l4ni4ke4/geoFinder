@@ -46,22 +46,6 @@
 
     color: #FFFFFF;
 }
-#gamehistory-p{
-    padding:0;
-}
-
-#gamehistory-a {
-    padding: 1rem;
-    display: block;
-    text-decoration: none;
-    font-family: "ProText";
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 21px;
-
-    color: #FFFFFF;
-}
 
 .navbar-left p:hover, .navbar-right p:hover{
     background: rgba(255, 255, 255, 0.15);
