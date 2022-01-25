@@ -23,8 +23,8 @@ async function testLogout() {
     await driver.get('https://geofinder-9a266.web.app/');     //go to geofinder login page
 
     await driver.wait(until.urlIs('https://geofinder-9a266.web.app/'), 1000 * 5)  //Wait until login page
-    await driver.findElement(By.xpath("//input[@placeholder='E-mail Address']")).sendKeys("kek@kek.com");  //enter random email used to register
-    await driver.findElement(By.xpath("//input[@placeholder='Password']")).sendKeys("kekkek");        //enter random password used to register
+    await driver.findElement(By.xpath("//input[@placeholder='E-mail Address']")).sendKeys("host-test@test.com");  //enter random email used to register
+    await driver.findElement(By.xpath("//input[@placeholder='Password']")).sendKeys("123456");        //enter random password used to register
     await driver.findElement(By.xpath("//button[@class='btn-login']")).click();     //Click login button
     await driver.wait(until.urlContains('Home'), 1000 * 5);     //wait for home page    
 

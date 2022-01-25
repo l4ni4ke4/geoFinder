@@ -23,12 +23,12 @@ async function testHomePageUserName() {
   try {
     await driver.get('https://geofinder-9a266.web.app/');     //go to geofinder login page
 
-    await driver.findElement(By.xpath("//input[@placeholder='E-mail Address']")).sendKeys("kek@kek.com");  //enter email and pass to login
-    await driver.findElement(By.xpath("//input[@placeholder='Password']")).sendKeys("kekkek");        
+    await driver.findElement(By.xpath("//input[@placeholder='E-mail Address']")).sendKeys("host-test@test.com");  //enter email and pass to login
+    await driver.findElement(By.xpath("//input[@placeholder='Password']")).sendKeys("123456");        
     await driver.findElement(By.xpath("//button[@class='btn-login']")).click();     //Click login button
 
-    var userName = await driver.findElement(By.xpath("//p[text() = 'kek']"));   //The username is kek so it should apper on dropdown menu
-    if(await userName.getText() == 'kek')
+    var userName = await driver.findElement(By.xpath("//p[text() = 'HOST-TEST']"));   //The username is HOST-TEST so it should apper on dropdown menu
+    if(await userName.getText() == 'HOST-TEST')
         console.log("TESTHOMEPAGEUSERNAME SUCCESS");
     else{
         console.log("TESTHOMEPAGEUSERNAME FAILED");

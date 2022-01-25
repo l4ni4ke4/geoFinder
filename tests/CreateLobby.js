@@ -29,8 +29,8 @@ async function createLobbyTest() {
   try {
     await driver.get('https://geofinder-9a266.web.app/');     //go to geofinder login page
 
-    await driver.findElement(By.xpath("//input[@placeholder='E-mail Address']")).sendKeys("kek@kek.com");  //enter email
-    await driver.findElement(By.xpath("//input[@placeholder='Password']")).sendKeys("kekkek");        //enter password
+    await driver.findElement(By.xpath("//input[@placeholder='E-mail Address']")).sendKeys("host-test@test.com");  //enter email
+    await driver.findElement(By.xpath("//input[@placeholder='Password']")).sendKeys("123456");        //enter password
     await driver.findElement(By.xpath("//button[@class='btn-login']")).click();     //Click login button
     //await driver.wait(until.urlContains('Home'), 1000 * 5);     //wait for home page
 
