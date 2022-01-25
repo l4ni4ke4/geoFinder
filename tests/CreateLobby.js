@@ -10,7 +10,7 @@ var driver = new webdriver.Builder()
                  .build();
 
 
-// This doesnt work for some reason idk why, fucking shitscript
+// This doesnt work for some reason idk why
 const logins = {
     email: process.env.FIREBASE_TEST_EMAIL,
     pass: process.env.FIREBASE_TEST_PASS
