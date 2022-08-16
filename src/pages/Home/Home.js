@@ -3,296 +3,385 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import singlePlayerLogo from '../../assets/one-player-game-symbol.png';
-import multiPlayerLogo from '../../assets/network_icon.png';
+import singlePlayerLogo from "../../assets/one-player-game-symbol.png";
+import multiPlayerLogo from "../../assets/network_icon.png";
 import multiPicture from "../../assets/round-start-nature-1.png";
 import singlePicture from "../../assets/singleplayer.jpg";
 import Vector from "../../assets/Vector.svg";
 import whiteLine from "../../assets/whiteLine.png";
-import './Home.css';
+import "./Home.css";
 import { auth, db, logout } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import CloseButton from "react-bootstrap/CloseButton";
 
-import { Button, Modal, Form } from 'react-bootstrap';
+import { Button, Modal, Form } from "react-bootstrap";
 
-import { doc, setDoc, collection, query, where, getDocs, getDoc } from "firebase/firestore"; 
+import {
+  doc,
+  setDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+} from "firebase/firestore";
 
 import Loading from "../../components/Loading";
 
 export default function Home() {
+  var lobbyId = 0;
+  var isMultiplayer = false;
 
-    var lobbyId = 0;
-    var isMultiplayer = false;
-    
+  const [showDropdown, setShowDropdown] = useState(false);
+  const history = useHistory();
+  const [name, setName] = useState("");
+  const [multiPlayerGameCode, setMultiPlayerGameCode] = useState(0);
 
-    const [showDropdown,setShowDropdown] = useState(false);
-    const history = useHistory();
-    const [name, setName] = useState("");
-    const [multiPlayerGameCode, setMultiPlayerGameCode] = useState(0);
+  const [user, loading, error] = useAuthState(auth);
+  const [userDocumentId, setUserDocumentId] = useState(0);
 
-    const [user, loading, error] = useAuthState(auth);
-    const [userDocumentId, setUserDocumentId] = useState(0);
+  const [inviteCodeInput, setInviteCodeInput] = useState("");
 
-    const [inviteCodeInput, setInviteCodeInput] = useState("");
+  const [popupShow, setPopupShow] = useState(false);
 
-    const [popupShow, setPopupShow] = useState(false);
+  const handlePopupClose = () => setPopupShow(false);
+  const handlePopupShow = () => setPopupShow(true);
 
-    const handlePopupClose = () => setPopupShow(false);
-    const handlePopupShow = () => setPopupShow(true);
+  const [showLoading, setShowLoading] = useState(false);
 
-    const [showLoading,setShowLoading] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+  const [showContact, setShowContact] = useState(false);
 
-    
-    const fetchUserName = async () => {
-        try {
-          const query = await db
-            .collection("users")
-            .where("uid", "==", user?.uid)
-            .get();
-          const data = await query.docs[0].data();
-          setUserDocumentId(query.docs[0].id);
-          setName(data.name);
-        } catch (err) {
-          console.error(err);
-        }
-      };
+  const fetchUserName = async () => {
+    try {
+      const query = await db
+        .collection("users")
+        .where("uid", "==", user?.uid)
+        .get();
+      const data = await query.docs[0].data();
+      setUserDocumentId(query.docs[0].id);
+      setName(data.name);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-    async function singlePlayerButtonClick () { 
-        setShowLoading(true);
-        lobbyId = generateRandomLobbyCode();
-        //setMultiPlayerGameCode(lobbyId);
-        isMultiplayer = false;
-        await setDoc(doc(db, "lobbies", `${lobbyId}`), {
-            inviteCode: lobbyId,
-            isActive: false,
-            isGameStarted: false,
-            isMultiplayer: false,
-            currentRound: "",
-            trueLocations: [],
-            gameState: "Lobby",
-            noRounds: 5,
-            timeLimit: 60,
-            enableZooming: false,
-            enableMovement: false
-        });
-        await setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
-            userId: db.doc('users/' + userDocumentId),
-            userName: localStorage.getItem("userName"),
-            isHost: true,
-            guessedLocations: [],
-            distances: [],
-            scores: [],
-            totalScore: "",
-            isClickedGuess: ""
-        });
+  async function singlePlayerButtonClick() {
+    setShowLoading(true);
+    lobbyId = generateRandomLobbyCode();
+    //setMultiPlayerGameCode(lobbyId);
+    isMultiplayer = false;
+    await setDoc(doc(db, "lobbies", `${lobbyId}`), {
+      inviteCode: lobbyId,
+      isActive: false,
+      isGameStarted: false,
+      isMultiplayer: false,
+      currentRound: "",
+      trueLocations: [],
+      gameState: "Lobby",
+      noRounds: 5,
+      timeLimit: 60,
+      enableZooming: false,
+      enableMovement: false,
+    });
+    await setDoc(
+      doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`),
+      {
+        userId: db.doc("users/" + userDocumentId),
+        userName: localStorage.getItem("userName"),
+        isHost: true,
+        guessedLocations: [],
+        distances: [],
+        scores: [],
+        totalScore: "",
+        isClickedGuess: "",
+      }
+    );
 
-        //let data = {lobbyId:lobbyId, userId: userDocumentId};
-        setShowLoading(false);
-        history.push({
-            pathname: `/GameLobby`,
-            state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
-            /* ,
+    //let data = {lobbyId:lobbyId, userId: userDocumentId};
+    setShowLoading(false);
+    history.push({
+      pathname: `/GameLobby`,
+      state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer },
+      /* ,
             state: data */
-        });
-    }
+    });
+  }
 
-    async function joinExistingMultiplayerLobbyButtonClick() {
-        setShowLoading(true);
-        var lobbyFound = false;
-        isMultiplayer = true;
-        const queryResult = await query(collection(db, "lobbies"), where("isActive", "==", true), where("isMultiplayer", "==", true));
-        const querySnapshot = await getDocs(queryResult);
-        if (querySnapshot.empty) {
-            alert("no active lobbies. check next time!");
-            setShowLoading(false);
-            return;
+  async function joinExistingMultiplayerLobbyButtonClick() {
+    setShowLoading(true);
+    var lobbyFound = false;
+    isMultiplayer = true;
+    const queryResult = await query(
+      collection(db, "lobbies"),
+      where("isActive", "==", true),
+      where("isMultiplayer", "==", true)
+    );
+    const querySnapshot = await getDocs(queryResult);
+    if (querySnapshot.empty) {
+      alert("no active lobbies. check next time!");
+      setShowLoading(false);
+      return;
+    } else {
+      querySnapshot.forEach((doc) => {
+        if (doc.id === inviteCodeInput) {
+          lobbyFound = true;
+          lobbyId = doc.id;
+          // console.log("A lobby with given code found.");
         }
-        else {
-            querySnapshot.forEach((doc) => {
-                if (doc.id === inviteCodeInput) {
-                    lobbyFound = true;
-                    lobbyId = doc.id;
-                    // console.log("A lobby with given code found.");
-                }
-            });
+      });
 
-            if (lobbyFound) {
-                // get lobby currentRound
-                const docRef = doc(db, "lobbies", `${lobbyId}`);
-                const docSnap = await getDoc(docRef);
-                const {currentRound:currR,gameState} = docSnap.data();
+      if (lobbyFound) {
+        // get lobby currentRound
+        const docRef = doc(db, "lobbies", `${lobbyId}`);
+        const docSnap = await getDoc(docRef);
+        const { currentRound: currR, gameState } = docSnap.data();
 
-                if(gameState === "RoundPlay"){
-                    alert("Round is already started, you can join next round !")
-                }
-                else{
-                    // add nulls to db for missed rounds
-                    let missedLocs = [];
-                    let missedDists= [];
-                    let missedScores =[];
-                    
-                    for(let i =0; i<currR; i++){
-                        missedLocs.push(null);
-                        missedDists.push("null");
-                        missedScores.push(0);
-                    }
+        if (gameState === "RoundPlay") {
+          alert("Round is already started, you can join next round !");
+        } else {
+          // add nulls to db for missed rounds
+          let missedLocs = [];
+          let missedDists = [];
+          let missedScores = [];
 
-                    setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
-                        userId: db.doc('users/' + userDocumentId),
-                        userName: localStorage.getItem("userName"),
-                        isHost: false,
-                        guessedLocations: missedLocs,
-                        distances: missedDists,
-                        scores: missedScores,
-                        totalScore: "",
-                        isClickedGuess: false
-                    });
-                    //setMultiPlayerGameCode(lobbyId);
-                    
-                    let path = `/GameLobby`;
-                    history.push({
-                        pathname: path,
-                        state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
-                    });
+          for (let i = 0; i < currR; i++) {
+            missedLocs.push(null);
+            missedDists.push("null");
+            missedScores.push(0);
+          }
 
-                    }
-
+          setDoc(
+            doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`),
+            {
+              userId: db.doc("users/" + userDocumentId),
+              userName: localStorage.getItem("userName"),
+              isHost: false,
+              guessedLocations: missedLocs,
+              distances: missedDists,
+              scores: missedScores,
+              totalScore: "",
+              isClickedGuess: false,
             }
-            if (!lobbyFound) {
-                alert("No lobbies exist with code: " + inviteCodeInput);
-                setShowLoading(false);
-                return;
-            }
-        }
-        setShowLoading(false)
+          );
+          //setMultiPlayerGameCode(lobbyId);
 
-    }
-
-    function generateRandomLobbyCode() {
-        return Math.floor(100000000 + Math.random() * 900000000); 
-    }
-
-    //below code creates a new db game instance once user creates a new lobby.
-    //user will be the host, hence have permission to change game settings and rules.
-    async function createNewMultiplayerLobbyButtonClick () {
-        setShowLoading(true)
-        lobbyId = generateRandomLobbyCode();
-        //setMultiPlayerGameCode(lobbyId);
-        isMultiplayer = true;
-        // console.log(multiPlayerGameCode);
-        // console.log(userDocumentId);
-        await setDoc(doc(db, "lobbies", `${lobbyId}`), {
-            inviteCode: lobbyId,
-            isActive: true,
-            isGameStarted: false,
-            isMultiplayer: true,
-            currentRound: "",
-            trueLocations: [],
-            gameState: "Lobby",
-            noRounds: 5,
-            timeLimit: 60,
-            enableZooming: false,
-            enableMovement: false
-        });
-        await setDoc(doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`), {
-            userId: db.doc('users/' + userDocumentId),
-            userName: localStorage.getItem("userName"),
-            isHost: true,
-            guessedLocations: [],
-            distances: [],
-            scores: [],
-            totalScore: "",
-            isClickedGuess: ""
-        });
-        setShowLoading(false)
-        let path = `/GameLobby`;
-        history.push({
+          let path = `/GameLobby`;
+          history.push({
             pathname: path,
-            state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer }
-        });
-
+            state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer },
+          });
+        }
+      }
+      if (!lobbyFound) {
+        alert("No lobbies exist with code: " + inviteCodeInput);
+        setShowLoading(false);
+        return;
+      }
     }
-    
-    useEffect(() => {
-        fetchUserName();
-        if (loading) return;
-        if (!user) return history.replace("/");
-    }, [user, loading])
+    setShowLoading(false);
+  }
 
-    return (<>
-    {showLoading && <Loading/>}
-    <div className ="home-container">
-        <div className = "navbar">
-            <div className= "navbar-left ">
-                    <p>About</p>
-                    <p>Contact</p>
-            </div>
-            <div className = "navbar-center">
-                    <p>GeoFinder</p>
-            </div>
-            <div className="navbar-right ">
-                    <p id="gamehistory-p"><a id="gamehistory-a" href="/GameHistory">Game History</a></p>
-                    <p className="dropdown-toggle" data-bs-toggle="dropdown" onClick={()=>setShowDropdown(!showDropdown)}>
+  function generateRandomLobbyCode() {
+    return Math.floor(100000000 + Math.random() * 900000000);
+  }
+
+  //below code creates a new db game instance once user creates a new lobby.
+  //user will be the host, hence have permission to change game settings and rules.
+  async function createNewMultiplayerLobbyButtonClick() {
+    setShowLoading(true);
+    lobbyId = generateRandomLobbyCode();
+    //setMultiPlayerGameCode(lobbyId);
+    isMultiplayer = true;
+    // console.log(multiPlayerGameCode);
+    // console.log(userDocumentId);
+    await setDoc(doc(db, "lobbies", `${lobbyId}`), {
+      inviteCode: lobbyId,
+      isActive: true,
+      isGameStarted: false,
+      isMultiplayer: true,
+      currentRound: "",
+      trueLocations: [],
+      gameState: "Lobby",
+      noRounds: 5,
+      timeLimit: 60,
+      enableZooming: false,
+      enableMovement: false,
+    });
+    await setDoc(
+      doc(db, "lobbies/" + lobbyId + "/gameUsers", `${userDocumentId}`),
+      {
+        userId: db.doc("users/" + userDocumentId),
+        userName: localStorage.getItem("userName"),
+        isHost: true,
+        guessedLocations: [],
+        distances: [],
+        scores: [],
+        totalScore: "",
+        isClickedGuess: "",
+      }
+    );
+    setShowLoading(false);
+    let path = `/GameLobby`;
+    history.push({
+      pathname: path,
+      state: { lobbyId: lobbyId, isMultiplayer: isMultiplayer },
+    });
+  }
+
+  useEffect(() => {
+    fetchUserName();
+    if (loading) return;
+    if (!user) return history.replace("/");
+  }, [user, loading]);
+
+  const handleCloseAbout = () => {
+    setShowAbout(false);
+  };
+
+  const handleCloseContact = () => {
+    setShowContact(false)
+  }
+
+  return (
+    <>
+      {showLoading && <Loading />}
+      <div className="home-container">
+        <div className="navbar">
+          <div className="navbar-left ">
+            <p onClick={() => setShowAbout((prev) => !prev)}>About</p>
+            <p onClick={() => setShowContact((prev) => !prev)}>Contact</p>
+          </div>
+          <div className="navbar-center">
+            <p>GeoFinder</p>
+          </div>
+          <div className="navbar-right ">
+            {/* <p id="navbar-text">Welcome {localStorage.getItem("userName")}!</p> */}
+            <p id="gamehistory-p">
+              <a id="gamehistory-a" href="/GameHistory">
+                Game History
+              </a>
+            </p>
+            <p>
+              <a href="/" onClick={logout}>
+                Logout
+              </a>
+            </p>
+            {/* <p className="dropdown-toggle" data-bs-toggle="dropdown" onClick={()=>setShowDropdown(!showDropdown)}>
                         {localStorage.getItem("userName")}
                     </p>
                     {showDropdown &&
                         <ul class="custom-dropdown" >
-                            {/* <li><a href="/accountDetails">Account Details</a></li> */}
-                            {/* <li><a href="/GameHistory">Stats</a></li> */}
+                            <li><a href="/accountDetails">Account Details</a></li>
+                            <li><a href="/GameHistory">Stats</a></li>
                             <li><a href="/" onClick={logout}>Logout</a></li>
-                        </ul>}
-
-            </div>
+                        </ul>} */}
+          </div>
         </div>
-        
-        <div className ="play-box-singleplayer" onClick={singlePlayerButtonClick}>
-            <div className="play-box-singleplayer-left">
-                <div className="play-box-left-top">
-                    <p className = "play-box-left-text">Play on your own !</p>
-                    <p className = "play-box-left-text2">Single Player</p>
+
+        <div
+          className="play-box-singleplayer"
+          onClick={singlePlayerButtonClick}
+        >
+          <div className="play-box-singleplayer-left">
+            <div className="play-box-left-top">
+              {/* <p className = "play-box-left-text">Play on your own !</p> */}
+              <p className="play-box-left-text2">Single Player</p>
+            </div>
+            <img className="vector" src={Vector} />
+          </div>
+          <div className="play-box-singleplayer-right">
+            <img src={singlePicture} />
+          </div>
+        </div>
+        <div className="play-box-multiplayer" onClick={handlePopupShow}>
+          <div className="play-box-multiplayer-left">
+            <div className="play-box-left-top">
+              {/* <p className = "play-box-left-text">Play with friends !</p> */}
+              <p className="play-box-left-text2">Multiplayer</p>
+            </div>
+            <img className="vector" src={Vector} />
+          </div>
+          <div className="play-box-multiplayer-right">
+            <img src={multiPicture} />
+          </div>
+        </div>
+        {showAbout && (
+          <div className="footerLeft">
+            <div className="footerLeft-header">
+              <h1>About</h1>
+              <CloseButton onClick={handleCloseAbout} />
+            </div>
+            <div className="footerLeft-content">
+                <p>
+                GeoFinder is multiplayer geography game that you can play with your friends. Each round players are asked to guess the location of a random streetview.
+                The closest guess wins the most points. This project is developed for the course INF531-Software Project ll by four students studying at Turkish-German University.
+                </p>
+            </div>
+          </div>
+        )}
+
+        { showContact && 
+            <div className="footerRight">
+            <div className="footerRight-header">
+              <h1>Contact</h1>
+              <CloseButton onClick={handleCloseContact} />
+            </div>
+
+            <div className="footerRight-content">
+                <div className="footerRight-row">
+                    <p>Muhammet Berat Soyakça </p>
+                    <p>mberatsoyakca@gmail.com</p>
                 </div>
-                <img className= "vector" src={Vector}/>
-            </div>
-            <div className="play-box-singleplayer-right">
-                <img src={singlePicture}/>
-            </div>
-            
-        </div>
-        <div className ="play-box-multiplayer" onClick={handlePopupShow}>
-            <div className="play-box-multiplayer-left" >
-                <div className="play-box-left-top">
-                    <p className = "play-box-left-text">Play with friends !</p>
-                    <p className = "play-box-left-text2">Multiplayer</p>
+                <div className="footerRight-row">
+                    <p>Arman Yavuz</p>
+                    <p>yvz.arman@gmail.com</p>
                 </div>
-                <img className= "vector" src={Vector}/>
+                <div className="footerRight-row">
+                    <p>Serdar Pehlivan</p>
+                    <p>serdarpe00@gmail.com</p>
+                </div>
+                <div className="footerRight-row">
+                    <p>Anılcan Dikmetaş</p>
+                    <p>dikmetasanilcan@gmail.com</p>
+                </div>
+
             </div>
-            <div className="play-box-multiplayer-right">
-                 <img src={multiPicture}/>
-            </div>
-        </div>
-            <Modal show={popupShow} className="modal" onHide={handlePopupClose}>
-                    <Modal.Header closeButton>
-                        <p>Multiplayer</p>
-                    </Modal.Header>
-                    <Modal.Body className="modal-body">
-                        <h2>Enter lobby link: </h2>
-                        <input type="text" id="lobbyLinkTextBox" name="fname" value={inviteCodeInput} onChange={(event) => setInviteCodeInput(event.target.value)} onInput={(event) => setInviteCodeInput(event.target.value)}></input>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="outline-dark" onClick={createNewMultiplayerLobbyButtonClick}>
-                            Create new Lobby
-                        </Button>
-                        <Button variant="secondary" onClick={joinExistingMultiplayerLobbyButtonClick} disabled={inviteCodeInput === ""}>
-                            Join an existing Lobby
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-        
-                
-    </div>
-    
 
 
-    </>)
-
+          </div>}
+        <Modal show={popupShow} className="modal" onHide={handlePopupClose}>
+          <Modal.Header closeButton>
+            <p>Multiplayer</p>
+          </Modal.Header>
+          <Modal.Body className="modal-body">
+            <h2>Enter lobby link: </h2>
+            <input
+              type="text"
+              id="lobbyLinkTextBox"
+              name="fname"
+              value={inviteCodeInput}
+              onChange={(event) => setInviteCodeInput(event.target.value)}
+              onInput={(event) => setInviteCodeInput(event.target.value)}
+            ></input>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="outline-dark"
+              onClick={createNewMultiplayerLobbyButtonClick}
+            >
+              Create new Lobby
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={joinExistingMultiplayerLobbyButtonClick}
+              disabled={inviteCodeInput === ""}
+            >
+              Join an existing Lobby
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    </>
+  );
 }

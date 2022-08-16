@@ -1,6 +1,7 @@
 
  body {
     font-family: 'ProText';
+    box-sizing: border-box;
 }
 
 .home-container{
@@ -9,35 +10,62 @@
     grid-auto-columns: 1fr; 
     /* grid-auto-rows: 1fr;  */
     grid-template-columns: repeat(12,1fr);
-    gap:  40px; 
+    gap:  20px; 
     /* grid-template-rows: 1fr 4.75fr; */
     grid-template-areas: 
     "navbar navbar navbar navbar navbar navbar navbar navbar navbar navbar navbar navbar"
-    "play-single play-single play-single play-single play-single . . play-multi play-multi play-multi play-multi play-multi"   
+    "play-single play-single play-single play-single play-single . . play-multi play-multi play-multi play-multi play-multi" 
+    "footerLeft footerLeft footerLeft footerLeft footerLeft . . footerRight footerRight footerRight footerRight footerRight";
     ;
 
 }
 .navbar{
     grid-area:navbar;
-    display: grid;
+    /* display: grid;
     grid-template-columns: 3fr 2fr 4fr 2fr 3fr ;
-    grid-template-areas: "nleft . ncenter . nright";
+    grid-template-areas: "nleft . ncenter . nright"; */
+    display:flex;
 
 }
 
 
 .navbar-left {
-    grid-area: nleft;
-    display: flex;
+    display:flex;
+    flex:5;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .navbar-right {
-    grid-area: nright;
-    display: flex;
+    display:flex;
+    flex:5;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.navbar-center {
+    /* margin-left: 4rem; */
+    /* grid-area: ncenter; */
+    flex:2;
+    font-family: "ProDisplay";
+    font-style: normal;
+    font-weight: 900;
+    font-size: 28px;
+    line-height: 29px;
+    /* display: flex;
+    align-items: center;
+    text-align: center; */
+    letter-spacing: 0.01em;
+    cursor: default;
+    text-align: center;
+
+    color: #FFFFFF;
 }
 
 .navbar-left p, .navbar-right p{
-    padding: 1rem;
+    text-align: center;
+    width: 14rem;
+    padding: 0.75rem;
     font-family: "ProText";
     font-style: normal;
     font-weight: normal;
@@ -46,6 +74,16 @@
 
     color: #FFFFFF;
 }
+
+.navbar-right a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* margin: 0.5rem; */
+    text-decoration: none;
+    color:inherit;
+}
+
 #gamehistory-p{
     padding:0;
 }
@@ -71,23 +109,14 @@
     border-radius: 16px 16px 16px 16px;
 }
 
-.navbar-center {
-    /* margin-left: 4rem; */
-    grid-area: ncenter;
-    font-family: "ProDisplay";
-    font-style: normal;
-    font-weight: 900;
-    font-size: 28px;
-    line-height: 29px;
-    /* display: flex;
-    align-items: center;
-    text-align: center; */
-    letter-spacing: 0.01em;
-    cursor: default;
-    text-align: center;
-
-    color: #FFFFFF;
+#navbar-text:hover{
+    background: none;
+    backdrop-filter: none;
+    cursor: auto;
+    border-radius: none;
 }
+
+
 
 .line{
     background: #E7E7F2;
@@ -132,7 +161,8 @@
     margin-left: 2rem; */
     /* height: 6rem; */
     width: 25%;
-    margin-left:16px;
+    margin-left:auto;
+    margin-right: auto;
 }
 
 
@@ -300,6 +330,65 @@
     backdrop-filter: blur(70px);
     border-radius: 8px;
 }
+
+.footerLeft {
+    grid-area:footerLeft;
+    display:flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 16px;
+}
+
+.footerRight{
+    grid-area:footerRight;
+    display:flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 16px;
+}
+
+.footerLeft-header, .footerRight-header{
+    display:flex;
+    justify-content: space-between;
+    background-color: rgba(128, 128, 128,0.8);
+    border-radius: 16px 16px 0 0 ;
+    border-bottom: 2px rgb(0, 0, 0,0.4) solid;
+    padding: 1rem;
+}
+
+.footerLeft h1, .footerRight h1{
+    font-size: 20px;
+}
+
+.footerLeft p, .footerRight p{
+    font-size: 14px;
+}
+
+.footerRight-content {
+    display:flex;
+    flex-direction: column;
+    padding:0.5rem;
+}
+
+.footerLeft-content{
+    padding: 0.5rem;
+}
+
+.footerRight-row{
+    display:flex;
+    justify-content: space-between;
+}
+.footerRight-row p{
+    width: 50%;
+    margin:0.25rem;
+}
+
+.footerLeft p, .footerRight p, span{
+    /* padding: 1rem; */
+}
+
+
+
 /*
 .home-main {
     background-image: url('../../assets/pisa-tower.png');
